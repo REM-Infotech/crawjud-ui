@@ -4,19 +4,19 @@ const vitePluginOptions: VitePluginConfig = {
   build: [
     {
       entry: "app/electron/main.ts",
-      config: "electron/config/vite.main.config.ts",
+      config: "app/electron/config/vite.main.config.ts",
       target: "main",
     },
     {
       entry: "app/electron/preload.ts",
-      config: "electron/config/vite.preload.config.ts",
+      config: "app/electron/config/vite.preload.config.ts",
       target: "preload",
     },
   ],
   renderer: [
     {
       name: "CrawJUD",
-      config: "electron/config/vite.config.ts",
+      config: "app/electron/config/vite.config.ts",
     },
   ],
 };

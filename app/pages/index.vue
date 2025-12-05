@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
+
 <template>
-  <UiHeader />
-  <UiMain>
-    <NuxtPage />
-  </UiMain>
+  <div>
+    <span>hello, world!</span>
+  </div>
 </template>

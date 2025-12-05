@@ -2,7 +2,8 @@ import { dialog, session } from "electron";
 import { writeFileSync } from "fs";
 import { homedir } from "os";
 import { join } from "path";
-import api from "../utils/api";
+
+const api = null;
 
 const homeUser = homedir();
 
