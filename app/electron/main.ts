@@ -1,13 +1,11 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import useAuthService from "@/services/authService";
+import { app, BrowserWindow } from "electron";
 import { join, resolve } from "path";
-import IpcUtils from "./ipcMain";
+import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
 export let mainWindow: BrowserWindow | null = null;
 let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
-
-if (process.env.NODE_ENV === "development") {
-}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -16,19 +14,14 @@ function createWindow() {
     minHeight: 800,
     width: 1280,
     height: 800,
-    maxWidth: 1280,
-    maxHeight: 800,
-    maximizable: false, // This disables the maximize button
     webPreferences: {
       devTools: !app.isPackaged,
       preload: preload_path,
     },
   });
-
   if (process.argv.includes("--devtools") || !app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
-
   if (app.isPackaged) {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
     return;
@@ -46,11 +39,8 @@ if (!gotTheLock) {
 
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
-    mainWindow?.webContents.on("before-input-event", IpcUtils.beforeInputEvent);
-    ipcMain.on("set-title", IpcUtils.SetTitle);
-    ipcMain.handle("carregarSenha", IpcUtils.carregarSenha);
-    ipcMain.handle("salvarSenha", IpcUtils.salvarSenha);
-
+    IpcApp();
+    useAuthService();
     createWindow();
   });
 

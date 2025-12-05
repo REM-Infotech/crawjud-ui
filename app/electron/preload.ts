@@ -2,9 +2,9 @@ import { contextBridge, ipcRenderer } from "electron";
 
 // ✅ Good code
 contextBridge.exposeInMainWorld("electronAPI", {
-  setTitle: (title: string) => ipcRenderer.send("set-title", title),
-  salvarSenha: (login: string, senha: string) => ipcRenderer.invoke("salvarSenha", login, senha),
-  carregarSenha: (login: string) => ipcRenderer.invoke("carregarSenha", login),
+  loadPreferences: () => ipcRenderer.invoke("load-preferences"),
+  authenticateUser: (username: string, password: string) =>
+    ipcRenderer.invoke("authenticate-user", username, password),
 });
 
 window.addEventListener("keypress", (e) => {

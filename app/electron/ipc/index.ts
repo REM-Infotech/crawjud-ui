@@ -1,4 +1,5 @@
-import { app, BrowserWindow, safeStorage, type IpcMainInvokeEvent } from "electron";
+import { app, BrowserWindow, ipcMain, safeStorage, type IpcMainInvokeEvent } from "electron";
+import { BaseWindow } from "electron/main";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 
@@ -50,4 +51,13 @@ class IpcUtils {
   }
 }
 
-export default IpcUtils;
+export default function IpcApp() {
+  const mainWindow = BaseWindow.getAllWindows()[0];
+
+  const browserWindow = mainWindow ? BrowserWindow.fromId(mainWindow.id) : undefined;
+  browserWindow?.webContents.on("before-input-event", IpcUtils.beforeInputEvent);
+
+  ipcMain.on("set-title", IpcUtils.SetTitle);
+  ipcMain.handle("carregarSenha", IpcUtils.carregarSenha);
+  ipcMain.handle("salvarSenha", IpcUtils.salvarSenha);
+}

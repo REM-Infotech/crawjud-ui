@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AppToast from "./components/AppToast.vue";
+</script>
 <template>
-  <UiHeader />
-  <UiMain>
-    <NuxtPage />
-  </UiMain>
+  <BApp>
+    <Loading />
+    <AppToast />
+    <NuxtLayout />
+  </BApp>
 </template>

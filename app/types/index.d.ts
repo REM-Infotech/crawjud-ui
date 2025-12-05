@@ -18,9 +18,14 @@ interface Window {
 
 interface electronAPI {
   loadPreferences: () => Promise<void>;
-  setTitle: (title: string) => Promise<void>;
-  salvarSenha: (login: string, senha: string) => Promise<void>;
-  carregarSenha: (login: string) => Promise<string | null>;
+  authenticateUser: (username: string, password: string) => Promise<boolean>;
+}
+
+interface toastOptions {
+  title?: string;
+  message: string;
+  type: MessageType;
+  timeout: number;
 }
 
 interface ImportMetaEnv {

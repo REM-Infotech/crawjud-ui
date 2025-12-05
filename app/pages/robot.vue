@@ -1,7 +1,5 @@
 <script setup lang="ts">
-onMounted(() => {
-  useRouter().push("/login");
-});
+useRouter().push({ name: "robot-listagem" });
 </script>
 
 <template>
