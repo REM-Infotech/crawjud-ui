@@ -1,0 +1,15 @@
+[
+  {
+    "message": "Carregando",
+    "message_type": "info",
+    "pid": "",
+    "status": "Inicializando",
+    "start_time": "",
+    "row": 0,
+    "total": 0,
+    "erros": 0,
+    "sucessos": 0,
+    "restantes": 0,
+    "link": ""
+  }
+]

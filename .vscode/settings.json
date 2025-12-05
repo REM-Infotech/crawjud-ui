@@ -1,0 +1,17 @@
+{
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": ".github/copilot-commit-message-instructions.md"
+    }
+  ],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "varas.pyi": "varas.json",
+    "cidades.pyi": "cidades.json",
+    "pyproject.toml": "requirements.txt, *.lock,  *.toml, .pre-commit-config.yaml, .python-version, .coveragerc",
+    "requirements.txt": "requirements.*.txt",
+    ".gitattributes": ".gitignore, .gitmodules"
+  },
+  "python.REPL.enableREPLSmartSend": false,
+  "python.analysis.autoImportCompletions": true
+}
