@@ -9,6 +9,7 @@ import renderer from "vite-plugin-electron-renderer";
  * Returns:
  *     object: Configuração do Vite com plugin de cópia.
  */
+const workDir = process.cwd();
 export default defineConfig({
   base: "/",
   plugins: [
@@ -48,5 +49,12 @@ export default defineConfig({
     outDir: resolve(process.cwd(), ".vite/renderer"),
 
     // Outras configurações de build aqui
+  },
+  resolve: {
+    alias: {
+      "@": resolve(workDir, "app"),
+      "#electron": resolve(workDir, "app/electron"),
+      "#utils": resolve(workDir, "app", "electron", "utils"),
+    },
   },
 });

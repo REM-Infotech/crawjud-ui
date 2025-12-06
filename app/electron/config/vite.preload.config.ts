@@ -13,4 +13,11 @@ export default defineConfig({
     minify: isProd,
     watch: isDev ? {} : null,
   },
+  resolve: {
+    alias: {
+      "@": resolve(workDir, "app"),
+      "#electron": resolve(workDir, "app/electron"),
+      "#utils": resolve(workDir, "app", "electron", "utils"),
+    },
+  },
 });

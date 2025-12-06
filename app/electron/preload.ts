@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from "electron";
 
 // ✅ Good code
 contextBridge.exposeInMainWorld("electronAPI", {
+  listagemBots: () => ipcRenderer.invoke("listagem-bots"),
   loadPreferences: () => ipcRenderer.invoke("load-preferences"),
   authenticateUser: (username: string, password: string) =>
     ipcRenderer.invoke("authenticate-user", username, password),

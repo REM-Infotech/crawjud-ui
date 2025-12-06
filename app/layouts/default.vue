@@ -1,20 +1,23 @@
 <script setup lang="ts"></script>
 
 <template>
-  <UiHeader />
-  <div class="layout">
-    <NuxtPage />
+  <div class="content">
+    <UiHeader />
+    <div class="layout">
+      <NuxtPage />
+    </div>
   </div>
 </template>
 
 <style lang="css" scoped>
 .layout {
-  margin-top: 35px;
+  margin-bottom: 45px;
   padding: 25px;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  height: calc(100dvh - 55px);
+  width: 100%;
+  overflow-y: auto;
 }
 
 .page-enter-active,

@@ -1,51 +1,92 @@
+/* =====================
+   Imports & Variables
+   ===================== */
 @import url("datatables.net-dt");
-:root {
-  --p-maroon-50: #b02cf4;
-  --p-maroon-100: #ae27f1;
-  --p-maroon-200: #9f23de;
-  --p-maroon-300: #9520cf;
-  --p-maroon-400: #861cbc;
-  --p-maroon-500: #7c19ae;
-  --p-maroon-600: #6e159b;
-  --p-maroon-700: #64128d;
-  --p-maroon-800: #5a0f80;
-  --p-maroon-900: #4e0c6e;
-  --p-maroon-950: #4a0b6a;
-}
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-body: #f1e2fc;
-    --color-primary: #7c19ae;
-    --color-secondary: #64128d;
-    --color-accent: #4a2655;
-    --bg-input: rgba(253, 226, 151, 0.295);
-    --bg-primary: #ffffff;
-    --bg-secondary: var(--p-maroon-50);
-    --bg-accent: var(--p-maroon-100);
-  }
+:root {
+  /* Maroon Palette */
+  --color-electric-violet-50: #fcf3ff;
+  --color-electric-violet-100: #f7e3ff;
+  --color-electric-violet-200: #f0cdff;
+  --color-electric-violet-300: #e4a5ff;
+  --color-electric-violet-400: #d36cff;
+  --color-electric-violet-500: #c435ff;
+  --color-electric-violet-600: #b50fff;
+  --color-electric-violet-700: #aa00ff;
+  --color-electric-violet-800: #8706c3;
+  --color-electric-violet-900: #6f079c;
+  --color-electric-violet-950: #4d0076;
+
+  /* Flirt Palette */
+  --color-flirt-50: #fef5fd;
+  --color-flirt-100: #fdeafb;
+  --color-flirt-200: #fad4f4;
+  --color-flirt-300: #f6b1ea;
+  --color-flirt-400: #ef83da;
+  --color-flirt-500: #e154c4;
+  --color-flirt-600: #c534a5;
+  --color-flirt-700: #9c267f;
+  --color-flirt-800: #86226d;
+  --color-flirt-900: #6e2158;
+  --color-flirt-950: #480a36;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-body: #1a0826;
-    --color-primary: #eee0f5;
-    --color-secondary: #d1b3e0;
-    --color-accent: #a678c1;
-    --bg-input: #3a0d4a;
-    --bg-primary: var(--p-maroon-950);
-    --bg-secondary: var(--p-maroon-800);
-    --bg-accent: var(--p-maroon-900);
+    --color-primary: var(--color-flirt-50);
+    --color-secondary: var(--color-flirt-100);
+    --color-accent: var(--color-electric-violet-300);
+
+    /* Backgrounds */
+    --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
+    --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(0.4 * 100%), transparent);
+    --bg-accent: var(--color-flirt-300);
+    --bg-input: #1f071862;
   }
 }
 
-/* Global Reset & Base Styles */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-primary: #29061f;
+    --color-secondary: #480a36;
+    --color-accent: #86226d;
+
+    /* Backgrounds */
+
+    --bg-primary: color-mix(in srgb, var(--color-flirt-200) calc(0.9 * 100%), transparent);
+    --bg-secondary: color-mix(in srgb, var(--color-flirt-700) calc(0.8 * 100%), transparent);
+    --bg-accent: var(--color-flirt-600);
+    --bg-input: #f1bae162;
+  }
+}
+
+.content {
+  background-color: color-mix(in srgb, var(--color-flirt-800) calc(0.2 * 100%), transparent);
+  border-radius: 25.5px;
+}
+
+@media (prefers-color-scheme: light) {
+  .content {
+    background-color: color-mix(in srgb, var(--color-flirt-100) calc(0.2 * 100%), transparent);
+  }
+}
+
+/* =====================
+   Reset & Base Styles
+   ===================== */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 100;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE e Edge antigo */
+  transition:
+    color 0.5s,
+    background-color 0.5s;
 }
 
 html {
@@ -56,24 +97,48 @@ html {
 body {
   min-height: 100vh;
   line-height: 1.5;
-  color: #f5f5f5;
+  color: var(--color-primary);
+  background-color: rgba(0, 0, 0, 0);
+  overflow: hidden;
 }
 
+/* =====================
+   Typography
+   ===================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-primary);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+}
+
+/* =====================
+   Elements
+   ===================== */
 a {
   color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s;
 }
 a:hover {
-  color: var(--color-secondary);
+  color: var(--color-primary);
   text-decoration: underline;
 }
 
-ul,
-ol {
-  list-style: none;
+img {
+  max-width: 100%;
+  display: block;
 }
 
+/* =====================
+   Form Elements
+   ===================== */
 [type="text"],
 [type="email"],
 [type="password"] {
@@ -89,7 +154,7 @@ select {
   font-size: 1rem;
   border-radius: 4px;
   border: 1px solid var(--color-accent);
-  background: var(--bg-primary);
+  background: var(--bg-input);
   color: var(--color-primary);
 }
 
@@ -99,46 +164,6 @@ button {
 }
 button:hover {
   background: var(--bg-accent);
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  background: var(--bg-primary);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--bg-accent);
-  border-radius: 8px;
-}
-
-/* Responsive base */
-@media (max-width: 600px) {
-  body {
-    font-size: 0.95rem;
-  }
-}
-body {
-  /* background-color: #0c1920; */
-  background-color: var(--color-body);
-  overflow: hidden;
-}
-
-[class*="card"] {
-  background-color: var(--bg-primary);
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-}
-
-* {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-weight: 100;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE e Edge antigo */
 }
 
 [class*="form-"][type="text"],
@@ -161,15 +186,43 @@ body {
   outline: none !important;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* =====================
+   Utility Classes
+   ===================== */
+.window-box {
+  pointer-events: none; /* permite interação com conteúdo abaixo */
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  border: #470350 solid 3.5px;
+  border-radius: 19.5px;
+  z-index: 9999; /* garante que fique por cima */
+}
+
+[class*="card"] {
   color: var(--color-primary);
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 0.5em;
+  background-color: var(--bg-primary);
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+/* =====================
+   Scrollbar
+   ===================== */
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-accent);
+  border-radius: 8px;
+}
+
+/* =====================
+   Responsive
+   ===================== */
+@media (max-width: 600px) {
+  body {
+    font-size: 0.95rem;
+  }
 }

@@ -1,4 +1,5 @@
 import useAuthService from "@/services/authService";
+import useBotService from "@/services/botService";
 import { app, BrowserWindow } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
@@ -14,6 +15,8 @@ function createWindow() {
     minHeight: 800,
     width: 1280,
     height: 800,
+    frame: false,
+    transparent: true,
     webPreferences: {
       devTools: !app.isPackaged,
       preload: preload_path,
@@ -40,6 +43,7 @@ if (!gotTheLock) {
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
     IpcApp();
+    useBotService();
     useAuthService();
     createWindow();
   });

@@ -18,6 +18,7 @@ interface Window {
 
 interface electronAPI {
   loadPreferences: () => Promise<void>;
+  listagemBots: () => Promise<BotInfo[]>;
   authenticateUser: (username: string, password: string) => Promise<boolean>;
 }
 

@@ -59,8 +59,14 @@ async function handleLogin(event: Event) {
 .card-login {
   width: 400px;
   padding: 30px;
-  background-color: var(--bg-primary);
+  background-color: color-mix(in srgb, var(--color-flirt-950) calc(0.4 * 100%), transparent);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+@media (prefers-color-scheme: light) {
+  .card-login {
+    background-color: color-mix(in srgb, var(--color-flirt-200) calc(0.6 * 100%), transparent);
+  }
 }
 </style>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MingcuteCloseSquareLine from "~icons/mingcute/close-square-line?width=48px&height=48px";
 const routerName = ref(useRoute().name);
 const currentRoute = computed(() => routerName.value);
 watch(
@@ -34,6 +35,13 @@ const isLoginOrIndex = computed(() => {
             </NuxtLink>
           </li>
         </ul>
+        <div class="window-buttons">
+          <button is="window-button" aria-label="Minimize"></button>
+          <button aria-label="Maximize">#480a36#480a36</button>
+          <button is="window-button" aria-label="Close">
+            <MingcuteCloseSquareLine />
+          </button>
+        </div>
       </div>
     </Transition>
   </div>
@@ -46,31 +54,31 @@ const isLoginOrIndex = computed(() => {
 }
 
 .navbar {
+  padding: 25px;
   height: 100%;
   display: flex;
+  padding: 2px;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
-  background-color: #f5f5f5;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 15.5px 15.5px;
+  background-color: var(--bg-primary);
+  box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 25.5px;
+  app-region: drag;
+  width: 100%;
 }
+
+.window-buttons {
+  margin-left: auto;
+  app-region: no-drag;
+}
+
 .nav-items {
   list-style: none;
   margin: 0;
-  padding: 0;
   display: flex;
   gap: 15px;
   justify-content: center;
-}
-@media (prefers-color-scheme: dark) {
-  .navbar {
-    background-color: var(--p-maroon-950) !important;
-    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-  }
-  .nav-items li {
-    color: #ffffff;
-  }
+  app-region: no-drag;
 }
 
 .navbar-anim-enter-active,
@@ -80,6 +88,6 @@ const isLoginOrIndex = computed(() => {
 
 .navbar-anim-enter-from,
 .navbar-anim-leave-to {
-  transform: translateY(-45px);
+  opacity: 0;
 }
 </style>

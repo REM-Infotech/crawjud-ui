@@ -17,6 +17,7 @@ export default defineConfig({
     alias: {
       "@": resolve(workDir, "app"),
       "#electron": resolve(workDir, "app/electron"),
+      "#utils": resolve(workDir, "app", "electron", "utils"),
     },
   },
 });
