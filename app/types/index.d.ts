@@ -20,6 +20,9 @@ interface electronAPI {
   loadPreferences: () => Promise<void>;
   listagemBots: () => Promise<BotInfo[]>;
   authenticateUser: (username: string, password: string) => Promise<boolean>;
+  closeWindow: () => Promise<void>;
+  maximizeWindow: () => Promise<void>;
+  minimizeWindow: () => Promise<void>;
 }
 
 interface toastOptions {
@@ -54,14 +57,9 @@ interface NotificationOptions {
   tag?: string;
 }
 
-interface IElectronAPI {
-  loadPreferences: () => Promise<void>;
-  setTitle: (title: string) => Promise<void>;
-}
-
 declare global {
   interface Window {
-    electronAPI: IElectronAPI;
+    electronAPI: electronAPI;
   }
 }
 

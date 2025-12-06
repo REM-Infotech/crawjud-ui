@@ -58,6 +58,7 @@
     "@eslint/json": "^0.14.0",
     "@eslint/markdown": "^7.5.1",
     "@iconify-json/bi": "^1.2.6",
+    "@iconify-json/material-symbols-light": "^1.2.49",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/mingcute": "^1.2.5",
     "@tsconfig/node22": "^22.0.2",

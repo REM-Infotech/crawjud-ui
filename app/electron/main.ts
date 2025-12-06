@@ -11,8 +11,6 @@ let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 function createWindow() {
   mainWindow = new BrowserWindow({
     title: "CrawJUD",
-    minWidth: 1280,
-    minHeight: 800,
     width: 1280,
     height: 800,
     frame: false,
@@ -22,6 +20,21 @@ function createWindow() {
       preload: preload_path,
     },
   });
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    const currentUrl = mainWindow?.webContents.getURL();
+    if (url !== currentUrl) {
+      event.preventDefault();
+    }
+  });
+
+  mainWindow.webContents.on("before-input-event", (event, input) => {
+    const isBack = input.key === "BrowserBack" || (input.key === "ArrowLeft" && input.alt);
+
+    if (isBack) {
+      event.preventDefault();
+    }
+  });
+
   if (process.argv.includes("--devtools") || !app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import MingcuteCloseSquareLine from "~icons/mingcute/close-square-line?width=48px&height=48px";
+import MaterialSymbolsLightCloseRounded from "~icons/material-symbols-light/close-rounded?width=48px&height=48px";
+import MaterialSymbolsLightMinimizeRounded from "~icons/material-symbols-light/minimize-rounded?width=48px&height=48px";
+import MaterialSymbolsLightOpenInFullRounded from "~icons/material-symbols-light/open-in-full-rounded?width=48px&height=48px";
 const routerName = ref(useRoute().name);
 const currentRoute = computed(() => routerName.value);
 watch(
@@ -12,6 +14,17 @@ watch(
 const isLoginOrIndex = computed(() => {
   return currentRoute.value === "index" || currentRoute.value === "login";
 });
+
+const closeWindow = () => {
+  window.electronAPI.closeWindow();
+};
+
+const minimizeWindow = () => {
+  window.electronAPI.minimizeWindow();
+};
+const maximizeWindow = () => {
+  window.electronAPI.maximizeWindow();
+};
 </script>
 
 <template>
@@ -36,10 +49,14 @@ const isLoginOrIndex = computed(() => {
           </li>
         </ul>
         <div class="window-buttons">
-          <button is="window-button" aria-label="Minimize"></button>
-          <button aria-label="Maximize">#480a36#480a36</button>
-          <button is="window-button" aria-label="Close">
-            <MingcuteCloseSquareLine />
+          <button class="minimize-window">
+            <MaterialSymbolsLightMinimizeRounded @click="minimizeWindow" />
+          </button>
+          <button class="maximize-window">
+            <MaterialSymbolsLightOpenInFullRounded @click="maximizeWindow" />
+          </button>
+          <button class="close-window" @click="closeWindow">
+            <MaterialSymbolsLightCloseRounded />
           </button>
         </div>
       </div>
@@ -67,11 +84,6 @@ const isLoginOrIndex = computed(() => {
   width: 100%;
 }
 
-.window-buttons {
-  margin-left: auto;
-  app-region: no-drag;
-}
-
 .nav-items {
   list-style: none;
   margin: 0;
@@ -89,5 +101,36 @@ const isLoginOrIndex = computed(() => {
 .navbar-anim-enter-from,
 .navbar-anim-leave-to {
   opacity: 0;
+}
+
+.window-buttons {
+  margin-left: auto;
+  justify-content: center;
+  align-items: center;
+  app-region: no-drag;
+  padding: 2px;
+  display: flex;
+  gap: 10px;
+  margin-right: 15px;
+}
+
+.minimize-window,
+.maximize-window,
+.close-window {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  width: 32px;
+  height: 32px;
+  border: none;
+}
+
+.maximize-window:hover,
+.minimize-window:hover,
+.close-window:hover {
+  background-color: var(--bg-secondary);
+
+  cursor: pointer;
 }
 </style>
