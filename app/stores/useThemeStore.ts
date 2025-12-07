@@ -25,19 +25,20 @@ export default defineStore("themeStore", () => {
       theme === "system" ? (isDark ? "dark" : "light") : theme,
     );
 
-    callableThemes[theme]();
+    await callableThemes[theme]();
   }
 
   async function toggleTheme() {
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     rowTheme.value = (rowTheme.value + 1) % themes.length;
     const selectedTheme = themes[rowTheme.value] as Theme;
+
+    await callableThemes[selectedTheme]();
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
     document.documentElement.setAttribute(
       "app-theme",
       selectedTheme === "system" ? (isDark ? "dark" : "light") : selectedTheme,
     );
-
-    callableThemes[selectedTheme]();
   }
 
   return { current, loadTheme, toggleTheme, themes, rowTheme };

@@ -53,7 +53,7 @@
   /* Backgrounds */
   --bg-input: #1f071862;
   --bg-card: var(--color-flirt-950);
-  --bg-accent: var(--color-flirt-300);
+  --bg-accent: var(--color-electric-violet-900);
   --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
   --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(0.4 * 100%), transparent);
   --bg-box-shadow: 0 0 5px rgba(255, 254, 254, 0.2);
@@ -73,7 +73,7 @@
   --bg-card: var(--color-maroon-600);
   --bg-primary: color-mix(in srgb, var(--color-flirt-200) calc(0.9 * 100%), transparent);
   --bg-secondary: color-mix(in srgb, var(--color-flirt-700) calc(0.8 * 100%), transparent);
-  --bg-accent: var(--color-flirt-600);
+
   --bg-input: #f1bae162;
   --bg-box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
   --background-color-container: var(--color-flirt-100);
