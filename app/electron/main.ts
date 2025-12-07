@@ -13,8 +13,8 @@ let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 function createWindow() {
   mainWindow = new BrowserWindow({
     title: "CrawJUD",
-    width: 1280,
-    height: 800,
+    width: 1360,
+    height: 768,
     frame: false,
     transparent: true,
     webPreferences: {
@@ -45,7 +45,7 @@ function createWindow() {
     return;
   }
 
-  mainWindow.loadURL("http://localhost:3000/#/login");
+  mainWindow.loadURL("http://localhost:3000/#/");
 }
 
 const gotTheLock = app.requestSingleInstanceLock();

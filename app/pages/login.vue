@@ -67,7 +67,7 @@ async function handleLogin(event: Event) {
 
 @media (prefers-color-scheme: light) {
   .card-login {
-    background-color: color-mix(in srgb, var(--color-flirt-200) calc(0.6 * 100%), transparent);
+    background-color: color-mix(in srgb, var(--color-flirt-200) calc(0.8 * 100%), transparent);
   }
 }
 </style>

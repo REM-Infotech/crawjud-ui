@@ -7,8 +7,8 @@ onBeforeMount(loadTheme);
 </script>
 
 <template>
-  <div class="window-box" />
   <BApp>
+    <div class="window-box" />
     <Loading />
     <AppToast />
     <NuxtLayout />

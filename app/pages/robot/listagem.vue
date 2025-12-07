@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
-
 const listagemRobos = useListagemRobos();
 const listagem = computed<BotInfo[]>(() => listagemRobos.data);
 
@@ -11,16 +10,53 @@ onBeforeMount(async () => {
 onUnmounted(() => {
   listagemRobos.data = [];
 });
+
+const modal = ref(false);
+
+watch(
+  () => modal,
+  async (newValue) => {
+    if (!modal) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      selectedBot.value = undefined;
+    }
+  },
+);
+
+const selectedBot = ref<BotInfo>();
+
+function setSelectedBot(bot: BotInfo) {
+  modal.value = true;
+  selectedBot.value = bot;
+}
 </script>
 
 <template>
   <Container :main-class="'container-fluid'">
+    <AppModal v-model="modal">
+      <template #header>
+        <span class="fs-4 fw-bold">
+          {{ selectedBot?.display_name }}
+        </span>
+      </template>
+      <template #body>
+        <AppDropFile />
+      </template>
+    </AppModal>
+    <div
+      class="modal fade"
+      id="modalBot"
+      aria-hidden="true"
+      aria-labelledby="exampleModalToggleLabel"
+      tabindex="-1"
+    ></div>
     <template #heading> Robos Page </template>
     <TransitionGroup tag="div" name="bots" class="row">
-      <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
+      <div class="col-lg-3 col-xl-3 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">
           <div class="card-header">
-            <span class="text-white">
+            <span class="text-white fw-bold fs-6">
               {{ bot.display_name }}
             </span>
           </div>
@@ -40,7 +76,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="card-footer d-flex">
-            <button class="button-execute">Executar</button>
+            <button class="button-execute" @click="setSelectedBot(bot)">Executar</button>
             <button class="button-bot">Ver Logs</button>
           </div>
         </div>
@@ -83,15 +119,19 @@ onUnmounted(() => {
 }
 
 .button-execute {
-  width: 9em;
+  width: 7.2em;
   height: 2.5em;
   padding: 5px;
   font-weight: bold;
   background-color: rgba(35, 180, 6, 0.568);
 }
 
+.button-execute:hover {
+  background-color: rgb(63, 94, 17);
+}
+
 .button-bot {
-  width: 9em;
+  width: 7.2em;
   height: 2.5em;
   padding: 5px;
   font-weight: bold;

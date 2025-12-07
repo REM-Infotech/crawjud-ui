@@ -33,41 +33,43 @@ watch(
     routerName.value = newName as string;
   },
 );
+
+const iconTheme = () => {
+  return {
+    light: MaterialSymbolsLightSunnyOutline,
+    dark: MaterialSymbolsLightMoonStarsOutlineRounded,
+    system: MaterialSymbolsLightNightSightAuto,
+  }[current.value];
+};
 </script>
 
 <template>
   <div class="header">
     <Transition name="navbar-anim" mode="out-in">
-      <div class="navbar" v-if="!isLoginOrIndex">
-        <ul class="nav-items">
-          <li class="nav-item">
-            <NuxtLink :to="{ name: 'dashboard' }">
-              <span> Dashboard </span>
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink :to="{ name: 'robot-listagem' }">
-              <span> Robôs </span>
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink :to="{ name: 'index' }">
-              <span> Configurações </span>
-            </NuxtLink>
-          </li>
-        </ul>
+      <div class="navbar" v-if="currentRoute !== 'index'">
+        <Transition name="navbar-anim" mode="out-in">
+          <ul class="nav-items" v-if="!isLoginOrIndex">
+            <li class="nav-item">
+              <NuxtLink :to="{ name: 'dashboard' }">
+                <span> Dashboard </span>
+              </NuxtLink>
+            </li>
+            <li class="nav-item">
+              <NuxtLink :to="{ name: 'robot-listagem' }">
+                <span> Robôs </span>
+              </NuxtLink>
+            </li>
+            <li class="nav-item">
+              <NuxtLink :to="{ name: 'index' }">
+                <span> Configurações </span>
+              </NuxtLink>
+            </li>
+          </ul>
+        </Transition>
         <div class="window-buttons">
           <button class="change-theme" @click="toggleTheme">
             <Transition name="icon" mode="out-in">
-              <MaterialSymbolsLightSunnyOutline class="icon-button" v-if="current === 'light'" />
-              <MaterialSymbolsLightMoonStarsOutlineRounded
-                class="icon-button"
-                v-else-if="current === 'dark'"
-              />
-              <MaterialSymbolsLightNightSightAuto
-                class="icon-button"
-                v-else-if="current === 'system'"
-              />
+              <component :is="iconTheme()" class="icon-button" />
             </Transition>
           </button>
           <button class="minimize-window">
@@ -98,11 +100,19 @@ watch(
   padding: 2px;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-primary);
-  box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 20.5px;
   app-region: drag;
   width: 100%;
+}
+
+[app-theme="dark"] .navbar {
+  box-shadow: 0 0 4px 4px rgba(255, 255, 255, 0.1);
+  background-color: var(--color-flirt-900);
+}
+
+[app-theme="light"] .navbar {
+  box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-flirt-100);
 }
 
 .nav-items {
@@ -112,6 +122,7 @@ watch(
   gap: 15px;
   justify-content: center;
   app-region: no-drag;
+  font-weight: bolder;
 }
 
 .navbar-anim-enter-active,
