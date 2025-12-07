@@ -5,6 +5,19 @@
 
 :root {
   /* Maroon Palette */
+
+  --color-maroon-50: #b02cf4;
+  --color-maroon-100: #ae27f1;
+  --color-maroon-200: #9f23de;
+  --color-maroon-300: #9520cf;
+  --color-maroon-400: #861cbc;
+  --color-maroon-500: #7c19ae;
+  --color-maroon-600: #6e159b;
+  --color-maroon-700: #64128d;
+  --color-maroon-800: #5a0f80;
+  --color-maroon-900: #4e0c6e;
+  --color-maroon-950: #4a0b6a;
+
   --color-electric-violet-50: #fcf3ff;
   --color-electric-violet-100: #f7e3ff;
   --color-electric-violet-200: #f0cdff;
@@ -39,6 +52,7 @@
 
   /* Backgrounds */
   --bg-input: #1f071862;
+  --bg-card: var(--color-flirt-950);
   --bg-accent: var(--color-flirt-300);
   --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
   --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(0.4 * 100%), transparent);
@@ -56,8 +70,7 @@
   --color-secondary: #480a36;
   --color-accent: #86226d;
 
-  /* Backgrounds */
-
+  --bg-card: var(--color-maroon-600);
   --bg-primary: color-mix(in srgb, var(--color-flirt-200) calc(0.9 * 100%), transparent);
   --bg-secondary: color-mix(in srgb, var(--color-flirt-700) calc(0.8 * 100%), transparent);
   --bg-accent: var(--color-flirt-600);
@@ -85,8 +98,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-weight: 100;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE e Edge antigo */
   transition:
@@ -117,10 +128,6 @@ h4,
 h5,
 h6 {
   color: var(--color-primary);
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 0.5em;
 }
 
 /* =====================
@@ -155,8 +162,6 @@ button,
 input,
 textarea,
 select {
-  font-family: inherit;
-  font-size: 1rem;
   border-radius: 4px;
   border: 1px solid var(--color-accent);
   background: var(--bg-input);
@@ -210,9 +215,9 @@ button:hover {
 
 [class*="card"] {
   color: var(--color-primary);
-  background-color: var(--color-flirt-950);
+  background-color: var(--bg-card);
   border: none;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.48) 0px 6px 16px;
 }
 
 /* =====================

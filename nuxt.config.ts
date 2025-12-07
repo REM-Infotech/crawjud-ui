@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
-  css: ["bootstrap/dist/css/bootstrap.min.css", "~/assets/css/main.css"],
+  css: ["bootstrap/dist/css/bootstrap.css", "~/assets/css/main.css"],
   modules: ["@bootstrap-vue-next/nuxt", "@pinia/nuxt"],
   plugins: ["~/plugins/bootstrap.client.ts", "~/plugins/datatables.client.ts"],
   telemetry: false,

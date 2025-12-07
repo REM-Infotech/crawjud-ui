@@ -1,19 +1,44 @@
 import { defineStore } from "pinia";
 
-type Theme = "light" | "dark" | "auto";
-
 export default defineStore("themeStore", () => {
-  const current = ref<Theme>("auto");
-  const mediaTheme = computed(() =>
-    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
-  );
+  const themes: Theme[] = ["dark", "light", "system"];
 
-  function setTheme() {
-    if (current.value === "auto") {
-      document.documentElement.setAttribute("app-theme", mediaTheme.value);
-      return;
-    }
-    document.documentElement.setAttribute("app-theme", current.value);
+  const callableThemes: Record<Theme, () => Promise<void>> = {
+    dark: window.electronAPI.toggleDarkMode,
+    light: window.electronAPI.toggleLightMode,
+    system: window.electronAPI.toggleToSystem,
+  };
+
+  const rowTheme = ref(0);
+  const current = computed(() => themes[rowTheme.value] as Theme);
+
+  async function loadTheme() {
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const currentPreset = await window.electronAPI.currentPreset();
+
+    const presetIndex = themes.indexOf(currentPreset as Theme);
+    rowTheme.value = presetIndex !== -1 ? presetIndex : 1; // default to "light" if not found
+
+    const theme = themes[rowTheme.value] as Theme;
+    document.documentElement.setAttribute(
+      "app-theme",
+      theme === "system" ? (isDark ? "dark" : "light") : theme,
+    );
+
+    callableThemes[theme]();
   }
-  return { mediaTheme, current, setTheme };
+
+  async function toggleTheme() {
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    rowTheme.value = (rowTheme.value + 1) % themes.length;
+    const selectedTheme = themes[rowTheme.value] as Theme;
+    document.documentElement.setAttribute(
+      "app-theme",
+      selectedTheme === "system" ? (isDark ? "dark" : "light") : selectedTheme,
+    );
+
+    callableThemes[selectedTheme]();
+  }
+
+  return { current, loadTheme, toggleTheme, themes, rowTheme };
 });

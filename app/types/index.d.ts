@@ -8,6 +8,8 @@ type KeywordArgs = {
   duration: number;
 };
 
+type Theme = "dark" | "light" | "system";
+
 interface Window {
   jQuery: typeof jQuery;
   $: typeof jQuery;
@@ -23,7 +25,10 @@ interface electronAPI {
   closeWindow: () => Promise<void>;
   maximizeWindow: () => Promise<void>;
   minimizeWindow: () => Promise<void>;
-  getColorMode: () => Promise<"light" | "dark">;
+  toggleDarkMode: () => Promise<void>;
+  toggleToSystem: () => Promise<void>;
+  toggleLightMode: () => Promise<void>;
+  currentPreset: () => Promise<Theme>;
 }
 
 interface toastOptions {

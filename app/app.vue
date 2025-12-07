@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import AppToast from "./components/AppToast.vue";
 
-const theme = useThemeStore();
+const { loadTheme } = useThemeStore();
 
-onBeforeMount(() => {
-  theme.setTheme();
-});
+onBeforeMount(loadTheme);
 </script>
 
 <template>

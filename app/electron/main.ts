@@ -1,5 +1,7 @@
 import useAuthService from "@/services/authService";
 import useBotService from "@/services/botService";
+import useThemeService from "@/services/themeService";
+
 import { app, BrowserWindow } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
@@ -59,6 +61,7 @@ if (!gotTheLock) {
     useBotService();
     useAuthService();
     createWindow();
+    useThemeService();
   });
 
   app.on("window-all-closed", () => {

@@ -2,10 +2,13 @@
 import MaterialSymbolsLightCloseRounded from "~icons/material-symbols-light/close-rounded?width=48px&height=48px";
 import MaterialSymbolsLightMinimizeRounded from "~icons/material-symbols-light/minimize-rounded?width=48px&height=48px";
 import MaterialSymbolsLightMoonStarsOutlineRounded from "~icons/material-symbols-light/moon-stars-outline-rounded?width=48px&height=48px";
+import MaterialSymbolsLightNightSightAuto from "~icons/material-symbols-light/night-sight-auto?width=48px&height=48px";
 import MaterialSymbolsLightOpenInFullRounded from "~icons/material-symbols-light/open-in-full-rounded?width=48px&height=48px";
 import MaterialSymbolsLightSunnyOutline from "~icons/material-symbols-light/sunny-outline?width=48px&height=48px";
 
-const theme = useThemeStore();
+const { current } = storeToRefs(useThemeStore());
+const { toggleTheme } = useThemeStore();
+
 const routerName = ref(useRoute().name);
 const currentRoute = computed(() => routerName.value);
 const isLoginOrIndex = computed(() => {
@@ -54,15 +57,16 @@ watch(
           </li>
         </ul>
         <div class="window-buttons">
-          <button class="change-theme" @click="theme.setTheme()">
+          <button class="change-theme" @click="toggleTheme">
             <Transition name="icon" mode="out-in">
-              <MaterialSymbolsLightSunnyOutline
-                v-if="theme.current === 'light'"
-                class="icon-button"
-              />
+              <MaterialSymbolsLightSunnyOutline class="icon-button" v-if="current === 'light'" />
               <MaterialSymbolsLightMoonStarsOutlineRounded
-                v-else-if="theme.current === 'dark'"
                 class="icon-button"
+                v-else-if="current === 'dark'"
+              />
+              <MaterialSymbolsLightNightSightAuto
+                class="icon-button"
+                v-else-if="current === 'system'"
               />
             </Transition>
           </button>

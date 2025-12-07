@@ -20,7 +20,11 @@ onUnmounted(() => {
           <div class="card-header">
             {{ bot.display_name }}
           </div>
-          <div class="card-body">teste!</div>
+          <div class="card-body">
+            <span class="text-descricao">
+              {{ bot.descricao }}
+            </span>
+          </div>
         </div>
       </div>
     </TransitionGroup>
@@ -36,6 +40,15 @@ onUnmounted(() => {
 .bots-leave-to {
   opacity: 0;
   transform: translateY(20px);
+}
+
+.card {
+  padding: 15px;
+}
+
+.card-header {
+  border-bottom: 1px solid black;
+  font-weight: bold;
 }
 
 .card-body {
