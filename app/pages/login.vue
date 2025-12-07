@@ -23,6 +23,7 @@ async function handleLogin(event: Event) {
     variant: authenticated ? "success" : "danger",
   });
   load.hide();
+  useRouter().push({ name: "dashboard" });
 }
 </script>
 
@@ -59,7 +60,7 @@ async function handleLogin(event: Event) {
 .card-login {
   width: 400px;
   padding: 30px;
-  background-color: color-mix(in srgb, var(--color-flirt-950) calc(0.4 * 100%), transparent);
+  background-color: var(--color-flirt-950);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
