@@ -5,28 +5,12 @@ import MaterialSymbolsLightMoonStarsOutlineRounded from "~icons/material-symbols
 import MaterialSymbolsLightOpenInFullRounded from "~icons/material-symbols-light/open-in-full-rounded?width=48px&height=48px";
 import MaterialSymbolsLightSunnyOutline from "~icons/material-symbols-light/sunny-outline?width=48px&height=48px";
 
+const theme = useThemeStore();
 const routerName = ref(useRoute().name);
 const currentRoute = computed(() => routerName.value);
-
 const isLoginOrIndex = computed(() => {
   return currentRoute.value === "index" || currentRoute.value === "login";
 });
-
-const darkMode = ref(false);
-
-watch(
-  () => darkMode.value,
-  async (newVal) => {
-    const nuxtApp = useNuxtApp();
-    if (newVal) {
-      nuxtApp.$colormode.setTheme("dark");
-      return;
-    }
-    nuxtApp.$colormode.setTheme("light");
-  },
-);
-
-const { $colormode: colormode } = useNuxtApp();
 
 const closeWindow = () => {
   window.electronAPI.closeWindow();
@@ -35,6 +19,7 @@ const closeWindow = () => {
 const minimizeWindow = () => {
   window.electronAPI.minimizeWindow();
 };
+
 const maximizeWindow = () => {
   window.electronAPI.maximizeWindow();
 };
@@ -69,10 +54,16 @@ watch(
           </li>
         </ul>
         <div class="window-buttons">
-          <button class="change-theme" @click="darkMode = !darkMode">
+          <button class="change-theme" @click="theme.setTheme()">
             <Transition name="icon" mode="out-in">
-              <MaterialSymbolsLightSunnyOutline v-if="!darkMode" class="icon-button" />
-              <MaterialSymbolsLightMoonStarsOutlineRounded v-else class="icon-button" />
+              <MaterialSymbolsLightSunnyOutline
+                v-if="theme.current === 'light'"
+                class="icon-button"
+              />
+              <MaterialSymbolsLightMoonStarsOutlineRounded
+                v-else-if="theme.current === 'dark'"
+                class="icon-button"
+              />
             </Transition>
           </button>
           <button class="minimize-window">

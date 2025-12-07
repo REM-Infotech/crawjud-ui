@@ -29,6 +29,7 @@
   --color-flirt-800: #86226d;
   --color-flirt-900: #6e2158;
   --color-flirt-950: #480a36;
+  --color-flirt-1000: #1e0416;
 }
 
 [app-theme="dark"] {
@@ -42,7 +43,7 @@
   --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
   --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(0.4 * 100%), transparent);
   --bg-box-shadow: 0 0 5px rgba(255, 254, 254, 0.2);
-  --background-color-container: var(--color-flirt-800);
+  --background-color-container: #1e0416;
   --background-color-content: color-mix(
     in srgb,
     var(--color-flirt-800) calc(0.2 * 100%),
@@ -209,7 +210,7 @@ button:hover {
 
 [class*="card"] {
   color: var(--color-primary);
-  background-color: var(--bg-primary);
+  background-color: var(--color-flirt-950);
   border: none;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
