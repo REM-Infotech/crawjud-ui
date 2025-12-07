@@ -23,6 +23,7 @@ interface electronAPI {
   closeWindow: () => Promise<void>;
   maximizeWindow: () => Promise<void>;
   minimizeWindow: () => Promise<void>;
+  getColorMode: () => Promise<"light" | "dark">;
 }
 
 interface toastOptions {

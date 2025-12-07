@@ -41,8 +41,4 @@ onUnmounted(() => {
 .card-body {
   height: 280px;
 }
-
-.card {
-  background-color: var(--color-flirt-950);
-}
 </style>

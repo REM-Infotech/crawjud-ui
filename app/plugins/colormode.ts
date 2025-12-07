@@ -12,11 +12,11 @@ class ColorModeBootstrap {
   public setTheme(theme: string) {
     if (theme === "auto") {
       document.documentElement.setAttribute(
-        "data-bs-theme",
+        "app-theme",
         window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
       );
     } else {
-      document.documentElement.setAttribute("data-bs-theme", theme);
+      document.documentElement.setAttribute("app-theme", theme);
     }
   }
 
@@ -38,10 +38,10 @@ class ColorModeBootstrap {
 
     const themeSwitcherText = document.querySelector("#bd-theme-text");
     const activeThemeIcon = document.querySelector(".theme-icon-active use");
-    const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
+    const btnToActive = document.querySelector(`[app-theme-value="${theme}"]`);
     const svgOfActiveBtn = btnToActive?.querySelector("svg use")?.getAttribute("href");
 
-    document.querySelectorAll("[data-bs-theme-value]").forEach((element) => {
+    document.querySelectorAll("[app-theme-value]").forEach((element) => {
       element.classList.remove("active");
       element.setAttribute("aria-pressed", "false");
     });
@@ -69,9 +69,9 @@ class ColorModeBootstrap {
       window.addEventListener("DOMContentLoaded", () => {
         this.showActiveTheme(this.getPreferredTheme());
 
-        document.querySelectorAll("[data-bs-theme-value]").forEach((toggle) => {
+        document.querySelectorAll("[app-theme-value]").forEach((toggle) => {
           toggle.addEventListener("click", () => {
-            const theme: string = toggle.getAttribute("data-bs-theme-value") as string;
+            const theme: string = toggle.getAttribute("app-theme-value") as string;
             this.setStoredTheme(theme);
             this.setTheme(theme);
             this.showActiveTheme(theme, true);

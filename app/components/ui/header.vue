@@ -1,19 +1,32 @@
 <script setup lang="ts">
 import MaterialSymbolsLightCloseRounded from "~icons/material-symbols-light/close-rounded?width=48px&height=48px";
 import MaterialSymbolsLightMinimizeRounded from "~icons/material-symbols-light/minimize-rounded?width=48px&height=48px";
+import MaterialSymbolsLightMoonStarsOutlineRounded from "~icons/material-symbols-light/moon-stars-outline-rounded?width=48px&height=48px";
 import MaterialSymbolsLightOpenInFullRounded from "~icons/material-symbols-light/open-in-full-rounded?width=48px&height=48px";
+import MaterialSymbolsLightSunnyOutline from "~icons/material-symbols-light/sunny-outline?width=48px&height=48px";
+
 const routerName = ref(useRoute().name);
 const currentRoute = computed(() => routerName.value);
-watch(
-  () => useRoute().name,
-  (newName) => {
-    routerName.value = newName as string;
-  },
-);
 
 const isLoginOrIndex = computed(() => {
   return currentRoute.value === "index" || currentRoute.value === "login";
 });
+
+const darkMode = ref(false);
+
+watch(
+  () => darkMode.value,
+  async (newVal) => {
+    const nuxtApp = useNuxtApp();
+    if (newVal) {
+      nuxtApp.$colormode.setTheme("dark");
+      return;
+    }
+    nuxtApp.$colormode.setTheme("light");
+  },
+);
+
+const { $colormode: colormode } = useNuxtApp();
 
 const closeWindow = () => {
   window.electronAPI.closeWindow();
@@ -25,6 +38,13 @@ const minimizeWindow = () => {
 const maximizeWindow = () => {
   window.electronAPI.maximizeWindow();
 };
+
+watch(
+  () => useRoute().name,
+  (newName) => {
+    routerName.value = newName as string;
+  },
+);
 </script>
 
 <template>
@@ -49,6 +69,12 @@ const maximizeWindow = () => {
           </li>
         </ul>
         <div class="window-buttons">
+          <button class="change-theme" @click="darkMode = !darkMode">
+            <Transition name="icon" mode="out-in">
+              <MaterialSymbolsLightSunnyOutline v-if="!darkMode" class="icon-button" />
+              <MaterialSymbolsLightMoonStarsOutlineRounded v-else class="icon-button" />
+            </Transition>
+          </button>
           <button class="minimize-window">
             <MaterialSymbolsLightMinimizeRounded @click="minimizeWindow" />
           </button>
@@ -79,7 +105,7 @@ const maximizeWindow = () => {
   justify-content: center;
   background-color: var(--bg-primary);
   box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 25.5px;
+  border-radius: 20.5px;
   app-region: drag;
   width: 100%;
 }
@@ -101,6 +127,25 @@ const maximizeWindow = () => {
 .navbar-anim-enter-from,
 .navbar-anim-leave-to {
   opacity: 0;
+}
+
+.change-theme {
+  background-color: transparent;
+  border: none;
+  margin-right: 30px;
+}
+
+.change-theme:hover {
+  cursor: pointer;
+  box-shadow: var(--bg-box-shadow);
+}
+
+.icon-button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .window-buttons {
@@ -130,7 +175,23 @@ const maximizeWindow = () => {
 .minimize-window:hover,
 .close-window:hover {
   background-color: var(--bg-secondary);
-
   cursor: pointer;
+}
+
+.icon-enter-active,
+.icon-leave-active {
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.icon-enter-from,
+.icon-leave-to {
+  opacity: 0;
+  transform: scale(0.7) rotate(-20deg);
+}
+.icon-enter-to,
+.icon-leave-from {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
 }
 </style>
