@@ -3,7 +3,7 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld("electronAPI", {
   fileDialog: () => ipcRenderer.invoke("file-dialog"),
   isJwtToken: () => ipcRenderer.invoke("is-jwt-token"),
-  listagemBots: () => ipcRenderer.invoke("listagem-bots"),
+
   loadPreferences: () => ipcRenderer.invoke("load-preferences"),
   closeWindow: () => ipcRenderer.send("close-window"),
   maximizeWindow: () => ipcRenderer.send("maximize-window"),
@@ -14,6 +14,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
   currentPreset: () => ipcRenderer.invoke("dark-mode:current-preset"),
   authenticateUser: (username: string, password: string) =>
     ipcRenderer.invoke("authenticate-user", username, password),
+});
+
+contextBridge.exposeInMainWorld("botApi", {
+  listagemBots: () => ipcRenderer.invoke("listagem-bots"),
+  listagemCredenciais: (sistema: SystemBots) => ipcRenderer.invoke("listagem-credenciais", sistema),
 });
 
 window.addEventListener("keypress", (e) => {

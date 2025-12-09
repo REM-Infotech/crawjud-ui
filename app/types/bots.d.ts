@@ -1,7 +1,7 @@
 /**
  * Representa os sistemas judiciais suportados.
  */
-type SytemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
+type SystemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
 /**
  * Define os tipos de formulários de configuração disponíveis.
  */
@@ -23,7 +23,7 @@ type StatusBot = "Inicializando" | "Em Execução" | "Finalizado";
  * @property {number} Id - Identificador único do robô.
  * @property {ConfigForm} configuracao_form - Tipo de formulário usado.
  * @property {string} display_name - Nome exibido na interface.
- * @property {SytemBots} sistema - Sistema judicial associado.
+ * @property {SystemBots} sistema - Sistema judicial associado.
  * @property {string} descricao - Descrição do robô.
  * @property {string} categoria - Categoria do robô.
  */
@@ -31,7 +31,7 @@ interface BotInfo {
   Id: number;
   configuracao_form: ConfigForm;
   display_name: string;
-  sistema: SytemBots;
+  sistema: SystemBots;
   descricao: string;
   categoria: string;
 }

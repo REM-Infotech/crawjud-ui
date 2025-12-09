@@ -1,18 +1,28 @@
 <script setup lang="ts">
-type FileInput = File | File[] | undefined;
+import MaterialSymbolsLightCloudUpload from "~icons/material-symbols-light/cloud-upload?width=48px&height=48px";
+import MaterialSymbolsLightFilePresent from "~icons/material-symbols-light/file-present?width=64px&height=64px";
 const model = defineModel<FileInput>({ default: undefined });
 
 const files = ref<File[]>();
 const isDragging = ref(false);
 
+function removeFile(idx: number) {
+  console.log(idx);
+  console.log(model.value);
+  if (Array.isArray(model.value)) {
+    model.value.splice(idx, 1);
+  }
+}
+
 async function loadFile() {
   const filesLoad = await window.electronAPI.fileDialog();
 
-  if (filesLoad) {
+  if (filesLoad.length > 0) {
+    console.log(filesLoad);
+    model.value = [] as File[];
     for (const file of filesLoad) {
       const fl = new File([file.buffer as BlobPart], file.name, { type: file.type });
-      console.log(fl);
-      files.value?.push(...[fl]);
+      model.value.push(fl);
     }
   }
 }
@@ -47,7 +57,9 @@ function onDragOver(e: DragEvent) {
 <template>
   <div class="droparea">
     <div
-      :class="isDragging ? 'dropfile-area dragging' : 'dropfile-area'"
+      :class="
+        model ? 'dropfile-area file' : isDragging ? 'dropfile-area dragging' : 'dropfile-area'
+      "
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
@@ -64,11 +76,18 @@ function onDragOver(e: DragEvent) {
         accept=".pdf,.jpg,.jpeg,.png"
       />
       <Transition name="file" mode="out-in">
-        <div v-if="model" class="file-text fw-bold">
-          {{ model ? (Array.isArray(model) ? (model[0]?.name ?? "") : (model?.name ?? "")) : "" }}
+        <div v-if="model" class="dropdown-body-file">
+          <div v-for="(file, index) in model" :key="index" @click="removeFile(Number(index))">
+            <MaterialSymbolsLightFilePresent />
+            <span class="file-text fw-bold">
+              {{ file.name }}
+            </span>
+          </div>
         </div>
-        <div v-else-if="isDragging" class="file-text fw-bold">Solte os arquivos aqui</div>
-        <div v-else-if="!isDragging" class="file-text fw-bold">Arraste arquivos aqui</div>
+        <div v-else class="dropdown-body">
+          <MaterialSymbolsLightCloudUpload />
+          <span class="file-text fw-bold"> Arraste e solte os arquivos aqui </span>
+        </div>
       </Transition>
     </div>
   </div>
@@ -81,12 +100,25 @@ function onDragOver(e: DragEvent) {
 
 .dropfile-area {
   width: 100%;
-  height: 100px;
+  min-height: 100px;
   border: 2px dashed #aaa;
   border-radius: 15px;
   padding: 32px;
   text-align: center;
   box-sizing: border-box;
+}
+
+.dropfile-area.file {
+  width: 100%;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #aaa;
+  border-radius: 15px;
+  text-align: center;
+  box-sizing: border-box;
+  transition: all 0.5s;
 }
 
 .dropfile-area.dragging {
@@ -113,5 +145,20 @@ function onDragOver(e: DragEvent) {
   position: absolute;
   width: 1px;
   height: 1px;
+}
+
+.dropdown-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdown-body-file {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
 }
 </style>

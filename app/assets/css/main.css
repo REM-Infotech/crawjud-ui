@@ -2,6 +2,7 @@
    Imports & Variables
    ===================== */
 @import url("datatables.net-dt");
+@import "modal-app.css";
 
 :root {
   /* Maroon Palette */

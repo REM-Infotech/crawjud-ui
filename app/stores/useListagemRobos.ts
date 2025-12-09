@@ -3,7 +3,7 @@ export default defineStore("useListageRobo", {
 
   actions: {
     async listagem() {
-      this.data = await window.electronAPI.listagemBots();
+      this.data = await window.botApi.listagemBots();
     },
   },
 });

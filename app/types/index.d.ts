@@ -9,20 +9,21 @@ type KeywordArgs = {
 };
 
 type Theme = "dark" | "light" | "system";
-
+type FileInput = File | File[] | undefined;
 interface Window {
   jQuery: typeof jQuery;
   $: typeof jQuery;
   axios: typeof AxiosInstance;
   matchMedia: typeof window.matchMedia;
   electronAPI: electronAPI;
+  botApi: botApi;
 }
 
 interface electronAPI {
   isJwtToken: () => Promise<bool>;
   authenticateUser: (username: string, password: string) => Promise<boolean>;
   loadPreferences: () => Promise<void>;
-  listagemBots: () => Promise<BotInfo[]>;
+
   fileDialog: () => Promise<
     [
       {
@@ -39,6 +40,11 @@ interface electronAPI {
   toggleToSystem: () => Promise<void>;
   toggleLightMode: () => Promise<void>;
   currentPreset: () => Promise<Theme>;
+}
+
+interface botApi {
+  listagemBots: () => Promise<BotInfo[]>;
+  listagemCredenciais: (sistema: SystemBots) => Promise<CredenciaisSelect[]>;
 }
 
 interface toastOptions {
@@ -71,12 +77,6 @@ interface NotificationOptions {
   requireInteraction?: boolean;
   silent?: boolean | null;
   tag?: string;
-}
-
-declare global {
-  interface Window {
-    electronAPI: electronAPI;
-  }
 }
 
 interface FormLogin {

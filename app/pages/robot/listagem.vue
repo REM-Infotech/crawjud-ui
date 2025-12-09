@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import FileAuthForm from "~/components/bot/FileAuthForm.vue";
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
+
 const listagemRobos = useListagemRobos();
 const listagem = computed<BotInfo[]>(() => listagemRobos.data);
 
@@ -30,6 +32,24 @@ function setSelectedBot(bot: BotInfo) {
   modal.value = true;
   selectedBot.value = bot;
 }
+
+const EmptyComponent = {
+  template: "<div></div>",
+};
+
+const FormsBot: Record<ConfigForm, Component> = {
+  file_auth: FileAuthForm,
+  multiple_files: EmptyComponent,
+  only_auth: EmptyComponent,
+  proc_parte: EmptyComponent,
+  only_file: EmptyComponent,
+  pje: EmptyComponent,
+  pje_protocolo: EmptyComponent,
+};
+
+function getBotForm(bot: BotInfo) {
+  return FormsBot[bot.configuracao_form];
+}
 </script>
 
 <template>
@@ -41,7 +61,7 @@ function setSelectedBot(bot: BotInfo) {
         </span>
       </template>
       <template #body>
-        <AppDropFile />
+        <component :is="getBotForm(selectedBot as BotInfo)" />
       </template>
     </AppModal>
     <div
@@ -85,7 +105,7 @@ function setSelectedBot(bot: BotInfo) {
   </Container>
 </template>
 
-<style lang="css" scoped>
+<style lang="css">
 .bots-enter-active,
 .bots-leave-active {
   transition: all 0.5s;
@@ -154,5 +174,9 @@ function setSelectedBot(bot: BotInfo) {
   width: 95px;
   height: 105px;
   padding: 5px;
+}
+
+.modal-app {
+  min-width: 960px !important;
 }
 </style>
