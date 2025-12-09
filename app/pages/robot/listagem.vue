@@ -58,6 +58,25 @@ function getBotForm(bot: BotInfo) {
   return FormsBot[bot.configuracao_form];
 }
 
+async function toBase64(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const bytes = new Uint8Array(reader.result as ArrayBuffer);
+      let binary = "";
+
+      bytes.forEach((b) => (binary += String.fromCharCode(b)));
+
+      const base64 = btoa(binary);
+      resolve(base64);
+    };
+
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 async function handleSubmit(e: SubmitEvent) {
   e.preventDefault();
   modal.value = false;
@@ -69,9 +88,44 @@ async function handleSubmit(e: SubmitEvent) {
     load.hide();
     return;
   }
-  console.log(form.value, selectedBot.value);
-  await window.botApi.iniciaExecucao(form.value, selectedBot.value);
+  const formData: Record<string, any> = {};
+
+  const files: { name: string; base64: string }[] = [];
+  Object.entries(form.value).forEach(async ([key, value]) => {
+    if (value instanceof File) {
+      const b64file = (await toBase64(value)) as string;
+      files.push({
+        name: value.name,
+        base64: b64file,
+      });
+    } else if (Array.isArray(value)) {
+      value.forEach(async (v) => {
+        if (v instanceof File) {
+          const b64file = (await toBase64(v)) as string;
+          files.push({
+            name: v.name,
+            base64: b64file,
+          });
+        }
+      });
+    } else if (value !== undefined) {
+      formData[key] = value;
+    }
+  });
+
+  if (files && files.length > 0) {
+    formData["files"] = files;
+  }
+
+  console.log(formData);
+  const bot_info: Partial<BotInfo> = {};
+  Object.entries(selectedBot.value).forEach(([key, val]) => {
+    (bot_info as any)[key] = val;
+  });
+  console.log(bot_info);
   await new Promise((resolve) => setTimeout(resolve, 500));
+  await window.botApi.iniciaExecucao(formData, bot_info as BotInfo);
+
   load.hide();
 }
 </script>

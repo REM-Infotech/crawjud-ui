@@ -62,9 +62,17 @@ class BotService {
 
       form["seedUploadedFiles"] = seed;
 
+      const xsrf = (
+        await api.get("/bot/xsrf-cookie", {
+          headers: {
+            Authorization: token,
+          },
+        })
+      ).data.csrf as string;
       const response = await api.post(endpoint, form, {
         headers: {
           Authorization: token,
+          "x-xsrf-token": xsrf,
         },
       });
 

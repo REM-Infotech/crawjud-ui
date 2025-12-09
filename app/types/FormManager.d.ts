@@ -20,12 +20,14 @@ type RecordPJeFileAuthForm = {
   certificado: File | undefined;
   SenhaCertificado: string | null;
 };
-type FormBot =
+type formBot =
   | RecordFileAuthForm
   | RecordMultipleFilesForm
   | RecordOnlyAuthForm
   | RecordOnlyFileForm
   | RecordPJeProtocoloForm;
+
+interface FormBot extends Record<string, any> {}
 
 interface formManager {
   FormBot: FormData;
