@@ -4,7 +4,7 @@ const OnlyFile = reactive<RecordOnlyFileForm>({
   PlanilhaXlsx: undefined,
 });
 
-const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: null, text: "Selecione" }]);
+const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: undefined, text: "Selecione" }]);
 onBeforeMount(async () => {
   opcoesCredenciais.value = await window.botApi.listagemCredenciais(
     props.bot.sistema as SystemBots,
@@ -12,7 +12,7 @@ onBeforeMount(async () => {
 });
 
 onUnmounted(() => {
-  opcoesCredenciais.value = [{ value: null, text: "Selecione" }];
+  opcoesCredenciais.value = [{ value: undefined, text: "Selecione" }];
 });
 </script>
 

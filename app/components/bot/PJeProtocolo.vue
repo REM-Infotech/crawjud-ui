@@ -11,11 +11,15 @@ const CertificadoUpload = ref(false);
 const XlsxFileUpload = ref(false);
 const OutrosArquivosUpload = ref(false);
 
-const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: null, text: "Selecione" }]);
+const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: undefined, text: "Selecione" }]);
 onBeforeMount(async () => {
   opcoesCredenciais.value = await window.botApi.listagemCredenciais(
     props.bot.sistema as SystemBots,
   );
+});
+
+onUnmounted(() => {
+  opcoesCredenciais.value = [{ value: undefined, text: "Selecione" }];
 });
 </script>
 
