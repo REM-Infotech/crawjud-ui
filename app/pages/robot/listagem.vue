@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import FileAuthForm from "~/components/bot/FileAuthForm.vue";
+import FileAuth from "~/components/bot/FileAuth.vue";
+import MultipleFiles from "~/components/bot/MultipleFiles.vue";
+import OnlyAuth from "~/components/bot/OnlyAuth.vue";
+import OnlyFile from "~/components/bot/OnlyFile.vue";
+import PJeFileAuth from "~/components/bot/PJeFileAuth.vue";
+import PJeProtocolo from "~/components/bot/PJeProtocolo.vue";
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
 
 const listagemRobos = useListagemRobos();
@@ -18,7 +23,7 @@ const modal = ref(false);
 watch(
   () => modal,
   async (newValue) => {
-    if (!modal) {
+    if (!newValue) {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       selectedBot.value = undefined;
@@ -38,13 +43,13 @@ const EmptyComponent = {
 };
 
 const FormsBot: Record<ConfigForm, Component> = {
-  file_auth: FileAuthForm,
-  multiple_files: EmptyComponent,
-  only_auth: EmptyComponent,
+  file_auth: FileAuth,
+  multiple_files: MultipleFiles,
+  only_auth: OnlyAuth,
   proc_parte: EmptyComponent,
-  only_file: EmptyComponent,
-  pje: EmptyComponent,
-  pje_protocolo: EmptyComponent,
+  only_file: OnlyFile,
+  pje: PJeFileAuth,
+  pje_protocolo: PJeProtocolo,
 };
 
 function getBotForm(bot: BotInfo) {
