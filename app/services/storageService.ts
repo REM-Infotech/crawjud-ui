@@ -10,9 +10,7 @@ class StorageService {
     const returnFiles: FileInStorage[] = [];
     for (const file of files) {
       const objectDest = `/${seed}/${file.name}`.replace(/\\/g, "/");
-      console.log(objectDest);
       const filePath = resolve(file.pathFile);
-      console.log(bucket);
       const uploadedInfo = await storage.fPutObject(bucket, objectDest, filePath);
       if (uploadedInfo) returnFiles.push(...[{ name: file.name, seed: seed }]);
     }
