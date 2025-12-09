@@ -34,7 +34,7 @@ class BotService {
       safeStoreService.load(`cred-${sistema}`) || "[]",
     );
     if (listagem.length === 0) {
-      const endpoint = `/${sistema}/credenciais`;
+      const endpoint = `/bot/${sistema.toLowerCase()}/credenciais`;
       const requisitar = await BotService.requisitarApi<CredenciaisPayload>(endpoint);
       if (!requisitar) return [];
 

@@ -61,7 +61,7 @@ function getBotForm(bot: BotInfo) {
         </span>
       </template>
       <template #body>
-        <component :is="getBotForm(selectedBot as BotInfo)" />
+        <component :is="getBotForm(selectedBot as BotInfo)" v-bind:bot="selectedBot" />
       </template>
     </AppModal>
     <div

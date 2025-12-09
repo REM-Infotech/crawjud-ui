@@ -21,6 +21,10 @@ contextBridge.exposeInMainWorld("botApi", {
   listagemCredenciais: (sistema: SystemBots) => ipcRenderer.invoke("listagem-credenciais", sistema),
 });
 
+contextBridge.exposeInMainWorld("storageApi", {
+  uploadFiles: (files: File[]) => ipcRenderer.invoke("upload-files", files),
+});
+
 window.addEventListener("keypress", (e) => {
   if (e) {
     if (e.key === "F11") e.preventDefault();

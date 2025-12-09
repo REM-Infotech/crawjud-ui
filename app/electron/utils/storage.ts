@@ -1,0 +1,11 @@
+import { Client } from "minio";
+
+const { MINIO_ACCESS_KEY, MINIO_ENDPOINT, MINIO_PORT, MINIO_SECRET_KEY } = import.meta.env;
+
+export default new Client({
+  endPoint: MINIO_ENDPOINT,
+  port: Number(MINIO_PORT),
+  useSSL: false,
+  accessKey: MINIO_ACCESS_KEY,
+  secretKey: MINIO_SECRET_KEY,
+});

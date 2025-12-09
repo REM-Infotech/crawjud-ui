@@ -1,6 +1,8 @@
 /**
  * Representa os sistemas judiciais suportados.
  */
+
+type FileInput = File[] | File | undefined;
 type SystemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
 /**
  * Define os tipos de formulários de configuração disponíveis.
