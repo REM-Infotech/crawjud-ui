@@ -4,8 +4,44 @@ const FormLogin = reactive({
   password: "",
 });
 
-const toast = useToast();
+function pushDashboard() {
+  useRouter().push({ name: "dashboard" });
+}
 
+onMounted(async () => {
+  const { create } = useToast();
+
+  create({
+    title: "Mensagem",
+    body: "Recuperando sessão",
+    variant: "primary",
+  });
+
+  let jwt: boolean = false;
+  await new Promise((resolve, reject) =>
+    setTimeout(async () => {
+      try {
+        jwt = await window.electronAPI.isJwtToken();
+        resolve(null);
+      } catch {
+        reject();
+      }
+    }, 1000),
+  );
+
+  if (jwt) {
+    create({
+      title: "Sucesso",
+      body: "Sessão válida recuperada!",
+      variant: "success",
+    });
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    pushDashboard();
+  }
+});
+
+const toast = useToast();
+const isCapsOn = ref(false);
 async function handleLogin(event: Event) {
   event.preventDefault();
   const load = useLoad();
@@ -15,7 +51,7 @@ async function handleLogin(event: Event) {
     FormLogin.password,
   );
   if (authenticated) {
-    useRouter().push({ name: "dashboard" });
+    pushDashboard();
   }
   toast.create({
     title: authenticated ? "Success" : "Error",
@@ -23,7 +59,10 @@ async function handleLogin(event: Event) {
     variant: authenticated ? "success" : "danger",
   });
   load.hide();
-  useRouter().push({ name: "dashboard" });
+}
+
+function capsLockIndicator(e: Event) {
+  isCapsOn.value = (e as KeyboardEvent).getModifierState("CapsLock");
 }
 </script>
 
@@ -38,7 +77,16 @@ async function handleLogin(event: Event) {
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" v-model="FormLogin.password" />
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            v-model="FormLogin.password"
+            @keyup="capsLockIndicator"
+          />
+          <div v-if="isCapsOn" class="text-warning mt-1 fw-bold" style="font-size: 0.95em">
+            Caps Lock is ON
+          </div>
         </div>
         <button type="submit" class="btn btn-primary w-100">Login</button>
       </form>
@@ -67,7 +115,10 @@ async function handleLogin(event: Event) {
 
 @media (prefers-color-scheme: light) {
   .card-login {
-    background-color: color-mix(in srgb, var(--color-flirt-200) calc(0.8 * 100%), transparent);
+    background-color: var(--color-flirt-200);
+  }
+  .text-warning {
+    color: rgb(78, 52, 4) !important;
   }
 }
 </style>

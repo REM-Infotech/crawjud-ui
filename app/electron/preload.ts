@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  isJwtToken: () => ipcRenderer.invoke("is-jwt-token"),
   listagemBots: () => ipcRenderer.invoke("listagem-bots"),
   loadPreferences: () => ipcRenderer.invoke("load-preferences"),
   closeWindow: () => ipcRenderer.send("close-window"),

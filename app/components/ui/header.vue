@@ -106,12 +106,10 @@ const iconTheme = () => {
 }
 
 [app-theme="dark"] .navbar {
-  box-shadow: 0 0 4px 4px rgba(255, 255, 255, 0.1);
   background-color: var(--color-flirt-900);
 }
 
 [app-theme="light"] .navbar {
-  box-shadow: 0 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: var(--color-flirt-100);
 }
 
