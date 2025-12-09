@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const model = defineModel<RecordPJeFileAuthForm>();
 const props = defineProps<{ bot: BotInfo }>();
 const PJeFileAuth = reactive<RecordPJeFileAuthForm>({
   PlanilhaXlsx: undefined,
@@ -6,9 +7,7 @@ const PJeFileAuth = reactive<RecordPJeFileAuthForm>({
   SenhaCertificado: "",
 });
 
-const XlsxFileUpload = ref(false);
-const CertificadoUpload = ref(false);
-
+const exibeSenha = ref(false);
 const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: undefined, text: "Selecione" }]);
 onBeforeMount(async () => {
   opcoesCredenciais.value = await window.botApi.listagemCredenciais(
@@ -19,6 +18,11 @@ onBeforeMount(async () => {
 onUnmounted(() => {
   opcoesCredenciais.value = [{ value: undefined, text: "Selecione" }];
 });
+
+watch(
+  () => PJeFileAuth,
+  (newValue) => (model.value = newValue),
+);
 </script>
 
 <template>
@@ -31,6 +35,7 @@ onUnmounted(() => {
             class="mt-3"
             size="lg"
             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            required
           />
         </BFormGroup>
       </div>
@@ -43,20 +48,29 @@ onUnmounted(() => {
             class="mt-3"
             size="lg"
             :accept="['application/x-pkcs12', '.pfx']"
+            required
           />
         </BFormGroup>
       </div>
     </BCol>
     <BCol md="12" lg="12" xl="12" sm="12">
       <div class="container-fluid rounded rounded-4 border p-3" style="height: 6.5rem">
-        <BFormFloatingLabel label="Senha Certificado" label-for="floatingEmail" class="my-2">
-          <BFormInput
-            id="floatingEmail"
-            type="password"
-            placeholder="Senha do certificado"
-            v-model="PJeFileAuth.SenhaCertificado"
-          />
-        </BFormFloatingLabel>
+        <BFormGroup label="Senha Certificado" class="mb-2">
+          <BInputGroup>
+            <BFormInput
+              :type="exibeSenha ? 'text' : 'password'"
+              v-model="PJeFileAuth.SenhaCertificado"
+            />
+            <button
+              @click="exibeSenha = !exibeSenha"
+              :class="exibeSenha ? 'btn btn-primary' : 'btn btn-outline-primary'"
+              type="button"
+              id="button-addon2"
+            >
+              Exibir senha
+            </button>
+          </BInputGroup>
+        </BFormGroup>
       </div>
     </BCol>
     <BCol md="12" lg="12" xl="12" sm="12"> </BCol>

@@ -1,6 +1,7 @@
 import api from "@/electron/utils/api";
 import { ipcMain, type IpcMainInvokeEvent } from "electron";
 import safeStoreService from "./safeStoreService";
+import StorageService from "./storageService";
 
 class BotService {
   static async requisitarApi<T = any>(endpoint: string): Promise<T> {
@@ -44,11 +45,46 @@ class BotService {
     }
     return listagem;
   }
+  static async iniciaExecucao(form: Record<string, any>, bot: BotInfo) {
+    try {
+      const endpoint = `/bot/${bot.sistema.toLowerCase()}/run`;
+      const token = safeStoreService.load("jwt");
+      const files: File[] = [];
+      Object.entries(form).forEach(([_, value]) => {
+        if (value instanceof File) {
+          files.push(...[value]);
+        } else if (Array.isArray(value) && value[0] instanceof File) {
+          files.push(...value);
+        }
+      });
+
+      const seed = await StorageService.uploadFiles(files);
+
+      form["seedUploadedFiles"] = seed;
+
+      const response = await api.post(endpoint, form, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 200) {
+        return true;
+      }
+    } catch {}
+    return false;
+  }
 }
 
 export default function useBotService() {
   ipcMain.handle("listagem-bots", BotService.listagemBots);
   ipcMain.handle("listagem-credenciais", (_: IpcMainInvokeEvent, sistema: SystemBots) =>
     BotService.listagemCredenciais(sistema),
+  );
+
+  ipcMain.handle(
+    "inicia-execucao",
+    (_: IpcMainInvokeEvent, form: Record<string, any>, bot: BotInfo) =>
+      BotService.iniciaExecucao(form, bot),
   );
 }

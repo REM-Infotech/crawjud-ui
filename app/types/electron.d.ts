@@ -28,6 +28,7 @@ interface AuthApi {
 interface BotApi {
   listagemBots: () => Promise<BotInfo[]>;
   listagemCredenciais: (sistema: SystemBots) => Promise<CredenciaisSelect[]>;
+  iniciaExecucao: (form: FormBot, bot: BotInfo) => Promise<boolean>;
 }
 
 interface StorageApi {

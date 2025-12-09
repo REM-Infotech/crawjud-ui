@@ -25,17 +25,14 @@ const botApi = {
   listagemBots: (): Promise<unknown> => ipcRenderer.invoke("listagem-bots"),
   listagemCredenciais: (sistema: SystemBots): Promise<unknown> =>
     ipcRenderer.invoke("listagem-credenciais", sistema),
-};
-
-const storageApi = {
-  uploadFiles: (files: File[]): Promise<unknown> => ipcRenderer.invoke("upload-files", files),
+  iniciaExecucao: (form: FormBot, bot: BotInfo): Promise<boolean> =>
+    ipcRenderer.invoke("inicia-execucao", form, bot),
 };
 
 contextBridge.exposeInMainWorld("windowApi", windowApi);
 contextBridge.exposeInMainWorld("themeApi", themeApi);
 contextBridge.exposeInMainWorld("authApi", authApi);
 contextBridge.exposeInMainWorld("botApi", botApi);
-contextBridge.exposeInMainWorld("storageApi", storageApi);
 
 window.addEventListener("keypress", (e) => {
   if (e) {

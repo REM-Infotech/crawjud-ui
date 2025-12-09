@@ -1,12 +1,24 @@
-import useAuthService from "@/services/authService";
-import useBotService from "@/services/botService";
-import useThemeService from "@/services/themeService";
-
-import useFileService from "@/services/fileService";
+import * as dotenv from "dotenv";
 import { app, BrowserWindow } from "electron";
+import * as Minio from "minio";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
+
+import useAuthService from "@/services/authService";
+import useBotService from "@/services/botService";
+import useFileService from "@/services/fileService";
+import useThemeService from "@/services/themeService";
+
+dotenv.config();
+
+export const storage = new Minio.Client({
+  endPoint: process.env.MINIO_ENDPOINT as string,
+  port: Number(process.env.MINIO_PORT),
+  useSSL: false,
+  accessKey: process.env.MINIO_ACCESS_KEY,
+  secretKey: process.env.MINIO_SECRET_KEY,
+});
 
 export let mainWindow: BrowserWindow | null = null;
 let preload_path = resolve(join(__dirname, "../preload", "preload.js"));

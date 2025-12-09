@@ -52,7 +52,7 @@
   --color-accent: var(--color-electric-violet-300);
 
   /* Backgrounds */
-  --bg-input: #1f071862;
+  --bg-input: #771b5b62;
   --bg-card: var(--color-flirt-950);
   --bg-accent: var(--color-electric-violet-900);
   --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
@@ -246,4 +246,5 @@ select:focus {
   align-items: center;
   justify-content: center;
   border-radius: 26px;
+  z-index: 9998;
 }

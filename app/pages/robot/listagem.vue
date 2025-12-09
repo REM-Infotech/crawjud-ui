@@ -31,6 +31,8 @@ watch(
   },
 );
 
+const form = ref<FormBot>();
+
 const selectedBot = ref<BotInfo>();
 
 function setSelectedBot(bot: BotInfo) {
@@ -56,10 +58,21 @@ function getBotForm(bot: BotInfo) {
   return FormsBot[bot.configuracao_form];
 }
 
-function handleSubmit(e: SubmitEvent) {
+async function handleSubmit(e: SubmitEvent) {
   e.preventDefault();
+  modal.value = false;
 
-  console.log(e);
+  const load = useLoad();
+  load.show();
+
+  if (!form.value || !selectedBot.value) {
+    load.hide();
+    return;
+  }
+  console.log(form.value, selectedBot.value);
+  await window.botApi.iniciaExecucao(form.value, selectedBot.value);
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  load.hide();
 }
 </script>
 
@@ -73,7 +86,11 @@ function handleSubmit(e: SubmitEvent) {
           </span>
         </template>
         <template #body>
-          <component :is="getBotForm(selectedBot as BotInfo)" v-bind:bot="selectedBot" />
+          <component
+            :is="getBotForm(selectedBot as BotInfo)"
+            v-bind:bot="selectedBot"
+            v-model="form"
+          />
         </template>
         <template #footer>
           <div class="d-flex flex-column">

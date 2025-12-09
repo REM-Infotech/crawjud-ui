@@ -7,8 +7,6 @@ const files = ref<File[]>();
 const isDragging = ref(false);
 
 function removeFile(idx: number) {
-  console.log(idx);
-  console.log(model.value);
   if (Array.isArray(model.value)) {
     model.value.splice(idx, 1);
   }
@@ -18,7 +16,6 @@ async function loadFile() {
   const filesLoad = await window.windowApi.fileDialog();
 
   if (filesLoad.length > 0) {
-    console.log(filesLoad);
     model.value = [] as File[];
     for (const file of filesLoad) {
       const fl = new File([file.buffer as BlobPart], file.name, { type: file.type });

@@ -1,7 +1,12 @@
 <script setup lang="ts">
+const model = defineModel<RecordFileAuthForm>();
 const props = defineProps<{ bot: BotInfo }>();
 
 const FormFileAuth = reactive<RecordFileAuthForm>({ PlanilhaXlsx: undefined, Credencial: null });
+
+const PlanilhaXlsx = ref();
+const Credencial = ref();
+
 const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: null, text: "Selecione" }]);
 onBeforeMount(async () => {
   opcoesCredenciais.value = await window.botApi.listagemCredenciais(
@@ -12,6 +17,13 @@ onBeforeMount(async () => {
 onUnmounted(() => {
   opcoesCredenciais.value = [{ value: null, text: "Selecione" }];
 });
+watch(
+  () => ({ ...FormFileAuth }),
+  (newValue) => {
+    model.value = newValue;
+  },
+  { deep: true },
+);
 </script>
 
 <template>
