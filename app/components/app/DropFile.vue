@@ -10,7 +10,7 @@ async function loadFile() {
 
   if (filesLoad) {
     for (const file of filesLoad) {
-      const fl = new File([file.buffer as BlobPart], file.name);
+      const fl = new File([file.buffer as BlobPart], file.name, { type: file.type });
       console.log(fl);
       files.value?.push(...[fl]);
     }

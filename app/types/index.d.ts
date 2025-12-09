@@ -28,6 +28,7 @@ interface electronAPI {
       {
         name: string;
         buffer: Uint8Array;
+        type: string;
       },
     ]
   >;
