@@ -23,7 +23,14 @@ interface electronAPI {
   authenticateUser: (username: string, password: string) => Promise<boolean>;
   loadPreferences: () => Promise<void>;
   listagemBots: () => Promise<BotInfo[]>;
-
+  fileDialog: () => Promise<
+    [
+      {
+        name: string;
+        buffer: Uint8Array;
+      },
+    ]
+  >;
   closeWindow: () => Promise<void>;
   maximizeWindow: () => Promise<void>;
   minimizeWindow: () => Promise<void>;

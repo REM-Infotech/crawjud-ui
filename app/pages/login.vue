@@ -54,8 +54,8 @@ async function handleLogin(event: Event) {
     pushDashboard();
   }
   toast.create({
-    title: authenticated ? "Success" : "Error",
-    body: authenticated ? "You have been logged in successfully." : "Invalid username or password.",
+    title: authenticated ? "Sucesso" : "Erro",
+    body: authenticated ? "Login efetuado com sucesso!" : "Usuário ou senha incorretos.",
     variant: authenticated ? "success" : "danger",
   });
   load.hide();

@@ -2,6 +2,7 @@ import useAuthService from "@/services/authService";
 import useBotService from "@/services/botService";
 import useThemeService from "@/services/themeService";
 
+import useFileService from "@/services/fileService";
 import { app, BrowserWindow } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
@@ -58,6 +59,7 @@ if (!gotTheLock) {
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
     IpcApp();
+    useFileService();
     useBotService();
     useAuthService();
     createWindow();

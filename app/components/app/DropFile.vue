@@ -3,8 +3,19 @@ type FileInput = File | File[] | undefined;
 const model = defineModel<FileInput>({ default: undefined });
 
 const files = ref<File[]>();
-
 const isDragging = ref(false);
+
+async function loadFile() {
+  const filesLoad = await window.electronAPI.fileDialog();
+
+  if (filesLoad) {
+    for (const file of filesLoad) {
+      const fl = new File([file.buffer as BlobPart], file.name);
+      console.log(fl);
+      files.value?.push(...[fl]);
+    }
+  }
+}
 
 function onChange() {
   if (Array.isArray(model.value)) {
@@ -40,6 +51,7 @@ function onDragOver(e: DragEvent) {
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
+      @click="loadFile"
     >
       <input
         type="file"
