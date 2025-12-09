@@ -1,7 +1,16 @@
 import api from "@/electron/utils/api";
 import { ipcMain, type IpcMainInvokeEvent } from "electron";
 import safeStoreService from "./safeStoreService";
-import StorageService from "./storageService";
+
+class FileIpc {
+  readonly name: string;
+  readonly base64: string;
+
+  constructor(name: string, base64: string) {
+    this.name = name;
+    this.base64 = base64;
+  }
+}
 
 class BotService {
   static async requisitarApi<T = any>(endpoint: string): Promise<T> {
@@ -49,18 +58,9 @@ class BotService {
     try {
       const endpoint = `/bot/${bot.sistema.toLowerCase()}/run`;
       const token = safeStoreService.load("jwt");
-      const files: File[] = [];
-      Object.entries(form).forEach(([_, value]) => {
-        if (value instanceof File) {
-          files.push(...[value]);
-        } else if (Array.isArray(value) && value[0] instanceof File) {
-          files.push(...value);
-        }
-      });
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const seed = await StorageService.uploadFiles(files);
-
-      form["seedUploadedFiles"] = seed;
+      form["configuracao_form"] = bot.configuracao_form;
 
       const xsrf = (
         await api.get("/bot/xsrf-cookie", {

@@ -1,8 +1,7 @@
 import { dialog, ipcMain } from "electron";
-import { fileTypeFromBuffer } from "file-type";
-import { readFileSync } from "fs";
 import { homedir } from "os";
-import { join, resolve } from "path";
+import { join } from "path";
+import StorageService from "./storageService";
 
 const userHome = homedir();
 class FileService {
@@ -15,17 +14,14 @@ class FileService {
 
     const files = [];
     for (const filePath of file.filePaths) {
-      const buffer = readFileSync(resolve(filePath));
-
       const fileName = filePath.split(/[\\/]/).pop() || "file";
       files.push({
         name: fileName,
-        buffer: buffer,
-        type: (await fileTypeFromBuffer(buffer))?.mime,
+        pathFile: filePath,
       });
     }
 
-    return files;
+    return await StorageService.uploadFiles(files);
   }
 }
 

@@ -89,40 +89,30 @@ async function handleSubmit(e: SubmitEvent) {
     return;
   }
   const formData: Record<string, any> = {};
-
-  const files: { name: string; base64: string }[] = [];
-  Object.entries(form.value).forEach(async ([key, value]) => {
+  const files: FileIpc[] = [];
+  const currentFiles: File[] = [];
+  Object.entries(form.value).forEach(([key, value]) => {
     if (value instanceof File) {
-      const b64file = (await toBase64(value)) as string;
-      files.push({
-        name: value.name,
-        base64: b64file,
-      });
+      currentFiles.push(...[value]);
     } else if (Array.isArray(value)) {
-      value.forEach(async (v) => {
-        if (v instanceof File) {
-          const b64file = (await toBase64(v)) as string;
-          files.push({
-            name: v.name,
-            base64: b64file,
-          });
-        }
-      });
+      currentFiles.push(...value);
     } else if (value !== undefined) {
       formData[key] = value;
     }
   });
 
+  for (const file of currentFiles) {
+    const b64file = (await toBase64(file)) as string;
+    files.push(...[{ name: file.name, base64: b64file }]);
+  }
+
   if (files && files.length > 0) {
     formData["files"] = files;
   }
-
-  console.log(formData);
   const bot_info: Partial<BotInfo> = {};
   Object.entries(selectedBot.value).forEach(([key, val]) => {
     (bot_info as any)[key] = val;
   });
-  console.log(bot_info);
   await new Promise((resolve) => setTimeout(resolve, 500));
   await window.botApi.iniciaExecucao(formData, bot_info as BotInfo);
 

@@ -13,11 +13,11 @@ import useThemeService from "@/services/themeService";
 dotenv.config();
 
 export const storage = new Minio.Client({
-  endPoint: process.env.MINIO_ENDPOINT as string,
-  port: Number(process.env.MINIO_PORT),
+  endPoint: import.meta.env.VITE_MINIO_ENDPOINT as string,
+  port: Number(import.meta.env.VITE_MINIO_PORT),
   useSSL: false,
-  accessKey: process.env.MINIO_ACCESS_KEY,
-  secretKey: process.env.MINIO_SECRET_KEY,
+  accessKey: import.meta.env.VITE_MINIO_ACCESS_KEY,
+  secretKey: import.meta.env.VITE_MINIO_SECRET_KEY,
 });
 
 export let mainWindow: BrowserWindow | null = null;

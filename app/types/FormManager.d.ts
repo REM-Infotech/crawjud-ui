@@ -1,6 +1,6 @@
 type FormComponentRecord = Record<ConfigForm, Component | undefined>;
-type RecordFileAuthForm = { PlanilhaXlsx: File | undefined; Credencial: string | null };
-type RecordOnlyFileForm = { PlanilhaXlsx: File | undefined };
+type RecordFileAuthForm = { PlanilhaXlsx: FileInStorage[] | undefined; Credencial: string | null };
+type RecordOnlyFileForm = { PlanilhaXlsx: FileInStorage };
 type RecordOnlyAuthForm = { Credencial: string | null };
 type RecordMultipleFilesForm = {
   PlanilhaXlsx: File | undefined;

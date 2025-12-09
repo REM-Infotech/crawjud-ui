@@ -4,9 +4,6 @@ const props = defineProps<{ bot: BotInfo }>();
 
 const FormFileAuth = reactive<RecordFileAuthForm>({ PlanilhaXlsx: undefined, Credencial: null });
 
-const PlanilhaXlsx = ref();
-const Credencial = ref();
-
 const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: null, text: "Selecione" }]);
 onBeforeMount(async () => {
   opcoesCredenciais.value = await window.botApi.listagemCredenciais(
@@ -31,13 +28,7 @@ watch(
     <BCol md="12" lg="12" xl="12" sm="12">
       <div class="container-fluid rounded rounded-4 border p-3" style="height: 8.5rem">
         <BFormGroup label="Planilha Xlsx" label-size="lg" class="mb-2">
-          <BFormFile
-            v-model="FormFileAuth.PlanilhaXlsx"
-            class="mt-3"
-            size="lg"
-            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            required
-          />
+          <AppDropFile v-model="FormFileAuth.PlanilhaXlsx" />
         </BFormGroup>
       </div>
     </BCol>

@@ -5,9 +5,23 @@ type FileUpload = {
   type: string;
 };
 
+class FileIpc {
+  name: string;
+  base64: string;
+}
+
+interface FileInStorage {
+  name: string;
+  seed: string;
+}
+
+interface FileUploadStorage {
+  name: string;
+  pathFile: string;
+}
+
 interface WindowApi {
-  fileDialog: () => Promise<FileUpload[]>;
-  isJwtToken: () => Promise<boolean>;
+  fileDialog: () => Promise<FileInStorage[]>;
   loadPreferences: () => Promise<unknown>;
   closeWindow: () => void;
   maximizeWindow: () => void;
@@ -23,6 +37,7 @@ interface ThemeApi {
 
 interface AuthApi {
   authenticateUser: (username: string, password: string) => Promise<unknown>;
+  isJwtToken: () => Promise<boolean>;
 }
 
 interface BotApi {

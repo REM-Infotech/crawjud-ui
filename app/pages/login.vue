@@ -21,7 +21,7 @@ onMounted(async () => {
   await new Promise((resolve, reject) =>
     setTimeout(async () => {
       try {
-        jwt = await window.windowApi.isJwtToken();
+        jwt = await window.authApi.isJwtToken();
         resolve(null);
       } catch {
         reject();
