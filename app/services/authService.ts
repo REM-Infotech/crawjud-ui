@@ -26,8 +26,15 @@ class AuthService {
 
     return response ? response.status === 200 : false;
   }
+
+  static async isJwtToken() {
+    if (safeStoreService.load("jwt")) return true;
+
+    return false;
+  }
 }
 
 export default function useAuthService() {
   ipcMain.handle("authenticate-user", AuthService.authenticateUser);
+  ipcMain.handle("is-jwt-token", AuthService.isJwtToken);
 }

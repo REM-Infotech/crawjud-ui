@@ -19,9 +19,11 @@ interface Window {
 }
 
 interface electronAPI {
+  isJwtToken: () => Promise<bool>;
+  authenticateUser: (username: string, password: string) => Promise<boolean>;
   loadPreferences: () => Promise<void>;
   listagemBots: () => Promise<BotInfo[]>;
-  authenticateUser: (username: string, password: string) => Promise<boolean>;
+
   closeWindow: () => Promise<void>;
   maximizeWindow: () => Promise<void>;
   minimizeWindow: () => Promise<void>;

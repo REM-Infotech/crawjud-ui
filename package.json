@@ -70,7 +70,6 @@
     "bootstrap": "^5.3.8",
     "bootstrap-vue-next": "^0.40.7",
     "cross-env": "^10.1.0",
-    "electorn": "0.0.1-security",
     "electron": "^39.1.2",
     "eslint": "^9.38.0",
     "eslint-plugin-vue": "^10.5.1",

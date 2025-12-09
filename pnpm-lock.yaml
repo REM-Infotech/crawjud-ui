@@ -142,9 +142,6 @@ importers:
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
-      electorn:
-        specifier: 0.0.1-security
-        version: 0.0.1-security
       electron:
         specifier: ^39.1.2
         version: 39.1.2
@@ -2724,9 +2721,6 @@ packages:
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
-
-  electorn@0.0.1-security:
-    resolution: {integrity: sha512-oMceq75Eyd9oMydHm5nKbk1CwsQWyN1fNZCHn5JcqGsIZ13pFJs1D+s548VxYtj4hsaAko3R16iv5NXec4zTng==}
 
   electron-installer-common@0.10.4:
     resolution: {integrity: sha512-8gMNPXfAqUE5CfXg8RL0vXpLE9HAaPkgLXVoHE3BMUzogMWenf4LmwQ27BdCUrEhkjrKl+igs2IHJibclR3z3Q==}
@@ -9200,8 +9194,6 @@ snapshots:
   eastasianwidth@0.2.0: {}
 
   ee-first@1.1.1: {}
-
-  electorn@0.0.1-security: {}
 
   electron-installer-common@0.10.4:
     dependencies:
