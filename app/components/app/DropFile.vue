@@ -15,7 +15,7 @@ function removeFile(idx: number) {
 }
 
 async function loadFile() {
-  const filesLoad = await window.electronAPI.fileDialog();
+  const filesLoad = await window.windowApi.fileDialog();
 
   if (filesLoad.length > 0) {
     console.log(filesLoad);

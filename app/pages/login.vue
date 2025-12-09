@@ -21,7 +21,7 @@ onMounted(async () => {
   await new Promise((resolve, reject) =>
     setTimeout(async () => {
       try {
-        jwt = await window.electronAPI.isJwtToken();
+        jwt = await window.windowApi.isJwtToken();
         resolve(null);
       } catch {
         reject();
@@ -46,7 +46,7 @@ async function handleLogin(event: Event) {
   event.preventDefault();
   const load = useLoad();
   load.show();
-  const authenticated = await window.electronAPI.authenticateUser(
+  const authenticated = await window.authApi.authenticateUser(
     FormLogin.username,
     FormLogin.password,
   );

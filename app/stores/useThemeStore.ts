@@ -4,9 +4,9 @@ export default defineStore("themeStore", () => {
   const themes: Theme[] = ["dark", "light", "system"];
 
   const callableThemes: Record<Theme, () => Promise<void>> = {
-    dark: window.electronAPI.toggleDarkMode,
-    light: window.electronAPI.toggleLightMode,
-    system: window.electronAPI.toggleToSystem,
+    dark: window.themeApi.toggleDarkMode,
+    light: window.themeApi.toggleLightMode,
+    system: window.themeApi.toggleToSystem,
   };
 
   const rowTheme = ref(0);
@@ -14,7 +14,7 @@ export default defineStore("themeStore", () => {
 
   async function loadTheme() {
     const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const currentPreset = await window.electronAPI.currentPreset();
+    const currentPreset = await window.themeApi.currentPreset();
 
     const presetIndex = themes.indexOf(currentPreset as Theme);
     rowTheme.value = presetIndex !== -1 ? presetIndex : 1; // default to "light" if not found
