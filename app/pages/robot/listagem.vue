@@ -55,20 +55,33 @@ const FormsBot: Record<ConfigForm, Component> = {
 function getBotForm(bot: BotInfo) {
   return FormsBot[bot.configuracao_form];
 }
+
+function handleSubmit(e: SubmitEvent) {
+  e.preventDefault();
+
+  console.log(e);
+}
 </script>
 
 <template>
   <Container :main-class="'container-fluid'">
-    <AppModal v-model="modal">
-      <template #header>
-        <span class="fs-4 fw-bold">
-          {{ selectedBot?.display_name }}
-        </span>
-      </template>
-      <template #body>
-        <component :is="getBotForm(selectedBot as BotInfo)" v-bind:bot="selectedBot" />
-      </template>
-    </AppModal>
+    <form @submit="handleSubmit">
+      <AppModal v-model="modal">
+        <template #header>
+          <span class="fs-4 fw-bold">
+            {{ selectedBot?.display_name }}
+          </span>
+        </template>
+        <template #body>
+          <component :is="getBotForm(selectedBot as BotInfo)" v-bind:bot="selectedBot" />
+        </template>
+        <template #footer>
+          <div class="d-flex flex-column">
+            <BButton type="submit" variant="success"> Iniciar Robô </BButton>
+          </div>
+        </template>
+      </AppModal>
+    </form>
     <div
       class="modal fade"
       id="modalBot"
