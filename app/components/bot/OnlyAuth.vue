@@ -10,6 +10,10 @@ onBeforeMount(async () => {
     props.bot.sistema as SystemBots,
   );
 });
+
+onUnmounted(() => {
+  opcoesCredenciais.value = [{ value: null, text: "Selecione" }];
+});
 </script>
 
 <template>
