@@ -4,8 +4,6 @@ import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
-import useAuthService from "@/services/authService";
-import useBotService from "@/services/botService";
 import useFileService from "@/services/fileService";
 import useThemeService from "@/services/themeService";
 
@@ -61,8 +59,6 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     IpcApp();
     useFileService();
-    useBotService();
-    useAuthService();
     createWindow();
     useThemeService();
   });

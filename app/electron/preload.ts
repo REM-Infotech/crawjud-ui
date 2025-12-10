@@ -15,24 +15,8 @@ const themeApi = {
   currentPreset: (): Promise<unknown> => ipcRenderer.invoke("dark-mode:current-preset"),
 };
 
-const authApi = {
-  isJwtToken: (): Promise<unknown> => ipcRenderer.invoke("is-jwt-token"),
-  authenticateUser: (username: string, password: string): Promise<unknown> =>
-    ipcRenderer.invoke("authenticate-user", username, password),
-};
-
-const botApi = {
-  listagemBots: (): Promise<unknown> => ipcRenderer.invoke("listagem-bots"),
-  listagemCredenciais: (sistema: SystemBots): Promise<unknown> =>
-    ipcRenderer.invoke("listagem-credenciais", sistema),
-  iniciaExecucao: (form: FormBot, bot: BotInfo): Promise<boolean> =>
-    ipcRenderer.invoke("inicia-execucao", form, bot),
-};
-
 contextBridge.exposeInMainWorld("windowApi", windowApi);
 contextBridge.exposeInMainWorld("themeApi", themeApi);
-contextBridge.exposeInMainWorld("authApi", authApi);
-contextBridge.exposeInMainWorld("botApi", botApi);
 
 window.addEventListener("keypress", (e) => {
   if (e) {
