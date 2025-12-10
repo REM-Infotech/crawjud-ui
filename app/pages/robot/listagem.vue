@@ -13,20 +13,14 @@ const selectedBot = ref<BotInfo>();
 const listagemRobos = useListagemRobos();
 const listagem = computed<BotInfo[]>(() => listagemRobos.data);
 
-onBeforeMount(async () => {
-  await listagemRobos.listagem();
+onBeforeMount(() => {
+  listagemRobos.listagem();
 });
-
-onUnmounted(() => {
-  listagemRobos.data = [];
-});
-
 watch(
   () => modal,
   async (newValue) => {
     if (!newValue) {
       await new Promise((resolve) => setTimeout(resolve, 200));
-
       selectedBot.value = undefined;
     }
   },
