@@ -1,68 +1,54 @@
 <script setup lang="ts">
+import { isAxiosError, type AxiosResponse } from "axios";
+
 const FormLogin = reactive({
   username: "",
   password: "",
 });
 
-function pushDashboard() {
-  useRouter().push({ name: "dashboard" });
-}
-
-onMounted(async () => {
-  const { create } = useToast();
-
-  create({
-    title: "Mensagem",
-    body: "Recuperando sessão",
-    variant: "primary",
-  });
-
-  let jwt: boolean = false;
-  await new Promise((resolve, reject) =>
-    setTimeout(async () => {
-      try {
-        jwt = await window.authApi.isJwtToken();
-        resolve(null);
-      } catch {
-        reject();
-      }
-    }, 1000),
-  );
-
-  if (jwt) {
-    create({
-      title: "Sucesso",
-      body: "Sessão válida recuperada!",
-      variant: "success",
-    });
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    pushDashboard();
-  }
-});
-
-const toast = useToast();
 const isCapsOn = ref(false);
-async function handleLogin(event: Event) {
-  event.preventDefault();
-  const load = useLoad();
-  load.show();
-  const authenticated = await window.authApi.authenticateUser(
-    FormLogin.username,
-    FormLogin.password,
-  );
-  if (authenticated) {
-    pushDashboard();
-  }
-  toast.create({
-    title: authenticated ? "Sucesso" : "Erro",
-    body: authenticated ? "Login efetuado com sucesso!" : "Usuário ou senha incorretos.",
-    variant: authenticated ? "success" : "danger",
-  });
-  load.hide();
-}
-
+const toast = useToast();
+const load = useLoad();
 function capsLockIndicator(e: Event) {
   isCapsOn.value = (e as KeyboardEvent).getModifierState("CapsLock");
+}
+
+class authService {
+  static async authUser(e: SubmitEvent) {
+    e.preventDefault();
+    load.show();
+
+    if (!FormLogin.username || !FormLogin.password) {
+      const message = !FormLogin.username ? "Informe um usuário" : "Informe a senha!";
+      load.hide();
+      toast.create({
+        title: "Erro",
+        body: message,
+      });
+      return;
+    }
+
+    try {
+      const response = await api.post("/auth/login", FormLogin);
+      if (response.status === 200) {
+        toast.create({
+          title: "Sucesso!",
+          body: "Login efetuado com sucesso!",
+          value: 1000,
+        });
+        useRouter().push({ name: "dashboard" });
+      }
+    } catch (err) {
+      if (isAxiosError(err) && err.response) {
+        const message = (err.response as AxiosResponse<AuthPayload>).data.message;
+        toast.create({
+          title: "Erro",
+          body: message,
+        });
+      }
+    }
+    load.hide();
+  }
 }
 </script>
 
@@ -70,7 +56,7 @@ function capsLockIndicator(e: Event) {
   <Container :main-class="'login-container'">
     <div class="card-login">
       <h2>Login</h2>
-      <form @submit="handleLogin">
+      <form @submit="(e) => authService.authUser(e)">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
           <input type="text" class="form-control" id="username" v-model="FormLogin.username" />

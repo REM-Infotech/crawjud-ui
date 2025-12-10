@@ -9,3 +9,7 @@ interface Window {
   botApi: BotApi;
   storageApi: StorageApi;
 }
+
+interface AuthPayload {
+  message: string;
+}

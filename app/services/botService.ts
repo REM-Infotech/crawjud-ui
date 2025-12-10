@@ -1,5 +1,4 @@
-import api from "@/electron/utils/api";
-import { ipcMain, type IpcMainInvokeEvent } from "electron";
+import { type IpcMainInvokeEvent } from "electron";
 import safeStoreService from "./safeStoreService";
 
 class FileIpc {
@@ -82,17 +81,4 @@ class BotService {
     } catch {}
     return false;
   }
-}
-
-export default function useBotService() {
-  ipcMain.handle("listagem-bots", BotService.listagemBots);
-  ipcMain.handle("listagem-credenciais", (_: IpcMainInvokeEvent, sistema: SystemBots) =>
-    BotService.listagemCredenciais(sistema),
-  );
-
-  ipcMain.handle(
-    "inicia-execucao",
-    (_: IpcMainInvokeEvent, form: Record<string, any>, bot: BotInfo) =>
-      BotService.iniciaExecucao(form, bot),
-  );
 }

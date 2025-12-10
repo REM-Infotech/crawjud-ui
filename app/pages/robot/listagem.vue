@@ -7,6 +7,9 @@ import PJeFileAuth from "~/components/bot/PJeFileAuth.vue";
 import PJeProtocolo from "~/components/bot/PJeProtocolo.vue";
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
 
+const modal = ref(false);
+const form = ref<FormBot>();
+const selectedBot = ref<BotInfo>();
 const listagemRobos = useListagemRobos();
 const listagem = computed<BotInfo[]>(() => listagemRobos.data);
 
@@ -18,8 +21,6 @@ onUnmounted(() => {
   listagemRobos.data = [];
 });
 
-const modal = ref(false);
-
 watch(
   () => modal,
   async (newValue) => {
@@ -30,10 +31,6 @@ watch(
     }
   },
 );
-
-const form = ref<FormBot>();
-
-const selectedBot = ref<BotInfo>();
 
 function setSelectedBot(bot: BotInfo) {
   modal.value = true;
@@ -121,7 +118,7 @@ async function handleSubmit(e: SubmitEvent) {
 </script>
 
 <template>
-  <Container :main-class="'container-fluid-app'">
+  <BContainer>
     <form @submit="handleSubmit">
       <AppModal v-model="modal">
         <template #header>
@@ -143,14 +140,6 @@ async function handleSubmit(e: SubmitEvent) {
         </template>
       </AppModal>
     </form>
-    <div
-      class="modal fade"
-      id="modalBot"
-      aria-hidden="true"
-      aria-labelledby="exampleModalToggleLabel"
-      tabindex="-1"
-    ></div>
-    <template #heading> Robos Page </template>
     <TransitionGroup tag="div" name="bots" class="row">
       <div class="col-lg-3 col-xl-3 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">
@@ -181,7 +170,7 @@ async function handleSubmit(e: SubmitEvent) {
         </div>
       </div>
     </TransitionGroup>
-  </Container>
+  </BContainer>
 </template>
 
 <style lang="css">

@@ -24,6 +24,10 @@ export default defineStore("themeStore", () => {
       "app-theme",
       theme === "system" ? (isDark ? "dark" : "light") : theme,
     );
+    document.documentElement.setAttribute(
+      "data-bs-theme",
+      theme === "system" ? (isDark ? "dark" : "light") : theme,
+    );
 
     await callableThemes[theme]();
   }
