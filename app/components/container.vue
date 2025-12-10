@@ -30,7 +30,7 @@ const props = defineProps({
   border-radius: 5px; /* Rounded corners */
 }
 
-.container-fluid {
+.container-fluid-app {
   min-width: calc(100% - 75px) !important; /* Full width */
 }
 

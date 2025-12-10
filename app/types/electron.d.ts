@@ -13,6 +13,7 @@ class FileIpc {
 interface FileInStorage {
   name: string;
   seed: string;
+  type: string;
 }
 
 interface FileUploadStorage {

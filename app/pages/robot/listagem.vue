@@ -121,7 +121,7 @@ async function handleSubmit(e: SubmitEvent) {
 </script>
 
 <template>
-  <Container :main-class="'container-fluid'">
+  <Container :main-class="'container-fluid-app'">
     <form @submit="handleSubmit">
       <AppModal v-model="modal">
         <template #header>

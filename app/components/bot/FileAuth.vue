@@ -2,18 +2,13 @@
 const model = defineModel<RecordFileAuthForm>();
 const props = defineProps<{ bot: BotInfo }>();
 
-const FormFileAuth = reactive<RecordFileAuthForm>({ PlanilhaXlsx: undefined, Credencial: null });
-
+const FormFileAuth = reactive<RecordFileAuthForm>({ PlanilhaXlsx: [], Credencial: null });
+const computedFiles = computed(() => FormFileAuth.PlanilhaXlsx);
 const opcoesCredenciais = ref<CredenciaisSelect[]>([{ value: null, text: "Selecione" }]);
-onBeforeMount(async () => {
-  opcoesCredenciais.value = await window.botApi.listagemCredenciais(
-    props.bot.sistema as SystemBots,
-  );
-});
+function removeFile(idx: number) {
+  FormFileAuth.PlanilhaXlsx?.splice(idx, 1);
+}
 
-onUnmounted(() => {
-  opcoesCredenciais.value = [{ value: null, text: "Selecione" }];
-});
 watch(
   () => ({ ...FormFileAuth }),
   (newValue) => {
@@ -21,6 +16,15 @@ watch(
   },
   { deep: true },
 );
+
+onBeforeMount(async () => {
+  opcoesCredenciais.value = await window.botApi.listagemCredenciais(
+    props.bot.sistema as SystemBots,
+  );
+});
+onUnmounted(() => {
+  opcoesCredenciais.value = [{ value: null, text: "Selecione" }];
+});
 </script>
 
 <template>
@@ -28,8 +32,25 @@ watch(
     <BCol md="12" lg="12" xl="12" sm="12">
       <div class="container-fluid rounded rounded-4 border p-3" style="height: 8.5rem">
         <BFormGroup label="Planilha Xlsx" label-size="lg" class="mb-2">
-          <AppDropFile v-model="FormFileAuth.PlanilhaXlsx" />
+          <AppDropFile
+            v-model="FormFileAuth.PlanilhaXlsx"
+            v-if="FormFileAuth.PlanilhaXlsx?.length === 0"
+          />
         </BFormGroup>
+      </div>
+      <div class="p-3">
+        <TransitionGroup class="list-group" tag="ul" name="list">
+          <li
+            @click="removeFile(idx)"
+            class="list-group-item list-group-item-action"
+            v-for="(file, idx) in computedFiles"
+            :key="idx"
+          >
+            <div>
+              {{ file.name }}
+            </div>
+          </li>
+        </TransitionGroup>
       </div>
     </BCol>
     <BCol md="12" lg="12" xl="12" sm="12">
@@ -47,3 +68,15 @@ watch(
     </BCol>
   </div>
 </template>
+
+<style lang="css" scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>

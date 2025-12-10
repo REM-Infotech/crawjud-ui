@@ -7,6 +7,7 @@ const userHome = homedir();
 class FileService {
   static async fileDialog() {
     const file = await dialog.showOpenDialog({
+      properties: ["multiSelections", "dontAddToRecent"],
       title: "Selecione os arquivo",
       defaultPath: join(userHome),
       filters: [{ name: "Arquivos para o robô", extensions: ["xlsx", "pdf"] }],
