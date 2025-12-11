@@ -32,9 +32,10 @@ watch(
       {{ props.bot?.display_name }}
     </template>
     <BForm>
-      <BotXlsxfile v-model="FormBot.xlsx" />
-      <BotAnexos v-model="FormBot.anexos" />
-      <BotCredencial v-model="FormBot.credencial" />
+      <BotXlsxfile />
+      <BotAnexos />
+      <BotCredencial />
+      <BotCertificado v-if="bot?.sistema === 'PJE'" />
     </BForm>
   </BModal>
 </template>
