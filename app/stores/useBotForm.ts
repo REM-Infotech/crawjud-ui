@@ -1,15 +1,7 @@
 export default defineStore("useBotForm", () => {
   const progressBarValue = ref(0);
   const fileNs = socketio.socket("/files");
-  const selects = reactive({
-    enviaXlsx: false,
-    enviaAnexos: false,
-    needCredencial: false,
-    needSenhaToken: true,
-    enviaCertificado: true,
-    enviaKbdx: true,
-  });
-
+  const seed = ref("");
   const current = ref<BotInfo>({} as BotInfo);
   const FormBot = reactive<formBot>({
     xlsx: null,
@@ -19,7 +11,9 @@ export default defineStore("useBotForm", () => {
     kbdx: null,
     senha_token: null,
     configuracao_form: null,
+    sid_filesocket: "",
+    bot_id: 0,
   });
 
-  return { selects, FormBot, current, fileNs, progressBarValue };
+  return { seed, FormBot, current, fileNs, progressBarValue };
 });

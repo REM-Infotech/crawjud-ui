@@ -3,7 +3,6 @@ import type { Socket } from "socket.io-client";
 import Utils from "./Utils";
 
 class FileUploader {
-  public FormBot: FormData;
   private totalSent: number;
   private chunkSize: number;
   public fileSocket: Socket;
@@ -13,7 +12,6 @@ class FileUploader {
     this.chunkSize = 1024 * 90;
     this.fileSocket = socketio.socket("/files");
     this.fileSocket.connect();
-    this.FormBot = new FormData();
   }
 
   public async uploadFile(file: File): Promise<void> {
@@ -34,6 +32,7 @@ class FileUploader {
 
   private async uploadInChunks(file: File, totalSize: number) {
     const totalChunks = Math.ceil(file.size / this.chunkSize);
+    const { seed } = storeToRefs(useBotForm());
     for (let i = 0; i < totalChunks; i++) {
       const start = i * this.chunkSize;
       const end = Math.min(file.size, start + this.chunkSize);
@@ -43,7 +42,7 @@ class FileUploader {
 
       this.totalSent = this.totalSent + currentSize;
 
-      await this.uploadToSocketIo(file, arrayBuffer, currentSize);
+      await this.uploadToSocketIo(file, arrayBuffer, currentSize, seed.value);
       await this.updateProgressBar(this.totalSent, totalSize);
 
       if (end >= totalSize) {
@@ -52,7 +51,12 @@ class FileUploader {
     }
   }
 
-  private async uploadToSocketIo(file: File, arrayBuffer: ArrayBuffer, currentSize: number) {
+  private async uploadToSocketIo(
+    file: File,
+    arrayBuffer: ArrayBuffer,
+    currentSize: number,
+    seed: string,
+  ) {
     await new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         this.fileSocket.emit(
@@ -63,6 +67,7 @@ class FileUploader {
             current_size: currentSize,
             fileSize: file.size,
             fileType: file.type,
+            seed: seed,
           },
           (err: Error | null) => {
             if (err) reject(err);

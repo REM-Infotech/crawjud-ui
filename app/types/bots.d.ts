@@ -7,15 +7,7 @@ type SystemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
 
 type CertificadoFile = (File & { name: `${string}.pfx` }) | null;
 type KbdxFile = (File & { name: `${string}.kbdx` }) | null;
-interface formBot {
-  configuracao_form: ConfigForm | null;
-  xlsx: File | null;
-  anexos: File[] | null;
-  credencial: number | null | undefined;
-  senha_token: string | null;
-  certificado: CertificadoFile;
-  kbdx: KbdxFile;
-}
+
 /**
  * Indica o status atual de execução do robô.
  */

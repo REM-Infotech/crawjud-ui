@@ -9,16 +9,13 @@ const props = defineProps<{ bot: BotInfo | undefined }>();
 
 const toast = useToast();
 const bots = useBotStore();
-const { selects, FormBot } = useBotForm();
-
+const { FormBot } = useBotForm();
+const { seed } = storeToRefs(useBotForm());
 const ConfirmDados = ref(false);
 
 class FormBotManager {
   static async clearForm(val: boolean) {
     if (!val) {
-      Object.entries(selects).forEach(([key, _]) => {
-        selects[key as keyof typeof selects] = false;
-      });
       Object.entries(FormBot).forEach(([key, _]) => {
         FormBot[key as keyof typeof FormBot] = null;
       });
@@ -28,14 +25,16 @@ class FormBotManager {
     bots.listar_credenciais(props.bot as BotInfo);
   }
   static async handleSubmit(e: Event) {
+    e.preventDefault();
+
     let title = "Erro";
     let message = "Erro ao iniciar robô";
 
     try {
       FormBot.configuracao_form = props.bot?.configuracao_form as ConfigForm;
-
+      FormBot.sid_filesocket = seed.value;
+      FormBot.bot_id = Number(props.bot?.Id);
       const form: Record<string, any> = {};
-
       Object.entries(FormBot).forEach(([k, v]) => {
         if (v) {
           if (typeof v === "string" || typeof v === "number") {
@@ -63,6 +62,10 @@ class FormBotManager {
   }
 }
 
+onMounted(() => {
+  const { $uuid: uuid } = useNuxtApp();
+  seed.value = uuid.v4().toString();
+});
 watch(model, FormBotManager.clearForm);
 
 const botForms: Record<ConfigForm, Component[]> = {
