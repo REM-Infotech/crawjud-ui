@@ -16,15 +16,12 @@ const listagem = computed<BotInfo[]>(() => listagemRobos.data);
 onBeforeMount(() => {
   listagemRobos.listagem();
 });
-watch(
-  () => modal,
-  async (newValue) => {
-    if (!newValue) {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      selectedBot.value = undefined;
-    }
-  },
-);
+watch(modal, async (val) => {
+  if (!val) {
+    await new Promise((r) => setTimeout(r, 200));
+    selectedBot.value = undefined;
+  }
+});
 
 function setSelectedBot(bot: BotInfo) {
   modal.value = true;
