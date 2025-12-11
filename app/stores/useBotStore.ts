@@ -1,4 +1,4 @@
-export default defineStore("useListageRobo", {
+export default defineStore("useBotStore", {
   state: () => ({
     listagem: [] as BotInfo[],
     credenciais: [{ value: null, text: "Selecione" }] as CredenciaisSelect[],
