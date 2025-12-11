@@ -7,10 +7,9 @@ import Xlsxfile from "./xlsxfile.vue";
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: BotInfo | undefined }>();
 
-const modal = useModal();
 const toast = useToast();
 const bots = useBotStore();
-const { selects, FormBot, current } = useBotForm();
+const { selects, FormBot } = useBotForm();
 
 const ConfirmDados = ref(false);
 
