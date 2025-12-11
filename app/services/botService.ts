@@ -1,6 +1,5 @@
-import { type IpcMainInvokeEvent } from "electron";
+import { session, type IpcMainInvokeEvent } from "electron";
 import safeStoreService from "./safeStoreService";
-
 class FileIpc {
   readonly name: string;
   readonly base64: string;
@@ -56,22 +55,14 @@ class BotService {
   static async iniciaExecucao(form: Record<string, any>, bot: BotInfo) {
     try {
       const endpoint = `/bot/${bot.sistema.toLowerCase()}/run`;
-      const token = safeStoreService.load("jwt");
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const cookiesArr = await session.defaultSession.cookies.get({
+        url: import.meta.env.VITE_API_URL,
+      });
 
-      form["configuracao_form"] = bot.configuracao_form;
-
-      const xsrf = (
-        await api.get("/bot/xsrf-cookie", {
-          headers: {
-            Authorization: token,
-          },
-        })
-      ).data.csrf as string;
+      const cookieHeader = cookiesArr.map((cookie) => `${cookie.name}=${cookie.value}`).join("; ");
       const response = await api.post(endpoint, form, {
         headers: {
-          Authorization: token,
-          "x-xsrf-token": xsrf,
+          Cookie: cookieHeader,
         },
       });
 

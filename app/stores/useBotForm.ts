@@ -1,4 +1,5 @@
 export default defineStore("useBotForm", () => {
+  const fileNs = socketio.socket("/files");
   const selects = reactive({
     enviaXlsx: false,
     enviaAnexos: false,
@@ -19,5 +20,5 @@ export default defineStore("useBotForm", () => {
     configuracao_form: null,
   });
 
-  return { selects, FormBot, current };
+  return { selects, FormBot, current, fileNs };
 });
