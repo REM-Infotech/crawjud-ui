@@ -1,18 +1,13 @@
 /**
  * Representa os sistemas judiciais suportados.
  */
-type SytemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
-/**
- * Define os tipos de formulários de configuração disponíveis.
- */
-type ConfigForm =
-  | "file_auth"
-  | "multiple_files"
-  | "only_auth"
-  | "proc_parte"
-  | "only_file"
-  | "pje"
-  | "pje_protocolo";
+
+type FileInput = File[] | File | undefined;
+type SystemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
+
+type CertificadoFile = (File & { name: `${string}.pfx` }) | null;
+type KbdxFile = (File & { name: `${string}.kbdx` }) | null;
+
 /**
  * Indica o status atual de execução do robô.
  */
@@ -23,7 +18,7 @@ type StatusBot = "Inicializando" | "Em Execução" | "Finalizado";
  * @property {number} Id - Identificador único do robô.
  * @property {ConfigForm} configuracao_form - Tipo de formulário usado.
  * @property {string} display_name - Nome exibido na interface.
- * @property {SytemBots} sistema - Sistema judicial associado.
+ * @property {SystemBots} sistema - Sistema judicial associado.
  * @property {string} descricao - Descrição do robô.
  * @property {string} categoria - Categoria do robô.
  */
@@ -31,7 +26,7 @@ interface BotInfo {
   Id: number;
   configuracao_form: ConfigForm;
   display_name: string;
-  sistema: SytemBots;
+  sistema: SystemBots;
   descricao: string;
   categoria: string;
 }
@@ -123,3 +118,12 @@ type Contadores = "total" | "sucessos" | "erros" | "restantes";
 interface ValoresContador extends Record<Contadores, number> {
   [key in T]: number;
 }
+
+type ConfigForm =
+  | "file_auth"
+  | "multiple_files"
+  | "only_auth"
+  | "only_file"
+  | "pje"
+  | "pje_protocolo"
+  | "proc_parte";

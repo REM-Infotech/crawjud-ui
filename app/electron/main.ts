@@ -1,11 +1,10 @@
-import useAuthService from "@/services/authService";
-import useBotService from "@/services/botService";
-import useThemeService from "@/services/themeService";
-
 import { app, BrowserWindow } from "electron";
+
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
+
+import useThemeService from "@/services/themeService";
 
 export let mainWindow: BrowserWindow | null = null;
 let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
@@ -58,8 +57,7 @@ if (!gotTheLock) {
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
     IpcApp();
-    useBotService();
-    useAuthService();
+
     createWindow();
     useThemeService();
   });

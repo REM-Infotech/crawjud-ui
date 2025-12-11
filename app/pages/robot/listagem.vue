@@ -1,59 +1,33 @@
 <script setup lang="ts">
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
-const listagemRobos = useListagemRobos();
-const listagem = computed<BotInfo[]>(() => listagemRobos.data);
-
-onBeforeMount(async () => {
-  await listagemRobos.listagem();
-});
-
-onUnmounted(() => {
-  listagemRobos.data = [];
-});
 
 const modal = ref(false);
+const { current } = storeToRefs(useBotForm());
+const bots = useBotStore();
+const listagem = computed<BotInfo[]>(() => bots.listagem);
 
-watch(
-  () => modal,
-  async (newValue) => {
-    if (!modal) {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-
-      selectedBot.value = undefined;
-    }
-  },
-);
-
-const selectedBot = ref<BotInfo>();
-
-function setSelectedBot(bot: BotInfo) {
-  modal.value = true;
-  selectedBot.value = bot;
-}
+onBeforeMount(async () => {
+  await bots.listar_robos();
+  const configs: Record<string, string> = {};
+  for (const bot of bots.listagem) {
+    configs[bot.configuracao_form] = "ok";
+  }
+  console.clear();
+  console.log(configs);
+});
+watch(modal, async (val) => {
+  if (!val) {
+    await new Promise((r) => setTimeout(r, 200));
+    current.value = {} as BotInfo;
+  }
+});
 </script>
 
 <template>
-  <Container :main-class="'container-fluid'">
-    <AppModal v-model="modal">
-      <template #header>
-        <span class="fs-4 fw-bold">
-          {{ selectedBot?.display_name }}
-        </span>
-      </template>
-      <template #body>
-        <AppDropFile />
-      </template>
-    </AppModal>
-    <div
-      class="modal fade"
-      id="modalBot"
-      aria-hidden="true"
-      aria-labelledby="exampleModalToggleLabel"
-      tabindex="-1"
-    ></div>
-    <template #heading> Robos Page </template>
+  <BContainer>
+    <BotForm v-model="modal" :bot="current" />
     <TransitionGroup tag="div" name="bots" class="row">
-      <div class="col-lg-3 col-xl-3 p-2" v-for="(bot, index) in listagem" :key="index">
+      <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">
           <div class="card-header">
             <span class="text-white fw-bold fs-6">
@@ -76,16 +50,26 @@ function setSelectedBot(bot: BotInfo) {
             </div>
           </div>
           <div class="card-footer d-flex">
-            <button class="button-execute" @click="setSelectedBot(bot)">Executar</button>
+            <button
+              class="button-execute"
+              @click="
+                () => {
+                  modal = true;
+                  current = bot;
+                }
+              "
+            >
+              Executar
+            </button>
             <button class="button-bot">Ver Logs</button>
           </div>
         </div>
       </div>
     </TransitionGroup>
-  </Container>
+  </BContainer>
 </template>
 
-<style lang="css" scoped>
+<style lang="css">
 .bots-enter-active,
 .bots-leave-active {
   transition: all 0.5s;
@@ -154,5 +138,9 @@ function setSelectedBot(bot: BotInfo) {
   width: 95px;
   height: 105px;
   padding: 5px;
+}
+
+.modal-app {
+  min-width: 960px !important;
 }
 </style>

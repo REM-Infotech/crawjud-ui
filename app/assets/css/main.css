@@ -2,6 +2,7 @@
    Imports & Variables
    ===================== */
 @import url("datatables.net-dt");
+@import "modal-app.css";
 
 :root {
   /* Maroon Palette */
@@ -51,7 +52,7 @@
   --color-accent: var(--color-electric-violet-300);
 
   /* Backgrounds */
-  --bg-input: #1f071862;
+  --bg-input: #771b5b62;
   --bg-card: var(--color-flirt-950);
   --bg-accent: var(--color-electric-violet-900);
   --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
@@ -151,12 +152,6 @@ img {
 /* =====================
    Form Elements
    ===================== */
-[type="text"],
-[type="email"],
-[type="password"] {
-  padding: 0.5em;
-  background-color: var(--bg-input) !important;
-}
 
 button,
 input,
@@ -176,24 +171,31 @@ button:hover {
   background: var(--bg-accent);
 }
 
-[class*="form-"][type="text"],
-[class*="form-"][type="email"],
-[class*="form-"][type="password"],
-[class*="form-"] textarea,
-[class*="form-"] select {
+[type="text"],
+[type="email"],
+[type="password"] {
+  padding: 0.5em;
+  background-color: var(--bg-input) !important;
+}
+
+input,
+textarea,
+select {
   color: var(--color-primary) !important;
   background-color: var(--bg-input) !important;
 }
 
-[class*="form-"]::placeholder {
-  color: var(--color-secondary) !important;
-  background-color: var(--bg-secondary) !important;
-}
-
-[class*="form-"]:focus {
+input:focus,
+textarea:focus,
+select:focus {
   border-color: var(--color-accent) !important;
   box-shadow: 0 0 5px var(--color-accent) !important;
   outline: none !important;
+}
+
+option {
+  background-color: var(--bg-primary) !important;
+  color: var(--color-primary) !important;
 }
 
 /* =====================
@@ -249,4 +251,5 @@ button:hover {
   align-items: center;
   justify-content: center;
   border-radius: 26px;
+  z-index: 9998;
 }

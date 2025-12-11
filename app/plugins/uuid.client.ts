@@ -1,7 +1,9 @@
+import * as uuid from "uuid";
+
 export default defineNuxtPlugin(() => {
   return {
     provide: {
-      electron: (window as Window).windowApi || null,
+      uuid: uuid,
     },
   };
 });

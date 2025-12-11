@@ -16,15 +16,15 @@ const isLoginOrIndex = computed(() => {
 });
 
 const closeWindow = () => {
-  window.electronAPI.closeWindow();
+  window.windowApi.closeWindow();
 };
 
 const minimizeWindow = () => {
-  window.electronAPI.minimizeWindow();
+  window.windowApi.minimizeWindow();
 };
 
 const maximizeWindow = () => {
-  window.electronAPI.maximizeWindow();
+  window.windowApi.maximizeWindow();
 };
 
 watch(

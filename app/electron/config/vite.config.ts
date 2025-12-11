@@ -12,6 +12,20 @@ import renderer from "vite-plugin-electron-renderer";
 const workDir = process.cwd();
 export default defineConfig({
   base: "/",
+  build: {
+    rollupOptions: {
+      external: ["minio", "fs", "path", "crypto", "http", "https"],
+      input: resolve(process.cwd(), "index.html"),
+    },
+    outDir: resolve(process.cwd(), ".vite/renderer"),
+  },
+  resolve: {
+    alias: {
+      "@": resolve(workDir, "app"),
+      "#electron": resolve(workDir, "app/electron"),
+      "#utils": resolve(workDir, "app", "electron", "utils"),
+    },
+  },
   plugins: [
     {
       name: "copy-nuxt-output-public",
@@ -42,19 +56,4 @@ export default defineConfig({
       },
     }),
   ],
-  build: {
-    rollupOptions: {
-      input: resolve(process.cwd(), "index.html"),
-    },
-    outDir: resolve(process.cwd(), ".vite/renderer"),
-
-    // Outras configurações de build aqui
-  },
-  resolve: {
-    alias: {
-      "@": resolve(workDir, "app"),
-      "#electron": resolve(workDir, "app/electron"),
-      "#utils": resolve(workDir, "app", "electron", "utils"),
-    },
-  },
 });

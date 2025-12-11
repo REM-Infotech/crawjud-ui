@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import AppToast from "./components/AppToast.vue";
-
 const { loadTheme } = useThemeStore();
-
 onBeforeMount(loadTheme);
 </script>
 

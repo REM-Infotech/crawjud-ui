@@ -1,19 +1,22 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("electronAPI", {
-  isJwtToken: () => ipcRenderer.invoke("is-jwt-token"),
-  listagemBots: () => ipcRenderer.invoke("listagem-bots"),
-  loadPreferences: () => ipcRenderer.invoke("load-preferences"),
-  closeWindow: () => ipcRenderer.send("close-window"),
-  maximizeWindow: () => ipcRenderer.send("maximize-window"),
-  minimizeWindow: () => ipcRenderer.send("minimize-window"),
-  toggleDarkMode: () => ipcRenderer.invoke("dark-mode:toggle-dark"),
-  toggleToSystem: () => ipcRenderer.invoke("dark-mode:toggle-system"),
-  toggleLightMode: () => ipcRenderer.invoke("dark-mode:toggle-light"),
-  currentPreset: () => ipcRenderer.invoke("dark-mode:current-preset"),
-  authenticateUser: (username: string, password: string) =>
-    ipcRenderer.invoke("authenticate-user", username, password),
-});
+const windowApi = {
+  fileDialog: (): Promise<unknown> => ipcRenderer.invoke("file-dialog"),
+  loadPreferences: (): Promise<unknown> => ipcRenderer.invoke("load-preferences"),
+  closeWindow: (): void => ipcRenderer.send("close-window"),
+  maximizeWindow: (): void => ipcRenderer.send("maximize-window"),
+  minimizeWindow: (): void => ipcRenderer.send("minimize-window"),
+};
+
+const themeApi = {
+  toggleDarkMode: (): Promise<unknown> => ipcRenderer.invoke("dark-mode:toggle-dark"),
+  toggleToSystem: (): Promise<unknown> => ipcRenderer.invoke("dark-mode:toggle-system"),
+  toggleLightMode: (): Promise<unknown> => ipcRenderer.invoke("dark-mode:toggle-light"),
+  currentPreset: (): Promise<unknown> => ipcRenderer.invoke("dark-mode:current-preset"),
+};
+
+contextBridge.exposeInMainWorld("windowApi", windowApi);
+contextBridge.exposeInMainWorld("themeApi", themeApi);
 
 window.addEventListener("keypress", (e) => {
   if (e) {

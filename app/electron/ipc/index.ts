@@ -1,5 +1,4 @@
-import { BrowserWindow, dialog, ipcMain } from "electron";
-import { BaseWindow } from "electron/main";
+import { BaseWindow, BrowserWindow, dialog, ipcMain } from "electron";
 
 class IpcUtils {
   static beforeInputEvent(event: Electron.Event, input: Electron.Input) {
