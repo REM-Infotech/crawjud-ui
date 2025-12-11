@@ -1,5 +1,6 @@
 import { storeToRefs } from "pinia";
 import type { Socket } from "socket.io-client";
+import Utils from "./Utils";
 
 class FileUploader {
   public FormBot: FormData;
@@ -15,29 +16,17 @@ class FileUploader {
     this.FormBot = new FormData();
   }
 
-  public async uploadXlsx(file: File | undefined): Promise<void> {
+  public async uploadFile(file: File): Promise<void> {
     this.totalSent = 0;
-    if (file) {
-      await this.uploadInChunks(file, file.size);
-      this.clearProgressBar(`Arquivo ${file.name} carregado!`);
-    }
+    await this.uploadInChunks(file, file.size);
+    this.clearProgressBar(`Arquivo ${file.name} carregado!`);
   }
-  public async uploadMultipleFiles(FileList: File[] | undefined): Promise<void> {
+  public async uploadMultipleFile(FileList: File[] | undefined): Promise<void> {
     this.totalSent = 0;
     if (FileList) {
       const totalFilesSizes = FileList.reduce((acc, f) => acc + f.size, 0);
       for (const file of FileList) {
         await this.uploadInChunks(file, totalFilesSizes);
-
-        await new Promise<void>((resolve, _) => {
-          notify.show({
-            title: "Mensagem",
-            message: `Arquivo ${file.name} carregado!`,
-            type: "info",
-            duration: 2000,
-          });
-          setTimeout(resolve, 500); // delay envio de cada chunk
-        });
       }
       this.clearProgressBar(`Seus ${FileList.length} foram carregados!`);
     }
@@ -86,7 +75,7 @@ class FileUploader {
 
   private async updateProgressBar(totalSent: number, totalBytes: number) {
     // Ref da progressBar
-    const { progressBarValue } = storeToRefs(botStore());
+    const { progressBarValue } = storeToRefs(useBotForm());
 
     // Target Progress
     const targetProgress = Math.round((totalSent / totalBytes) * 100);
@@ -103,13 +92,8 @@ class FileUploader {
   }
 
   private async clearProgressBar(message: string) {
-    const { progressBarValue } = storeToRefs(botStore());
-    notify.show({
-      title: "Sucesso",
-      message: message,
-      type: "success",
-      duration: 5000,
-    });
+    const { progressBarValue } = storeToRefs(useBotForm());
+
     await new Promise((r) => setTimeout(r, 2000));
     progressBarValue.value = 0;
   }

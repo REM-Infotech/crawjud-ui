@@ -1,4 +1,5 @@
 export default defineStore("useBotForm", () => {
+  const progressBarValue = ref(0);
   const fileNs = socketio.socket("/files");
   const selects = reactive({
     enviaXlsx: false,
@@ -20,5 +21,5 @@ export default defineStore("useBotForm", () => {
     configuracao_form: null,
   });
 
-  return { selects, FormBot, current, fileNs };
+  return { selects, FormBot, current, fileNs, progressBarValue };
 });
