@@ -10,7 +10,7 @@ const props = defineProps<{ bot: BotInfo | undefined }>();
 const modal = useModal();
 const toast = useToast();
 const bots = useBotStore();
-const { selects, FormBot } = useBotForm();
+const { selects, FormBot, current } = useBotForm();
 
 const ConfirmDados = ref(false);
 
@@ -54,15 +54,12 @@ const botForms: Record<ConfigForm, Component[]> = {
     <template #header>
       {{ props.bot?.display_name }}
     </template>
-    <BForm
-      class="d-flex flex-column"
-      style="min-height: 100px"
-      @submit="FormBotManager.handleSubmit"
-    >
-      <BotXlsxfile />
-      <BotAnexos />
-      <BotCredencial />
-      <BotCertificado v-if="bot?.sistema === 'PJE'" />
+    <BForm class="d-flex flex-column" @submit="FormBotManager.handleSubmit">
+      <component
+        :is="ComponentForm"
+        v-for="(ComponentForm, idx) in botForms[bot?.configuracao_form as ConfigForm]"
+        :key="idx"
+      />
       <div class="d-flex flex-column p-3 gap-2" style="min-height: 120px">
         <BFormCheckbox v-model="ConfirmDados">
           Confirmo que os dados inseridos estão corretos

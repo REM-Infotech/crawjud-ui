@@ -14,16 +14,14 @@ watch(certificado, (newV) => (FormBot.certificado = newV));
       <BFormCheckbox v-model="selects.enviaCertificado" switch>
         Certificado? {{ selects.enviaCertificado ? "Sim" : "Não" }}
       </BFormCheckbox>
-      <div style="min-height: 175px">
-        <Transition name="inputbot" mode="in-out">
-          <div v-if="selects.enviaCertificado">
-            <BFormFile class="mb-1" size="md" v-model="certificado" accept=".pfx" required />
-            <div v-if="current.sistema === 'PJE'">
-              <BotKbdxfile />
-            </div>
+      <Transition name="inputbot" mode="in-out">
+        <div v-if="selects.enviaCertificado">
+          <BFormFile class="mb-1" size="md" v-model="certificado" accept=".pfx" required />
+          <div v-if="current.sistema === 'PJE'">
+            <BotKbdxfile />
           </div>
-        </Transition>
-      </div>
+        </div>
+      </Transition>
     </div>
   </BFormGroup>
 </template>

@@ -15,20 +15,18 @@ watch(anexos, (newV) => (FormBot.anexos = newV));
       <BFormCheckbox switch v-model="selects.enviaAnexos">
         Anexos? {{ selects.enviaAnexos ? "Sim" : "Não" }}
       </BFormCheckbox>
-      <div style="min-height: 50px">
-        <Transition name="inputbot" mode="in-out">
-          <div v-if="selects.enviaAnexos">
-            <BFormFile
-              class="mb-1"
-              size="md"
-              multiple
-              required
-              accept=".pdf, .docx"
-              v-model="anexos"
-            />
-          </div>
-        </Transition>
-      </div>
+      <Transition name="inputbot" mode="in-out">
+        <div v-if="selects.enviaAnexos">
+          <BFormFile
+            class="mb-1"
+            size="md"
+            multiple
+            required
+            accept=".pdf, .docx"
+            v-model="anexos"
+          />
+        </div>
+      </Transition>
     </div>
   </BFormGroup>
 </template>
