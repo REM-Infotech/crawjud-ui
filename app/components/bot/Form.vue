@@ -7,6 +7,8 @@ const toast = useToast();
 const bots = useBotStore();
 const { selects, FormBot } = useBotForm();
 
+const ConfirmDados = ref(false);
+
 class FormBotManager {
   static async clearForm(val: boolean) {
     if (!val) {
@@ -33,7 +35,7 @@ watch(model, FormBotManager.clearForm);
 </script>
 
 <template>
-  <BModal no-footer centered size="lg" v-model="model">
+  <BModal no-footer centered size="lg" header-class="fs-3" v-model="model">
     <template #header>
       {{ props.bot?.display_name }}
     </template>
@@ -46,9 +48,26 @@ watch(model, FormBotManager.clearForm);
       <BotAnexos />
       <BotCredencial />
       <BotCertificado v-if="bot?.sistema === 'PJE'" />
-      <div class="d-flex flex-column p-3">
-        <BButton variant="success" type="submit"> Iniciar! </BButton>
+      <div class="d-flex flex-column p-3 gap-2" style="min-height: 120px">
+        <BFormCheckbox v-model="ConfirmDados">
+          Confirmo que os dados inseridos estão corretos
+        </BFormCheckbox>
+        <Transition name="execbtn">
+          <BButton v-if="ConfirmDados" variant="success" type="submit"> Iniciar! </BButton>
+        </Transition>
       </div>
     </BForm>
   </BModal>
 </template>
+<style lang="css" scoped>
+.execbtn-enter-active,
+.execbtn-leave-active {
+  transition: all 0.3s ease;
+}
+
+.execbtn-enter-from,
+.execbtn-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>
