@@ -4,7 +4,6 @@ import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
-import useFileService from "@/services/fileService";
 import useThemeService from "@/services/themeService";
 
 export let mainWindow: BrowserWindow | null = null;
@@ -58,7 +57,7 @@ if (!gotTheLock) {
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
     IpcApp();
-    useFileService();
+
     createWindow();
     useThemeService();
   });
