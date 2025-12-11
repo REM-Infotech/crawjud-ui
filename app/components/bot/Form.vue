@@ -67,9 +67,11 @@ const botForms: Record<ConfigForm, Component[]> = {
         <BFormCheckbox v-model="ConfirmDados">
           Confirmo que os dados inseridos estão corretos
         </BFormCheckbox>
-        <Transition name="execbtn">
-          <BButton v-if="ConfirmDados" variant="success" type="submit"> Iniciar! </BButton>
-        </Transition>
+        <div class="d-flex flex-column">
+          <Transition name="execbtn">
+            <BButton v-if="ConfirmDados" variant="success" type="submit"> Iniciar! </BButton>
+          </Transition>
+        </div>
       </div>
     </BForm>
   </BModal>

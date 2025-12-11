@@ -29,15 +29,17 @@ watch(credencial, (newV) => (FormBot.credencial = newV));
       <BFormCheckbox switch v-model="selects.needCredencial">
         Necessita credencial? {{ selects.needCredencial ? "Sim" : "Não" }}
       </BFormCheckbox>
-      <Transition name="inputbot" mode="in-out">
-        <div
-          v-if="selects.needCredencial"
-          class="d-flex flex-column p-3 gap-3 border border-secondary border-2 rounded-2"
-        >
-          <BFormInput size="md" placeholder="Filtre" v-model="query" />
-          <BFormSelect size="md" :options="computedCredenciais" v-model="FormBot.credencial" />
-        </div>
-      </Transition>
+      <div style="min-height: 150px">
+        <Transition name="inputbot" mode="in-out">
+          <div
+            v-if="selects.needCredencial"
+            class="d-flex flex-column p-3 gap-3 border border-secondary border-2 rounded-2"
+          >
+            <BFormInput size="md" placeholder="Filtre" v-model="query" />
+            <BFormSelect size="md" :options="computedCredenciais" v-model="FormBot.credencial" />
+          </div>
+        </Transition>
+      </div>
     </div>
   </BFormGroup>
 </template>
