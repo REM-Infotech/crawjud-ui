@@ -7,19 +7,10 @@ watch(xlsx, (newV) => (FormBot.xlsx = newV));
 <template>
   <BFormGroup
     class="mb-3 p-3 border border-secondary border-1 rounded-1"
-    label="Arquivos de execução"
-    label-size="lg"
+    label="Planilha xlsx"
+    label-size="md"
   >
-    <div class="d-flex flex-column gap-2" s>
-      <BFormCheckbox switch v-model="selects.enviaXlsx">
-        Arquivo Xlsx? {{ selects.enviaXlsx ? "Sim" : "Não" }}
-      </BFormCheckbox>
-      <Transition name="inputbot" mode="in-out">
-        <div v-if="selects.enviaXlsx">
-          <BFormFile class="mb-1" size="md" required accept=".xlsx" v-model="xlsx" />
-        </div>
-      </Transition>
-    </div>
+    <BFormFile class="mb-1" size="sm" required accept=".xlsx" v-model="xlsx" />
   </BFormGroup>
 </template>
 

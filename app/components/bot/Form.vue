@@ -60,7 +60,10 @@ const botForms: Record<ConfigForm, Component[]> = {
         v-for="(ComponentForm, idx) in botForms[bot?.configuracao_form as ConfigForm]"
         :key="idx"
       />
-      <div class="d-flex flex-column p-3 gap-2" style="min-height: 120px">
+      <div
+        class="d-flex flex-column p-3 gap-2 mt-5"
+        style="min-height: 120px; border-top: 1px solid black"
+      >
         <BFormCheckbox v-model="ConfirmDados">
           Confirmo que os dados inseridos estão corretos
         </BFormCheckbox>

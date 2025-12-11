@@ -7,21 +7,12 @@ watch(certificado, (newV) => (FormBot.certificado = newV));
 <template>
   <BFormGroup
     class="mb-3 p-3 border border-secondary border-1 rounded-1"
-    label="Arquivos de execução"
-    label-size="lg"
+    label="Certificado digital (A1)"
+    label-size="md"
   >
-    <div class="d-flex flex-column gap-2">
-      <BFormCheckbox v-model="selects.enviaCertificado" switch>
-        Certificado? {{ selects.enviaCertificado ? "Sim" : "Não" }}
-      </BFormCheckbox>
-      <Transition name="inputbot" mode="in-out">
-        <div v-if="selects.enviaCertificado">
-          <BFormFile class="mb-1" size="md" v-model="certificado" accept=".pfx" required />
-          <div v-if="current.sistema === 'PJE'">
-            <BotKbdxfile />
-          </div>
-        </div>
-      </Transition>
+    <BFormFile class="mb-1" size="sm" v-model="certificado" accept=".pfx" required />
+    <div v-if="current.sistema === 'PJE'">
+      <BotKbdxfile />
     </div>
   </BFormGroup>
 </template>
