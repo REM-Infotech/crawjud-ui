@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import FileAuth from "~/components/bot/FileAuth.vue";
-import MultipleFiles from "~/components/bot/MultipleFiles.vue";
-import OnlyAuth from "~/components/bot/OnlyAuth.vue";
-import OnlyFile from "~/components/bot/OnlyFile.vue";
-import PJeFileAuth from "~/components/bot/PJeFileAuth.vue";
-import PJeProtocolo from "~/components/bot/PJeProtocolo.vue";
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
 
 const modal = ref(false);
@@ -22,115 +16,10 @@ watch(modal, async (val) => {
     selectedBot.value = undefined;
   }
 });
-
-function setSelectedBot(bot: BotInfo) {
-  modal.value = true;
-  selectedBot.value = bot;
-}
-
-const EmptyComponent = {
-  template: "<div></div>",
-};
-
-const FormsBot: Record<ConfigForm, Component> = {
-  file_auth: FileAuth,
-  multiple_files: MultipleFiles,
-  only_auth: OnlyAuth,
-  proc_parte: EmptyComponent,
-  only_file: OnlyFile,
-  pje: PJeFileAuth,
-  pje_protocolo: PJeProtocolo,
-};
-
-function getBotForm(bot: BotInfo) {
-  return FormsBot[bot.configuracao_form];
-}
-
-async function toBase64(file: File) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const bytes = new Uint8Array(reader.result as ArrayBuffer);
-      let binary = "";
-
-      bytes.forEach((b) => (binary += String.fromCharCode(b)));
-
-      const base64 = btoa(binary);
-      resolve(base64);
-    };
-
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-async function handleSubmit(e: SubmitEvent) {
-  e.preventDefault();
-  modal.value = false;
-
-  const load = useLoad();
-  load.show();
-
-  if (!form.value || !selectedBot.value) {
-    load.hide();
-    return;
-  }
-  const formData: Record<string, any> = {};
-  const files: FileIpc[] = [];
-  const currentFiles: File[] = [];
-  Object.entries(form.value).forEach(([key, value]) => {
-    if (value instanceof File) {
-      currentFiles.push(...[value]);
-    } else if (Array.isArray(value)) {
-      currentFiles.push(...value);
-    } else if (value !== undefined) {
-      formData[key] = value;
-    }
-  });
-
-  for (const file of currentFiles) {
-    const b64file = (await toBase64(file)) as string;
-    files.push(...[{ name: file.name, base64: b64file }]);
-  }
-
-  if (files && files.length > 0) {
-    formData["files"] = files;
-  }
-  const bot_info: Partial<BotInfo> = {};
-  Object.entries(selectedBot.value).forEach(([key, val]) => {
-    (bot_info as any)[key] = val;
-  });
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  await window.botApi.iniciaExecucao(formData, bot_info as BotInfo);
-
-  load.hide();
-}
 </script>
 
 <template>
   <BContainer>
-    <form @submit="handleSubmit">
-      <AppModal v-model="modal">
-        <template #header>
-          <span class="fs-4 fw-bold">
-            {{ selectedBot?.display_name }}
-          </span>
-        </template>
-        <template #body>
-          <component
-            :is="getBotForm(selectedBot as BotInfo)"
-            v-bind:bot="selectedBot"
-            v-model="form"
-          />
-        </template>
-        <template #footer>
-          <div class="d-flex flex-column">
-            <BButton type="submit" variant="success"> Iniciar Robô </BButton>
-          </div>
-        </template>
-      </AppModal>
-    </form>
     <TransitionGroup tag="div" name="bots" class="row">
       <div class="col-lg-3 col-xl-3 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">
@@ -155,7 +44,17 @@ async function handleSubmit(e: SubmitEvent) {
             </div>
           </div>
           <div class="card-footer d-flex">
-            <button class="button-execute" @click="setSelectedBot(bot)">Executar</button>
+            <button
+              class="button-execute"
+              @click="
+                () => {
+                  modal = true;
+                  selectedBot = bot;
+                }
+              "
+            >
+              Executar
+            </button>
             <button class="button-bot">Ver Logs</button>
           </div>
         </div>
