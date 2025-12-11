@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { selects, FormBot } = useBotForm();
+const { selects, FormBot, current } = useBotForm();
 const certificado = ref<CertificadoFile>(null);
 watch(certificado, (newV) => (FormBot.certificado = newV));
 </script>
@@ -10,13 +10,16 @@ watch(certificado, (newV) => (FormBot.certificado = newV));
     label="Arquivos de execução"
     label-size="lg"
   >
-    <div class="d-flex flex-column gap-2" s>
-      <BFormCheckbox switch v-model="selects.enviaCertificado">
+    <div class="d-flex flex-column gap-2">
+      <BFormCheckbox v-model="selects.enviaCertificado" switch>
         Certificado? {{ selects.enviaCertificado ? "Sim" : "Não" }}
       </BFormCheckbox>
       <Transition name="inputbot" mode="in-out">
         <div v-if="selects.enviaCertificado">
-          <BFormFile class="mb-1" size="md" required accept=".pfx" v-model="certificado" />
+          <BFormFile class="mb-1" size="md" v-model="certificado" accept=".pfx" required />
+          <div v-if="current.sistema === 'PJE'">
+            <BotKbdxfile />
+          </div>
         </div>
       </Transition>
     </div>

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import Anexos from "./anexos.vue";
+import Certificado from "./certificado.vue";
+import Credencial from "./credencial.vue";
+import Xlsxfile from "./xlsxfile.vue";
+
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: BotInfo | undefined }>();
 
@@ -32,6 +37,16 @@ class FormBotManager {
 }
 
 watch(model, FormBotManager.clearForm);
+
+const botForms: Record<ConfigForm, Component[]> = {
+  file_auth: [Xlsxfile, Credencial],
+  multiple_files: [Xlsxfile, Anexos, Credencial],
+  only_auth: [Credencial],
+  only_file: [Xlsxfile],
+  pje: [Xlsxfile, Certificado],
+  pje_protocolo: [Xlsxfile, Certificado],
+  proc_parte: [Xlsxfile, Credencial],
+};
 </script>
 
 <template>

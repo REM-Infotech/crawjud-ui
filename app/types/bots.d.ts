@@ -125,3 +125,12 @@ type Contadores = "total" | "sucessos" | "erros" | "restantes";
 interface ValoresContador extends Record<Contadores, number> {
   [key in T]: number;
 }
+
+type ConfigForm =
+  | "file_auth"
+  | "multiple_files"
+  | "only_auth"
+  | "only_file"
+  | "pje"
+  | "pje_protocolo"
+  | "proc_parte";

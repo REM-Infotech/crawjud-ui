@@ -8,7 +8,7 @@ export default defineStore("useBotForm", () => {
     enviaKbdx: true,
   });
 
-  const computedNeedInputs = computed(() => selects);
+  const current = ref<BotInfo>({} as BotInfo);
   const FormBot = reactive<formBot>({
     xlsx: null,
     anexos: null,
@@ -18,5 +18,5 @@ export default defineStore("useBotForm", () => {
     senha_token: null,
   });
 
-  return { selects, FormBot };
+  return { selects, FormBot, current };
 });
