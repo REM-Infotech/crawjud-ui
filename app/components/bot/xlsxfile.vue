@@ -1,16 +1,9 @@
 <script setup lang="ts">
-const { FormBot, fileNs } = useBotForm();
-
+const { FormBot } = useBotForm();
+const { isFileUploading } = storeToRefs(useBotForm());
 const xlsx = ref<File | null>(null);
 
-const fileUploader = new FileUploader();
-
-watch(xlsx, async (newV) => {
-  if (newV) {
-    await fileUploader.uploadFile(newV as File);
-    FormBot.xlsx = newV;
-  }
-});
+watch(xlsx, async (newV) => (FormBot.xlsx = newV));
 </script>
 
 <template>
@@ -19,7 +12,13 @@ watch(xlsx, async (newV) => {
     label="Planilha xlsx"
     label-size="md"
   >
-    <BFormFile class="mb-1" size="sm" required accept=".xlsx" v-model="xlsx" />
-    <BotProgress />
+    <BFormFile
+      class="mb-1"
+      size="sm"
+      accept=".xlsx"
+      v-model="xlsx"
+      :disabled="isFileUploading"
+      required
+    />
   </BFormGroup>
 </template>

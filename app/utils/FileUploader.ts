@@ -34,6 +34,7 @@ class FileUploader {
     const totalChunks = Math.ceil(file.size / this.chunkSize);
     const { seed } = storeToRefs(useBotForm());
     for (let i = 0; i < totalChunks; i++) {
+      console.log(i);
       const start = i * this.chunkSize;
       const end = Math.min(file.size, start + this.chunkSize);
       const chunk = file.slice(start, end);

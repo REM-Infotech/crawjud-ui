@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { FormBot } = storeToRefs(useBotForm());
+const { FormBot, isFileUploading } = storeToRefs(useBotForm());
 const kbdx = ref<KbdxFile>(null);
 
 watch(kbdx, (newV) => (FormBot.value.kbdx = newV));
@@ -7,7 +7,14 @@ watch(kbdx, (newV) => (FormBot.value.kbdx = newV));
 
 <template>
   <BFormGroup class="mt-3" label="Arquivo .kbdx (Para 2FA)" label-size="md">
-    <BFormFile class="mb-1" size="sm" required accept=".kbdx" v-model="kbdx" />
+    <BFormFile
+      class="mb-1"
+      size="sm"
+      accept=".kbdx"
+      v-model="kbdx"
+      :disabled="isFileUploading"
+      required
+    />
   </BFormGroup>
 </template>
 <style lang="css" scoped>

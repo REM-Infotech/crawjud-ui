@@ -6,11 +6,12 @@ import Xlsxfile from "./xlsxfile.vue";
 
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: BotInfo | undefined }>();
-
+const fileUploader = new FileUploader();
 const toast = useToast();
 const bots = useBotStore();
 const { FormBot } = useBotForm();
-const { seed } = storeToRefs(useBotForm());
+const { seed, isFileUploading } = storeToRefs(useBotForm());
+
 const ConfirmDados = ref(false);
 
 class FormBotManager {
@@ -60,6 +61,13 @@ class FormBotManager {
       body: message,
     });
   }
+  static async handleFiles(data: CertificadoFile | KbdxFile | File | File[] | null) {
+    if (Array.isArray(data)) {
+      await fileUploader.uploadMultipleFile(data);
+      return;
+    }
+    await fileUploader.uploadFile(data as File);
+  }
 }
 
 onMounted(() => {
@@ -67,6 +75,27 @@ onMounted(() => {
   seed.value = uuid.v4().toString();
 });
 watch(model, FormBotManager.clearForm);
+
+watch(
+  () => FormBot.certificado,
+  async (newV) => FormBotManager.handleFiles(newV),
+  { deep: true },
+);
+watch(
+  () => FormBot.anexos,
+  async (newV) => FormBotManager.handleFiles(newV),
+  { deep: true },
+);
+watch(
+  () => FormBot.kbdx,
+  async (newV) => FormBotManager.handleFiles(newV),
+  { deep: true },
+);
+watch(
+  () => FormBot.xlsx,
+  async (newV) => FormBotManager.handleFiles(newV),
+  { deep: true },
+);
 
 const botForms: Record<ConfigForm, Component[]> = {
   file_auth: [Xlsxfile, Credencial],
@@ -85,6 +114,7 @@ const botForms: Record<ConfigForm, Component[]> = {
       {{ props.bot?.display_name }}
     </template>
     <BForm class="d-flex flex-column" @submit="FormBotManager.handleSubmit">
+      <BotProgress />
       <component
         :is="ComponentForm"
         v-for="(ComponentForm, idx) in botForms[bot?.configuracao_form as ConfigForm]"
@@ -99,7 +129,14 @@ const botForms: Record<ConfigForm, Component[]> = {
         </BFormCheckbox>
         <div class="d-flex flex-column">
           <Transition name="execbtn">
-            <BButton v-if="ConfirmDados" variant="success" type="submit"> Iniciar! </BButton>
+            <BButton
+              v-if="ConfirmDados"
+              :variant="isFileUploading ? 'outline-success' : 'success'"
+              type="submit"
+              :disabled="isFileUploading"
+            >
+              Iniciar!
+            </BButton>
           </Transition>
         </div>
       </div>

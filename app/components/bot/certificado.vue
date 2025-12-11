@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const { FormBot, current } = storeToRefs(useBotForm());
+const { FormBot, current, isFileUploading } = storeToRefs(useBotForm());
+
 const certificado = ref<CertificadoFile>(null);
 
 watch(certificado, (newV) => (FormBot.value.certificado = newV));
@@ -11,7 +12,14 @@ watch(certificado, (newV) => (FormBot.value.certificado = newV));
     label="Certificado digital (A1)"
     label-size="md"
   >
-    <BFormFile class="mb-1" size="sm" v-model="certificado" accept=".pfx" required />
+    <BFormFile
+      class="mb-1"
+      size="sm"
+      v-model="certificado"
+      accept=".pfx"
+      :disabled="isFileUploading"
+      required
+    />
     <div v-if="current.sistema === 'PJE'">
       <BotKbdxfile />
     </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { FormBot } = storeToRefs(useBotForm());
+const { FormBot, isFileUploading } = storeToRefs(useBotForm());
 const anexos = ref<File[] | null>(null);
 
 watch(anexos, (newV) => (FormBot.value.anexos = newV));
@@ -11,7 +11,15 @@ watch(anexos, (newV) => (FormBot.value.anexos = newV));
     label="Anexos"
     label-size="md"
   >
-    <BFormFile class="mb-1" size="sm" multiple required accept=".pdf, .docx" v-model="anexos" />
+    <BFormFile
+      class="mb-1"
+      size="sm"
+      :disabled="isFileUploading"
+      accept=".pdf, .docx"
+      v-model="anexos"
+      multiple
+      required
+    />
   </BFormGroup>
 </template>
 <style lang="css" scoped>
