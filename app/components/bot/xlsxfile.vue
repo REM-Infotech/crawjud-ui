@@ -14,7 +14,7 @@ watch(xlsx, (newV) => (FormBot.xlsx = newV));
       <BFormCheckbox switch v-model="selects.enviaXlsx">
         Arquivo Xlsx? {{ selects.enviaXlsx ? "Sim" : "Não" }}
       </BFormCheckbox>
-      <Transition name="xlsx" mode="in-out">
+      <Transition name="inputbot" mode="in-out">
         <div v-if="selects.enviaXlsx">
           <BFormFile class="mb-1" size="md" required accept=".xlsx" v-model="xlsx" />
         </div>
@@ -22,3 +22,16 @@ watch(xlsx, (newV) => (FormBot.xlsx = newV));
     </div>
   </BFormGroup>
 </template>
+
+<style lang="css" scoped>
+.inputbot-enter-active,
+.inputbot-leave-active {
+  transition: all 0.3s ease;
+}
+
+.inputbot-enter-from,
+.inputbot-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>

@@ -14,7 +14,7 @@ watch(certificado, (newV) => (FormBot.certificado = newV));
       <BFormCheckbox switch v-model="selects.enviaCertificado">
         Certificado? {{ selects.enviaCertificado ? "Sim" : "Não" }}
       </BFormCheckbox>
-      <Transition name="certificado" mode="in-out">
+      <Transition name="inputbot" mode="in-out">
         <div v-if="selects.enviaCertificado">
           <BFormFile class="mb-1" size="md" required accept=".pfx" v-model="certificado" />
         </div>
@@ -22,3 +22,15 @@ watch(certificado, (newV) => (FormBot.certificado = newV));
     </div>
   </BFormGroup>
 </template>
+<style lang="css" scoped>
+.inputbot-enter-active,
+.inputbot-leave-active {
+  transition: all 0.3s ease;
+}
+
+.inputbot-enter-from,
+.inputbot-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>

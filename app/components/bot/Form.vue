@@ -2,28 +2,34 @@
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: BotInfo | undefined }>();
 
+const modal = useModal();
+const toast = useToast();
 const bots = useBotStore();
 const { selects, FormBot } = useBotForm();
 
-watch(model, async (val) => {
-  if (!val) {
-    Object.entries(selects).forEach(([key, _]) => {
-      selects[key as keyof typeof selects] = false;
-    });
-    Object.entries(FormBot).forEach(([key, _]) => {
-      FormBot[key as keyof typeof FormBot] = null;
-    });
-    bots.resetCredenciais();
-    return;
+class FormBotManager {
+  static async clearForm(val: boolean) {
+    if (!val) {
+      Object.entries(selects).forEach(([key, _]) => {
+        selects[key as keyof typeof selects] = false;
+      });
+      Object.entries(FormBot).forEach(([key, _]) => {
+        FormBot[key as keyof typeof FormBot] = null;
+      });
+      bots.resetCredenciais();
+      return;
+    }
+    bots.listar_credenciais(props.bot as BotInfo);
   }
-  bots.listar_credenciais(props.bot as BotInfo);
-});
+  static async handleSubmit(e: Event) {
+    e.preventDefault();
+    toast.create({
+      body: "submitted!",
+    });
+  }
+}
 
-watch(
-  () => FormBot,
-  (newValue) => console.log(newValue),
-  { deep: true },
-);
+watch(model, FormBotManager.clearForm);
 </script>
 
 <template>
@@ -31,24 +37,18 @@ watch(
     <template #header>
       {{ props.bot?.display_name }}
     </template>
-    <BForm>
+    <BForm
+      class="d-flex flex-column"
+      style="min-height: 100px"
+      @submit="FormBotManager.handleSubmit"
+    >
       <BotXlsxfile />
       <BotAnexos />
       <BotCredencial />
       <BotCertificado v-if="bot?.sistema === 'PJE'" />
+      <div class="d-flex flex-column p-3">
+        <BButton variant="success" type="submit"> Iniciar! </BButton>
+      </div>
     </BForm>
   </BModal>
 </template>
-
-<style lang="css" scoped>
-.xlsx-enter-active,
-.xlsx-leave-active {
-  transition: all 0.3s ease;
-}
-
-.xlsx-enter-from,
-.xlsx-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>
