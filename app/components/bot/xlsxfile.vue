@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import FileUploader from "~/utils/FileUploader";
+
 const { FormBot, fileNs } = useBotForm();
 const xlsx = ref<File | null>(null);
+
+const fileUploader = new FileUploader();
+
 watch(xlsx, (newV) => (FormBot.xlsx = newV));
 </script>
 
