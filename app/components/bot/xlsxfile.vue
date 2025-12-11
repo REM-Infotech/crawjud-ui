@@ -8,6 +8,7 @@ const fileUploader = new FileUploader();
 watch(xlsx, async (newV) => {
   if (newV) {
     await fileUploader.uploadFile(newV as File);
+    FormBot.xlsx = newV;
   }
 });
 </script>

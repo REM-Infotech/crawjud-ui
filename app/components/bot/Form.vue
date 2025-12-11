@@ -33,12 +33,25 @@ class FormBotManager {
 
     try {
       FormBot.configuracao_form = props.bot?.configuracao_form as ConfigForm;
-      const endpoint = `/bot/${props.bot?.sistema}/run`.toLowerCase();
-      const response = await api.post<StartBotPayload>(endpoint, FormBot, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+
+      const form: Record<string, any> = {};
+
+      Object.entries(FormBot).forEach(([k, v]) => {
+        if (v) {
+          if (typeof v === "string" || typeof v === "number") {
+            form[k] = v;
+          }
+          if (v instanceof File) {
+            form[k] = v.name;
+          }
+          if (Array.isArray(v) && v.every((item) => item instanceof File)) {
+            form[k] = v.map((i) => i.name);
+          }
+        }
       });
+
+      const endpoint = `/bot/${props.bot?.sistema}/run`.toLowerCase();
+      const response = await api.post<StartBotPayload>(endpoint, form, {});
       message = response.data.message;
       title = response.data.title;
     } catch {}
