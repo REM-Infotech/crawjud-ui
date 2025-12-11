@@ -3,19 +3,31 @@ import { resolve } from "path";
 import IconsResolve from "unplugin-icons/resolver";
 import Icons from "unplugin-icons/vite";
 import Components from "unplugin-vue-components/vite";
-import renderer from "vite-plugin-electron-renderer";
-import electron from "vite-plugin-electron/simple";
 
 const workDir = process.cwd();
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
+  devtools: { enabled: true },
+  css: ["bootstrap/dist/css/bootstrap.css", "~/assets/css/main.css"],
+  modules: ["@bootstrap-vue-next/nuxt", "@pinia/nuxt"],
+  plugins: [
+    "~/plugins/bootstrap.client.ts",
+    "~/plugins/datatables.client.ts",
+    "~/plugins/uuid.client.ts",
+  ],
+  telemetry: false,
+  ssr: false,
+  bootstrapVueNext: {
+    composables: true,
+    directives: { all: true },
+  },
   app: {
     baseURL: "./",
     buildAssetsDir: "/assets",
     pageTransition: { name: "page", mode: "out-in" },
   },
-  ssr: false,
+
   runtimeConfig: {
     app: {
       baseURL: "./",
@@ -27,7 +39,6 @@ export default defineNuxtConfig({
     output: {
       publicDir: resolve(workDir, ".build/"),
     },
-
     runtimeConfig: {
       app: {
         baseURL: "./",
@@ -39,15 +50,6 @@ export default defineNuxtConfig({
       hashMode: true,
     },
   },
-  devtools: { enabled: true },
-  css: ["bootstrap/dist/css/bootstrap.css", "~/assets/css/main.css"],
-  modules: ["@bootstrap-vue-next/nuxt", "@pinia/nuxt"],
-  plugins: ["~/plugins/bootstrap.client.ts", "~/plugins/datatables.client.ts"],
-  telemetry: false,
-  bootstrapVueNext: {
-    composables: true,
-    directives: { all: true },
-  },
   vite: {
     plugins: [
       Components({
@@ -57,26 +59,6 @@ export default defineNuxtConfig({
       Icons({
         compiler: "vue3",
         autoInstall: true,
-      }),
-      electron({
-        main: {
-          entry: resolve(workDir, "app/electron/main.ts"),
-          vite: {
-            configFile: resolve(workDir, "app/electron/config/vite.main.config.ts"),
-          },
-        },
-        preload: {
-          input: resolve(workDir, "app/electron/preload.ts"),
-          vite: {
-            configFile: resolve(workDir, "app/electron/config/vite.preload.config.ts"),
-          },
-        },
-      }),
-      renderer({
-        resolve: {
-          serialport: { type: "cjs" },
-          got: { type: "esm" },
-        },
       }),
     ],
   },

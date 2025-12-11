@@ -8,6 +8,9 @@ const workDir = process.cwd();
 export default defineConfig({
   mode: process.env.NODE_ENV,
   build: {
+    rollupOptions: {
+      external: ["minio", "fs", "path", "crypto", "http", "https"],
+    },
     outDir: resolve(workDir, ".vite/main"),
     minify: isProd,
     watch: isDev ? {} : null,
