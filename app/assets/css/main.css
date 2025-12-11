@@ -193,6 +193,11 @@ select:focus {
   outline: none !important;
 }
 
+option {
+  background-color: var(--bg-primary) !important;
+  color: var(--color-primary) !important;
+}
+
 /* =====================
    Utility Classes
    ===================== */

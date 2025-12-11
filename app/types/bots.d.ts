@@ -4,17 +4,15 @@
 
 type FileInput = File[] | File | undefined;
 type SystemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
-/**
- * Define os tipos de formulários de configuração disponíveis.
- */
-type ConfigForm =
-  | "file_auth"
-  | "multiple_files"
-  | "only_auth"
-  | "proc_parte"
-  | "only_file"
-  | "pje"
-  | "pje_protocolo";
+
+interface formBot {
+  xlsx: File | null;
+  anexos: File[] | null;
+  credencial: number | null | undefined;
+  senha_token: string | null;
+  certificado: (File & { name: `${string}.pfx` }) | null;
+  kbdx: (File & { name: `${string}.kbdx` }) | null;
+}
 /**
  * Indica o status atual de execução do robô.
  */

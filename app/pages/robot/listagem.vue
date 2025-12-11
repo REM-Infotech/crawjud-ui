@@ -2,13 +2,12 @@
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
 
 const modal = ref(false);
-const form = ref<FormBot>();
 const selectedBot = ref<BotInfo>();
-const listagemRobos = useListagemRobos();
-const listagem = computed<BotInfo[]>(() => listagemRobos.data);
+const bots = useBotStore();
+const listagem = computed<BotInfo[]>(() => bots.listagem);
 
-onBeforeMount(() => {
-  listagemRobos.listagem();
+onBeforeMount(async () => {
+  await bots.listar_robos();
 });
 watch(modal, async (val) => {
   if (!val) {
@@ -20,8 +19,9 @@ watch(modal, async (val) => {
 
 <template>
   <BContainer>
+    <BotForm v-model="modal" :bot="selectedBot" />
     <TransitionGroup tag="div" name="bots" class="row">
-      <div class="col-lg-3 col-xl-3 p-2" v-for="(bot, index) in listagem" :key="index">
+      <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">
           <div class="card-header">
             <span class="text-white fw-bold fs-6">

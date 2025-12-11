@@ -1,5 +1,11 @@
 import { defineStore } from "pinia";
 
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2025 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
 export default defineStore("themeStore", () => {
   const themes: Theme[] = ["dark", "light", "system"];
 
@@ -41,6 +47,10 @@ export default defineStore("themeStore", () => {
 
     document.documentElement.setAttribute(
       "app-theme",
+      selectedTheme === "system" ? (isDark ? "dark" : "light") : selectedTheme,
+    );
+    document.documentElement.setAttribute(
+      "data-bs-theme",
       selectedTheme === "system" ? (isDark ? "dark" : "light") : selectedTheme,
     );
   }
