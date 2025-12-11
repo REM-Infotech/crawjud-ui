@@ -1,7 +1,8 @@
 <script setup lang="ts">
-const { FormBot } = useBotForm();
+const { FormBot } = storeToRefs(useBotForm());
 const kbdx = ref<KbdxFile>(null);
-watch(kbdx, (newV) => (FormBot.kbdx = newV));
+
+watch(kbdx, (newV) => (FormBot.value.kbdx = newV));
 </script>
 
 <template>

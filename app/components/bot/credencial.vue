@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { selects, FormBot } = useBotForm();
+const { FormBot } = storeToRefs(useBotForm());
 const query = ref("");
 const bots = useBotStore();
 const computedCredenciais = computed(() =>
@@ -9,14 +9,14 @@ const computedCredenciais = computed(() =>
       return key;
     }
     if (check) {
-      FormBot.credencial = key.value;
+      FormBot.value.credencial = key.value;
       return key;
     }
   }),
 );
 
 const credencial = ref<number | null | undefined>(null);
-watch(credencial, (newV) => (FormBot.credencial = newV));
+watch(credencial, (newV) => (FormBot.value.credencial = newV));
 </script>
 
 <template>

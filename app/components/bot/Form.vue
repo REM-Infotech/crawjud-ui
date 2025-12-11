@@ -28,9 +28,24 @@ class FormBotManager {
     bots.listar_credenciais(props.bot as BotInfo);
   }
   static async handleSubmit(e: Event) {
-    e.preventDefault();
+    let title = "Erro";
+    let message = "Erro ao iniciar robô";
+
+    try {
+      FormBot.configuracao_form = props.bot?.configuracao_form as ConfigForm;
+      const endpoint = `/bot/${props.bot?.sistema}/run`.toLowerCase();
+      const response = await api.post<StartBotPayload>(endpoint, FormBot, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      message = response.data.message;
+      title = response.data.title;
+    } catch {}
+
     toast.create({
-      body: "submitted!",
+      title: title,
+      body: message,
     });
   }
 }

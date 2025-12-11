@@ -1,7 +1,8 @@
 <script setup lang="ts">
-const { selects, FormBot, current } = useBotForm();
+const { FormBot, current } = storeToRefs(useBotForm());
 const certificado = ref<CertificadoFile>(null);
-watch(certificado, (newV) => (FormBot.certificado = newV));
+
+watch(certificado, (newV) => (FormBot.value.certificado = newV));
 </script>
 
 <template>

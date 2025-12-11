@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const { selects, FormBot } = useBotForm();
+const { FormBot } = storeToRefs(useBotForm());
 const xlsx = ref<File | null>(null);
-watch(xlsx, (newV) => (FormBot.xlsx = newV));
+watch(xlsx, (newV) => (FormBot.value.xlsx = newV));
 </script>
 
 <template>

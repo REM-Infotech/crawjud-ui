@@ -16,6 +16,7 @@ export default defineStore("useBotForm", () => {
     certificado: null,
     kbdx: null,
     senha_token: null,
+    configuracao_form: null,
   });
 
   return { selects, FormBot, current };

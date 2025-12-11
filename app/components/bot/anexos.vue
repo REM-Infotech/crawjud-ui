@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const { selects, FormBot } = useBotForm();
+const { FormBot } = storeToRefs(useBotForm());
 const anexos = ref<File[] | null>(null);
 
-watch(anexos, (newV) => (FormBot.anexos = newV));
+watch(anexos, (newV) => (FormBot.value.anexos = newV));
 </script>
 
 <template>
