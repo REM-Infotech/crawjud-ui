@@ -16,9 +16,9 @@ interface ResponseDownloadExecucao {
 /**
  * Interface para funções deep link.
  */
-interface DeepLinkFunctions extends Record<DeepFunctionNames, unknown> {
+interface DeepLinkFunctions<T = any> extends Record<DeepFunctionNames, unknown> {
   download_execucao: {
     need_args: boolean;
-    function: (...args: unknown[]) => Promise<void> | void;
+    function: (...args: T[]) => Promise<void> | void;
   };
 }
