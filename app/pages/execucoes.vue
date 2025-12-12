@@ -3,8 +3,9 @@ import type { BaseColorVariant } from "bootstrap-vue-next";
 
 const execucaoStore = useExecutionStore();
 const execToRef = storeToRefs(execucaoStore);
-const { queryExecucao, execucoes, execucaoBot, logsExecucao, logs, execucao } = execToRef;
+const { queryExecucao, execucoes, logsExecucao, execucao, itemLog } = execToRef;
 
+const _itemLog = itemLog;
 const hoveredExecId = ref();
 
 onBeforeMount(async () => {
@@ -71,6 +72,7 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
         <div class="body-listagem card-body body-exec">
           <TransitionGroup name="list" class="list-group" tag="div">
             <BListGroupItem
+              ref="itemLog"
               :class="[
                 'd-flex',
                 'justify-content-between',

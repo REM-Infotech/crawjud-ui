@@ -26,7 +26,7 @@ watch(modal, async (val) => {
 <template>
   <BContainer>
     <BotForm v-model="modal" :bot="current" />
-    <TransitionGroup tag="div" name="bots" class="row">
+    <TransitionGroup tag="div" name="bots" class="row row-bots">
       <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">
           <div class="card-header">
@@ -70,6 +70,11 @@ watch(modal, async (val) => {
 </template>
 
 <style lang="css">
+.row-bots {
+  height: calc(100dvh - 80px);
+  overflow: auto;
+}
+
 .bots-enter-active,
 .bots-leave-active {
   transition: all 0.5s;

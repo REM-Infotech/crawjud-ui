@@ -1,6 +1,6 @@
 export default defineStore("useExecutionStore", () => {
   const logNs = socketio.socket("/bot_logs");
-
+  const itemLog: Ref<HTMLElement> = ref<HTMLElement>(null as unknown as HTMLElement); // Ref para o ul
   const execucao = ref<Execucao>({} as Execucao);
   const queryExecucao: Ref<string> = ref("");
   const execucaoBot: Ref<string> = ref("");
@@ -18,6 +18,7 @@ export default defineStore("useExecutionStore", () => {
     currentLogs.push(msg);
     logs.value = currentLogs;
     await new Promise((resolve) => setTimeout(resolve, 500));
+    itemLog.value.scrollTop = itemLog.value.scrollHeight;
   }
   async function pushLogs(msgs: Message[]) {
     for (const msg of msgs) {
@@ -61,5 +62,6 @@ export default defineStore("useExecutionStore", () => {
     logNs,
     logs,
     execucao,
+    itemLog,
   };
 });

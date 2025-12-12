@@ -20,8 +20,8 @@ interface formBot {
   certificado: CertificadoFile;
   senha_certificado: string | null;
 
-  kbdx: KbdxFile;
-  senha_kbdx: string | null;
+  kdbx: KbdxFile;
+  senha_kdbx: string | null;
 
   sid_filesocket: string | null;
   bot_id: number | null;

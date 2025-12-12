@@ -6,7 +6,7 @@ type FileInput = File[] | File | undefined;
 type SystemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
 
 type CertificadoFile = (File & { name: `${string}.pfx` }) | null;
-type KbdxFile = (File & { name: `${string}.kbdx` }) | null;
+type KbdxFile = (File & { name: `${string}.kdbx` }) | null;
 
 /**
  * Indica o status atual de execução do robô.

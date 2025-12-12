@@ -105,7 +105,7 @@ watch(
   { deep: true },
 );
 watch(
-  () => FormBot.kbdx,
+  () => FormBot.kdbx,
   async (newV) => FormBotManager.handleFiles(newV),
   { deep: true },
 );
@@ -131,34 +131,38 @@ const botForms: Record<ConfigForm, Component[]> = {
     <template #header>
       {{ props.bot?.display_name }}
     </template>
-    <BForm class="d-flex flex-column" @submit="FormBotManager.handleSubmit">
-      <BotProgress />
-      <component
-        :is="ComponentForm"
-        v-for="(ComponentForm, idx) in botForms[bot?.configuracao_form as ConfigForm]"
-        :key="idx"
-      />
-      <div
-        class="d-flex flex-column p-3 gap-2 mt-5"
-        style="min-height: 120px; border-top: 1px solid black"
-      >
-        <BFormCheckbox v-model="ConfirmDados">
-          Confirmo que os dados inseridos estão corretos
-        </BFormCheckbox>
-        <div class="d-flex flex-column">
-          <Transition name="execbtn">
-            <BButton
-              v-if="ConfirmDados"
-              :variant="isFileUploading ? 'outline-success' : 'success'"
-              type="submit"
-              :disabled="isFileUploading"
-            >
-              Iniciar!
-            </BButton>
-          </Transition>
+    <div style="height: calc(100dvh - 150px)">
+      <BForm class="d-flex flex-column" @submit="FormBotManager.handleSubmit">
+        <component
+          :is="ComponentForm"
+          v-for="(ComponentForm, idx) in botForms[bot?.configuracao_form as ConfigForm]"
+          :key="idx"
+        />
+        <div style="min-height: 120px">
+          <BotProgress />
         </div>
-      </div>
-    </BForm>
+        <div
+          class="d-flex flex-column p-3 gap-2 mt-5"
+          style="min-height: 120px; border-top: 1px solid black"
+        >
+          <BFormCheckbox v-model="ConfirmDados">
+            Confirmo que os dados inseridos estão corretos
+          </BFormCheckbox>
+          <div class="d-flex flex-column">
+            <Transition name="execbtn">
+              <BButton
+                v-if="ConfirmDados"
+                :variant="isFileUploading ? 'outline-success' : 'success'"
+                type="submit"
+                :disabled="isFileUploading"
+              >
+                Iniciar!
+              </BButton>
+            </Transition>
+          </div>
+        </div>
+      </BForm>
+    </div>
   </BModal>
 </template>
 <style lang="css" scoped>
