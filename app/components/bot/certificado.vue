@@ -20,6 +20,9 @@ const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "prima
 <template>
   <div>
     <div class="mb-3 p-3 border border-secondary border-1 rounded-1">
+      <BFormGroup label="CPF/CNPJ" label-size="md">
+        <BFormInput class="mb-1" size="md" v-model="FormBot.cpf_cnpj_certificado" required />
+      </BFormGroup>
       <BFormGroup label="Certificado digital (A1)" label-size="md">
         <BFormFile
           class="mb-1"

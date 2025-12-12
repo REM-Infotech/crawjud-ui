@@ -131,7 +131,7 @@ const botForms: Record<ConfigForm, Component[]> = {
     <template #header>
       {{ props.bot?.display_name }}
     </template>
-    <div style="height: calc(100dvh - 150px)">
+    <div style="min-height: calc(100dvh - 150px)">
       <BForm class="d-flex flex-column" @submit="FormBotManager.handleSubmit">
         <component
           :is="ComponentForm"

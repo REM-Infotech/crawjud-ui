@@ -9,6 +9,7 @@ export default defineStore("useBotForm", () => {
     anexos: null,
     credencial: null,
 
+    cpf_cnpj_certificado: null,
     certificado: null,
     senha_certificado: null,
 

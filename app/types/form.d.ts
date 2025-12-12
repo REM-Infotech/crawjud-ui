@@ -14,6 +14,7 @@ interface formBot {
   xlsx: File | null;
   anexos: File[] | null;
 
+  cpf_cnpj_certificado: string | null;
   credencial: number | null | undefined;
   senha_token: string | null;
 
