@@ -8,11 +8,25 @@ const { queryExecucao, execucoes, logsExecucao, execucao, itemLog } = execToRef;
 const _itemLog = itemLog;
 const hoveredExecId = ref();
 
+const SetExec = ref(false);
+
 onBeforeMount(async () => {
   await execucaoStore.listar_execucoes();
 });
 
+async function performSelecaoExec(e: Event, exec: Execucao) {
+  e.preventDefault();
+
+  if (SetExec.value) return;
+  if (execucao.value === exec) return;
+  SetExec.value = true;
+  execucao.value = exec;
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  SetExec.value = false;
+}
+
 const classLogs: Record<MessageType, string> = {
+  log: "border border-2 border-info",
   success: "border border-2 border-success",
   error: "border border-2 border-danger",
   info: "border border-2 border-primary",
@@ -23,86 +37,96 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
   success: "success",
   error: "danger",
   info: "primary",
+  log: "info",
   warning: "warning",
 };
 </script>
 
 <template>
   <div class="execucoes-container">
-    <BRow class="row-execucoes gap-3">
-      <BCol class="col-execucoes card" md="5" lg="5" sm="5" xl="5" xxl="5">
-        <div class="card-header header-exec">
-          {{ execucao ? `Execução selecionada:  ${execucao.pid}` : "Execuções" }}
-        </div>
-        <BFormFloatingLabel class="mt-2 mb-2" label-size="md" label="Filtre aqui" for="inputFiltro">
-          <BFormInput id="inputFiltro" placeholder="Filtro de execução" v-model="queryExecucao" />
-        </BFormFloatingLabel>
-        <div class="body-listagem card-body">
-          <TransitionGroup name="list" class="list-group" tag="div">
-            <BListGroupItem
-              class="d-flex justify-content-between align-items-start"
-              v-for="exec in execucoes"
-              :key="exec.id"
-              :active="hoveredExecId === exec.id"
-              @mouseenter="hoveredExecId = exec.id"
-              @mouseleave="hoveredExecId = null"
-              @click="execucao = exec"
-              active-class="active"
-            >
-              <div class="ms-2 me-auto">
-                <div class="fw-bold">{{ exec.pid }}</div>
-                {{ exec.status }}
-              </div>
-              <!-- <BBadge variant="primary" pill>14</BBadge> -->
-            </BListGroupItem>
-          </TransitionGroup>
-        </div>
-      </BCol>
-      <BCol class="card col-execucoes" md="5" lg="5" sm="5" xl="5" xxl="5">
-        <div class="card-header header-exec d-flex justify-content-between align-items-center">
-          <span class="fw-bold">
-            {{ execucao ? `Execução ${execucao.pid}` : "Selecione uma Execução" }}
-          </span>
-          <div style="height: 35px">
-            <BButton size="md" variant="outline-danger" v-if="execucao">
-              <span class="fw-bold"> Encerrar Execução </span>
-            </BButton>
+    <BRow class="row-execucoes">
+      <BCol class="col-execucoes" md="6" lg="6" sm="6" xl="6" xxl="6">
+        <div class="card card-exec">
+          <div class="card-header header-exec">
+            {{ execucao.pid ? `Execução selecionada:  ${execucao.pid}` : "Execuções" }}
+          </div>
+          <BFormFloatingLabel
+            class="mt-2 mb-2"
+            label-size="md"
+            label="Filtre aqui"
+            for="inputFiltro"
+          >
+            <BFormInput id="inputFiltro" placeholder="Filtro de execução" v-model="queryExecucao" />
+          </BFormFloatingLabel>
+          <div class="body-listagem card-body">
+            <TransitionGroup name="list" class="list-group" tag="div">
+              <BListGroupItem
+                class="d-flex justify-content-between align-items-start"
+                v-for="exec in execucoes"
+                :key="exec.id"
+                :active="hoveredExecId === exec.id"
+                @mouseenter="hoveredExecId = exec.id"
+                @mouseleave="hoveredExecId = null"
+                @click="async (e: Event) => performSelecaoExec(e, exec)"
+                active-class="active"
+              >
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">{{ exec.pid }}</div>
+                  {{ exec.status }}
+                </div>
+                <!-- <BBadge variant="primary" pill>14</BBadge> -->
+              </BListGroupItem>
+            </TransitionGroup>
           </div>
         </div>
-        <div class="body-listagem card-body body-exec">
-          <TransitionGroup name="list" class="list-group" tag="div">
-            <BListGroupItem
-              ref="itemLog"
-              :class="[
-                'd-flex',
-                'justify-content-between',
-                'align-items-start',
-                classLogs[log.message_type],
-              ]"
-              v-for="(log, idx) in logsExecucao"
-              :key="idx"
-            >
-              <div class="ms-2 me-auto">
-                <div class="fw-bold">{{ log.message }}</div>
-                <div class="d-flex gap-1">
-                  <BBadge :variant="VariantLogs[log.message_type]">
-                    {{ log.message_type }}
-                  </BBadge>
-                  <BBadge variant="primary">
-                    {{ log.time_message }}
-                  </BBadge>
-                  <div style="width: 50px">
-                    <BBadge variant="secondary" v-if="log.row > 0">
-                      linha planilha: {{ log.row }}
+      </BCol>
+      <BCol class="col-execucoes" md="6" lg="6" sm="6" xl="6" xxl="6">
+        <div class="card card-exec">
+          <div class="card-header header-exec d-flex justify-content-between align-items-center">
+            <span class="fw-bold">
+              {{ execucao.pid ? `Execução ${execucao.pid}` : "Selecione uma Execução" }}
+            </span>
+            <div style="height: 35px">
+              <BButton size="md" variant="outline-danger" v-if="execucao">
+                <span class="fw-bold"> Encerrar Execução </span>
+              </BButton>
+            </div>
+          </div>
+          <div class="body-listagem card-body body-exec">
+            <TransitionGroup name="list" class="list-group" tag="div">
+              <BListGroupItem
+                ref="itemLog"
+                :class="[
+                  'd-flex',
+                  'justify-content-between',
+                  'align-items-start',
+                  classLogs[log.message_type],
+                ]"
+                v-for="(log, idx) in logsExecucao"
+                :key="idx"
+              >
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold" style="line-break: anywhere">{{ log.message }}</div>
+                  <div class="d-flex gap-1">
+                    <BBadge :variant="VariantLogs[log.message_type]">
+                      {{ log.message_type }}
                     </BBadge>
+                    <BBadge variant="primary">
+                      {{ log.time_message }}
+                    </BBadge>
+                    <div style="width: 50px">
+                      <BBadge variant="secondary" v-if="log.row > 0">
+                        linha planilha: {{ log.row }}
+                      </BBadge>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </BListGroupItem>
-          </TransitionGroup>
-        </div>
-        <div class="card-footer footer-exec">
-          {{ execucao ? `Status ${execucao.status}` : "" }}
+              </BListGroupItem>
+            </TransitionGroup>
+          </div>
+          <div class="card-footer footer-exec">
+            {{ execucao.status ? `Status ${execucao.status}` : "" }}
+          </div>
         </div>
       </BCol>
     </BRow>
@@ -125,11 +149,15 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
   height: 100%;
   background-color: rgba(0, 0, 0, 0);
   box-sizing: border-box;
-  padding: 30px;
 }
 
 .col-execucoes {
-  height: calc(100dvh - 240px);
+  padding: 25px;
+  height: calc(100dvh - 140px);
+}
+
+.card-exec {
+  height: 100%;
 }
 
 .header-exec {
@@ -146,7 +174,7 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
 
 .row-execucoes {
   width: 100%;
-  justify-content: center;
+  box-sizing: border-box;
 }
 
 .body-listagem {

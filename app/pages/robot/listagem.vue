@@ -4,7 +4,15 @@ import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbol
 const modal = ref(false);
 const { current } = storeToRefs(useBotForm());
 const bots = useBotStore();
-const listagem = computed<BotInfo[]>(() => bots.listagem);
+const queryBot = ref("");
+const queryLower = computed(() => queryBot.value.toLowerCase());
+const listagem = computed<BotInfo[]>(() =>
+  bots.listagem.filter(
+    (item) =>
+      item.display_name.toLowerCase().includes(queryLower.value) ||
+      item.sistema.toLowerCase().includes(queryLower.value),
+  ),
+);
 
 onBeforeMount(async () => {
   await bots.listar_robos();
@@ -26,6 +34,10 @@ watch(modal, async (val) => {
 <template>
   <BContainer>
     <BotForm v-model="modal" :bot="current" />
+    <BFormGroup>
+      <BFormInput placeholder="Filtre aqui" v-model="queryBot" />
+    </BFormGroup>
+
     <TransitionGroup tag="div" name="bots" class="row row-bots">
       <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">

@@ -21,8 +21,9 @@ const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "prima
   <div>
     <div class="mb-3 p-3 border border-secondary border-1 rounded-1">
       <BFormGroup label="CPF/CNPJ" label-size="md">
-        <BFormInput class="mb-1" size="md" v-model="FormBot.cpf_cnpj_certificado" required />
+        <BFormInput class="mb-3" size="md" v-model="FormBot.cpf_cnpj_certificado" required />
       </BFormGroup>
+      <hr />
       <BFormGroup label="Certificado digital (A1)" label-size="md">
         <BFormFile
           class="mb-1"
@@ -33,7 +34,7 @@ const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "prima
           required
         />
       </BFormGroup>
-      <div class="mt-2">
+      <div class="mt-3">
         <BInputGroup id="senhaCertificado">
           <BFormInput
             :class="[exibeSenha ? 'border-warning' : 'border-primary']"

@@ -6,6 +6,7 @@
     <div class="layout">
       <NuxtPage />
     </div>
+    <UiFooter />
   </div>
 </template>
 
@@ -18,7 +19,7 @@
   box-sizing: border-box;
   max-height: calc(100% - 55px);
   min-width: 100%;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 .page-enter-active,

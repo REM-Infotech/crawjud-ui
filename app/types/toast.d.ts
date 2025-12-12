@@ -3,7 +3,7 @@
 /**
  * Tipos de mensagem para toast.
  */
-type MessageType = "success" | "info" | "error" | "warning";
+type MessageType = "success" | "info" | "error" | "warning" | "log";
 
 /**
  * Opções para exibição de toast.
