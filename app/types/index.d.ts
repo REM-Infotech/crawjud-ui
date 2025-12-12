@@ -1,3 +1,6 @@
+type str = string;
+type int = number;
+
 interface Window {
   jQuery: typeof jQuery;
   $: typeof jQuery;

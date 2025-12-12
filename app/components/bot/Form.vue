@@ -4,6 +4,7 @@ import Certificado from "./certificado.vue";
 import Credencial from "./credencial.vue";
 import Xlsxfile from "./xlsxfile.vue";
 
+const execStore = useExecutionStore();
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: BotInfo | undefined }>();
 const fileUploader = new FileUploader();
@@ -11,7 +12,7 @@ const toast = useToast();
 const bots = useBotStore();
 const { FormBot } = useBotForm();
 const { seed, isFileUploading } = storeToRefs(useBotForm());
-
+const { execucaoBot, execucao } = storeToRefs(execStore);
 const ConfirmDados = ref(false);
 
 class FormBotManager {
@@ -54,7 +55,24 @@ class FormBotManager {
       const response = await api.post<StartBotPayload>(endpoint, form, {});
       message = response.data.message;
       title = response.data.title;
-    } catch {}
+
+      if (response.status === 200) {
+        const pid = response.data.pid;
+        execucaoBot.value = pid;
+        execucao.value = {
+          status: "Em Execução",
+          pid: pid,
+          data_fim: "",
+          data_inicio: "",
+          id: 0,
+          bot: "",
+        };
+
+        useRouter().push({ name: "execucoes" });
+      }
+    } catch (err) {
+      console.log(err);
+    }
 
     toast.create({
       title: title,

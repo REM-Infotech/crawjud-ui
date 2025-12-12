@@ -93,6 +93,7 @@ interface StartBotPayload {
 interface Message {
   pid: string;
   message: string;
+  time_message: string;
   message_type: MessageType;
   status: StatusBot;
   start_time: string;
