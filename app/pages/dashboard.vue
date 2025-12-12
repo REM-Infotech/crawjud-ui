@@ -1,9 +1,25 @@
 <script setup lang="ts">
 const execucoesStore = useExecutionStore();
-const { queryExecucao, execucoes } = storeToRefs(execucoesStore);
+const { queryExecucao, execucoes, execucaoBot } = storeToRefs(execucoesStore);
+
 const hoveredExecId = ref();
 const execucao = ref<Execucao>();
+
 onBeforeMount(execucoesStore.listar_execucoes);
+
+const logNs = socketio.socket("/bot_logs");
+
+watch(execucao, (newV) => {
+  execucaoBot.value = newV?.pid as string;
+});
+
+watch(execucaoBot, () => {
+  logNs.connect();
+});
+
+logNs.on("connect", () => {
+  logNs.emit("join_room");
+});
 </script>
 
 <template>
@@ -41,7 +57,21 @@ onBeforeMount(execucoesStore.listar_execucoes);
         <div class="card-header">
           {{ execucao ? `Execução ${execucao.pid}` : "Selecione uma Execução" }}
         </div>
-        <div class="card-body card-body-exec p-3"></div>
+        <div class="body-listagem card-body">
+          <TransitionGroup name="list" class="list-group" tag="div">
+            <BListGroupItem
+              class="d-flex justify-content-between align-items-start"
+              v-for="exec in execucoes"
+              :key="exec.id"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">{{ exec.pid }}</div>
+                {{ exec.status }}
+              </div>
+              <!-- <BBadge variant="primary" pill>14</BBadge> -->
+            </BListGroupItem>
+          </TransitionGroup>
+        </div>
         <div class="card-footer">
           {{ execucao ? `Status ${execucao.status}` : "" }}
         </div>

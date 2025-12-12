@@ -1,6 +1,7 @@
 export default defineStore("useExecutionStore", () => {
   const listagemExecucoes: Ref<Execucao[]> = ref<Execucao[]>([]);
   const queryExecucao: Ref<string> = ref("");
+  const execucaoBot = ref("");
   const execucoes: ComputedRef<Execucao[]> = computed(() =>
     listagemExecucoes.value.filter((item) =>
       item.pid.toLowerCase().includes(queryExecucao.value.toLowerCase()),
@@ -13,5 +14,5 @@ export default defineStore("useExecutionStore", () => {
       listagemExecucoes.value = response.data;
     } catch {}
   }
-  return { execucoes, queryExecucao, listar_execucoes };
+  return { execucoes, queryExecucao, listar_execucoes, execucaoBot };
 });
