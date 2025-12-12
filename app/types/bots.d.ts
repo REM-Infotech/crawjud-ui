@@ -127,3 +127,12 @@ type ConfigForm =
   | "pje"
   | "pje_protocolo"
   | "proc_parte";
+
+type Execucao = {
+  id: number;
+  bot: string;
+  pid: string;
+  status: string;
+  data_inicio: string;
+  data_fim: string;
+};

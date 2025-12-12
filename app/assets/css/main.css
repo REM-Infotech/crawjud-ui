@@ -64,6 +64,9 @@
     var(--color-flirt-800) calc(0.2 * 100%),
     transparent
   );
+
+  --bg-card-log: rgba(246, 177, 235, 0.301);
+  --bg-executions: #86226d;
 }
 
 [app-theme="light"] {
@@ -83,6 +86,9 @@
     var(--color-flirt-100) calc(0.2 * 100%),
     transparent
   );
+
+  --bg-card-log: rgb(220, 170, 243);
+  --bg-executions: #fad4f4;
 }
 
 .content {
@@ -102,8 +108,8 @@
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE e Edge antigo */
   transition:
-    color 0.5s,
-    background-color 0.5s;
+    color 0.2s,
+    background-color 0.2s;
 }
 
 html {

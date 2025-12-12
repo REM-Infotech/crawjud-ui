@@ -1,3 +1,3 @@
 <template>
-  <BContainer> ok </BContainer>
+  <div></div>
 </template>
