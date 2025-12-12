@@ -20,8 +20,6 @@ onBeforeMount(async () => {
   for (const bot of bots.listagem) {
     configs[bot.configuracao_form] = "ok";
   }
-  console.clear();
-  console.log(configs);
 });
 watch(modal, async (val) => {
   if (!val) {

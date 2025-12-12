@@ -18,9 +18,7 @@ export default defineStore("useBotStore", {
           .credenciais;
 
         this.credenciais = [{ value: null, text: "Selecione" }, ...credenciais];
-      } catch (err) {
-        console.log(err);
-      }
+      } catch {}
     },
     resetCredenciais() {
       this.credenciais = [{ value: null, text: "Selecione" }];

@@ -71,9 +71,7 @@ class FormBotManager {
 
         useRouter().push({ name: "execucoes" });
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch {}
 
     toast.create({
       title: title,
