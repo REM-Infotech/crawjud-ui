@@ -12,10 +12,10 @@ let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 function createWindow() {
   mainWindow = new BrowserWindow({
     title: "CrawJUD",
-    maxWidth: 1600,
-    maxHeight: 900,
-    minWidth: 1600,
-    minHeight: 900,
+    width: 1600,
+    height: 900,
+    resizable: false,
+    maximizable: false,
     frame: false,
     transparent: true,
     webPreferences: {
@@ -63,18 +63,18 @@ if (!gotTheLock) {
     createWindow();
     useThemeService();
   });
-
-  app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
-      app.quit();
-    }
-  });
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
 }
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {

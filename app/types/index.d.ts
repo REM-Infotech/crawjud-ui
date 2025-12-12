@@ -16,3 +16,5 @@ interface Window {
 interface AuthPayload {
   message: string;
 }
+
+type elementRef = Ref<Element | ComponentPublicInstance | null>;

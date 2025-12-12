@@ -5,13 +5,27 @@ const execucaoStore = useExecutionStore();
 const execToRef = storeToRefs(execucaoStore);
 const { queryExecucao, execucoes, logsExecucao, execucao, itemLog } = execToRef;
 
-const _itemLog = itemLog;
+const bodyListagem = ref<elementRef>(null as unknown as elementRef);
 const hoveredExecId = ref();
-
 const SetExec = ref(false);
 
 onBeforeMount(async () => {
   await execucaoStore.listar_execucoes();
+});
+
+watch(itemLog, async (newValue) => {
+  if (!newValue) return;
+
+  await nextTick();
+
+  const el = newValue as HTMLElement;
+  // Encontra o container de rolagem mais próximo
+  const scrollContainer = el.closest(".body-listagem");
+  if (scrollContainer) {
+    // Rola apenas o container, não a página inteira
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+  }
 });
 
 async function performSelecaoExec(e: Event, exec: Execucao) {
@@ -59,7 +73,16 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
             <BFormInput id="inputFiltro" placeholder="Filtro de execução" v-model="queryExecucao" />
           </BFormFloatingLabel>
           <div class="body-listagem card-body">
-            <TransitionGroup name="list" class="list-group" tag="div">
+            <TransitionGroup
+              name="list"
+              class="list-group"
+              tag="div"
+              :ref="
+                (el) => {
+                  bodyListagem = el;
+                }
+              "
+            >
               <BListGroupItem
                 class="d-flex justify-content-between align-items-start"
                 v-for="exec in execucoes"
@@ -94,8 +117,12 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
           </div>
           <div class="body-listagem card-body body-exec">
             <TransitionGroup name="list" class="list-group" tag="div">
-              <BListGroupItem
-                ref="itemLog"
+              <div
+                :ref="
+                  (el) => {
+                    itemLog = el;
+                  }
+                "
                 :class="[
                   'd-flex',
                   'justify-content-between',
@@ -104,6 +131,7 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
                 ]"
                 v-for="(log, idx) in logsExecucao"
                 :key="idx"
+                class="list-group-item"
               >
                 <div class="ms-2 me-auto">
                   <div class="fw-bold" style="line-break: anywhere">{{ log.message }}</div>
@@ -121,7 +149,7 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
                     </div>
                   </div>
                 </div>
-              </BListGroupItem>
+              </div>
             </TransitionGroup>
           </div>
           <div class="card-footer footer-exec">

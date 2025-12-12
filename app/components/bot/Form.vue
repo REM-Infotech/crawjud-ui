@@ -33,6 +33,7 @@ class FormBotManager {
     let message = "Erro ao iniciar robô";
 
     try {
+      FormBot.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       FormBot.configuracao_form = props.bot?.configuracao_form as ConfigForm;
       FormBot.sid_filesocket = seed.value;
       FormBot.bot_id = Number(props.bot?.Id);

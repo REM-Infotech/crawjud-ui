@@ -5,6 +5,7 @@ export default defineStore("useBotForm", () => {
   const isFileUploading = computed(() => progressBarValue.value > 0);
   const current = ref<BotInfo>({} as BotInfo);
   const FormBot = reactive<formBot>({
+    timezone: null,
     xlsx: null,
     anexos: null,
     credencial: null,

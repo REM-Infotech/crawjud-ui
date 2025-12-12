@@ -10,6 +10,8 @@ interface FormLogin {
 }
 
 interface formBot {
+  timezone: string | null;
+
   configuracao_form: ConfigForm | null;
   xlsx: File | null;
   anexos: File[] | null;
