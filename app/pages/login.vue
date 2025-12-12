@@ -4,6 +4,7 @@ import { isAxiosError, type AxiosResponse } from "axios";
 const FormLogin = reactive({
   username: "",
   password: "",
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 });
 
 const isCapsOn = ref(false);

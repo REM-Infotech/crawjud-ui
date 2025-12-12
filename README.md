@@ -19,6 +19,7 @@ repetitivos e melhorar a eficiência operacional.
 
 #
 
+[![IP2Location](https://img.shields.io/badge/IP2Location-blue?style=for-the-badge&logo=bitrise&link=https%3A%2F%2Fip2location.com)](https://ip2location.com)
 [![License MIT](https://img.shields.io/badge/licence-MIT-blue.svg?style=for-the-badge)](./LICENSE)
 [![Python 3.14 (FreeThread)](https://shields.io/badge/python-3.14%20-green?style=for-the-badge&logo=python)](https://python.org/downloads/release/python-3140/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json&style=for-the-badge)](https://github.com/astral-sh/ruff)
