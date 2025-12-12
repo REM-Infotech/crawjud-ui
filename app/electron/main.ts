@@ -12,8 +12,10 @@ let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 function createWindow() {
   mainWindow = new BrowserWindow({
     title: "CrawJUD",
-    width: 1360,
-    height: 768,
+    maxWidth: 1600,
+    maxHeight: 900,
+    minWidth: 1600,
+    minHeight: 900,
     frame: false,
     transparent: true,
     webPreferences: {

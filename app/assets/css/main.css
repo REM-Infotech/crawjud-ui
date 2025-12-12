@@ -92,6 +92,8 @@
 }
 
 .content {
+  box-sizing: border-box;
+  height: 100dvh;
   background-color: var(--background-color-content);
   border-radius: 25.5px;
 }
@@ -118,7 +120,8 @@ html {
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
+  min-width: 100dvw;
   line-height: 1.5;
   color: var(--color-primary);
   background-color: rgba(0, 0, 0, 0);
