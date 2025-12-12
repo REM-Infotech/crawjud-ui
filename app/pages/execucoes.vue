@@ -64,7 +64,7 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
           </span>
           <div style="height: 35px">
             <BButton size="md" variant="outline-danger" v-if="execucao">
-              Encerrar Execução
+              <span class="fw-bold"> Encerrar Execução </span>
             </BButton>
           </div>
         </div>
