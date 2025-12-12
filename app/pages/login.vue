@@ -36,7 +36,7 @@ class authService {
           body: "Login efetuado com sucesso!",
           value: 1000,
         });
-        useRouter().push({ name: "dashboard" });
+        useRouter().push({ name: "execucoes" });
       }
     } catch (err) {
       if (isAxiosError(err) && err.response) {

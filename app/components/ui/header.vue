@@ -50,7 +50,7 @@ const iconTheme = () => {
         <Transition name="navbar-anim" mode="out-in">
           <ul class="nav-items" v-if="!isLoginOrIndex">
             <li class="nav-item">
-              <NuxtLink :to="{ name: 'dashboard' }">
+              <NuxtLink :to="{ name: 'execucoes' }">
                 <span> Dashboard </span>
               </NuxtLink>
             </li>
