@@ -4,7 +4,11 @@ import MaterialSymbolsLightPassword2 from "~icons/material-symbols-light/passwor
 import MaterialSymbolsLightPassword from "~icons/material-symbols-light/password?width=24px&height=24px";
 
 const model = defineModel<Numberish | null | undefined>();
-const props = defineProps<{ id: string; placeholder: str }>();
+const props = defineProps<{
+  id: string;
+  placeholder: string;
+  size?: "sm" | "md" | "lg";
+}>();
 const exibeSenha = ref(false);
 
 const IconBtn = computed(() =>
@@ -23,7 +27,7 @@ function capsLockIndicator(e: Event) {
   <BInputGroup :id="props.id">
     <BFormInput
       :class="[exibeSenha ? 'border-warning' : 'border-primary']"
-      size="sm"
+      :size="props.size || 'md'"
       :id="props.id"
       :type="exibeSenha ? 'text' : 'password'"
       :placeholder="props.placeholder"
