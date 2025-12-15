@@ -36,15 +36,17 @@ export default defineStore("useExecutionStore", () => {
 
   async function download_execucao(pid: str) {
     const { $botService: botService } = useNuxtApp();
-    console.log(pid);
+    const { toggle } = useLoad();
+
+    toggle();
     await botService.downloadExecucao(pid);
+    toggle();
   }
 
   async function listar_execucoes(): Promise<void> {
-    try {
-      const response = await api.get<ExecucoesPayload>("/bot/execucoes");
-      listagemExecucoes.value = response.data;
-    } catch {}
+    logNs.emit("listagem_execucoes", (data: Execucoes) => {
+      listagemExecucoes.value = data;
+    });
   }
   logNs.on("connect", async () => {
     logs.value = [];

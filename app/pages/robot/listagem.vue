@@ -16,6 +16,11 @@ onBeforeMount(async () => {
     configs[bot.configuracao_form] = "ok";
   }
 });
+
+onBeforeUnmount(async () => {
+  botStore.botNs.disconnect();
+});
+
 watch(modal, async (val) => {
   if (!val) {
     await new Promise((r) => setTimeout(r, 200));

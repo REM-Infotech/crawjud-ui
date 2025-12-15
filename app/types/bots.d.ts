@@ -18,13 +18,15 @@ type ConfigForm =
   | "proc_parte";
 
 type Execucao = {
-  id: number;
+  Id: number;
   bot: string;
   pid: string;
   status: StatusBot;
   data_inicio: string;
   data_fim: string;
 };
+
+type Execucoes = Execucao[];
 
 interface BotInfo {
   Id: number;

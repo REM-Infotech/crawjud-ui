@@ -10,7 +10,12 @@ const hoveredExecId = ref();
 const SetExec = ref(false);
 
 onBeforeMount(async () => {
+  execucaoStore.logNs.connect();
   await execucaoStore.listar_execucoes();
+});
+
+onBeforeUnmount(() => {
+  execucaoStore.logNs.disconnect();
 });
 
 watch(itemLog, async (newValue) => {
@@ -19,10 +24,8 @@ watch(itemLog, async (newValue) => {
   await nextTick();
 
   const el = newValue as HTMLElement;
-  // Encontra o container de rolagem mais próximo
   const scrollContainer = el.closest(".body-listagem");
   if (scrollContainer) {
-    // Rola apenas o container, não a página inteira
     await new Promise((resolve) => setTimeout(resolve, 500));
     el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
   }
@@ -86,9 +89,9 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
               <BListGroupItem
                 class="d-flex justify-content-between align-items-start"
                 v-for="exec in execucoes"
-                :key="exec.id"
-                :active="hoveredExecId === exec.id"
-                @mouseenter="hoveredExecId = exec.id"
+                :key="exec.Id"
+                :active="hoveredExecId === exec.Id"
+                @mouseenter="hoveredExecId = exec.Id"
                 @mouseleave="hoveredExecId = null"
                 @click="async (e: Event) => performSelecaoExec(e, exec)"
                 active-class="active"
