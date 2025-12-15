@@ -1,40 +1,30 @@
-import DeepFunctions from "./deep";
+import DeepFunctions from "@/services/deepService";
 import { mainWindow } from "./main";
 
 class WindowUtils {
-  static HandleFunction(commandLine: string[]): {
-    funcName: DeepFunctionNames;
-    args: string[];
-  } {
+  static HandleFunction(cmdL: string[]): { fnName: DeepFunctionNames; args: string[] } {
     let args: string[] = [];
-    const FunctionAndArgs = commandLine.pop()?.replace("crawjud://", "").split("/");
+    const FunctionAndArgs = cmdL.pop()?.replace("crawjud://", "").split("/");
 
     const FuncAndArg = FunctionAndArgs as string[];
-    const funcName = FuncAndArg[0] as DeepFunctionNames;
+    const fnName = FuncAndArg[0] as DeepFunctionNames;
 
     if (FuncAndArg.length > 1) {
       args = FuncAndArg.slice(1);
     }
-
-    return { funcName, args };
+    console.log(args);
+    return { fnName, args };
   }
 
-  static async DeepLink(
-    _event: Electron.Event,
-    commandLine: string[],
-    _workingDirectory: string,
-    _additionalData: unknown,
-  ) {
-    // Someone tried to run a second instance, we should focus our window.
+  static async DeepLink(_: Electron.Event, cmdL: string[], __: string, ___: unknown) {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.focus();
     }
-    // the commandLine is array of strings in which last element is deep link url
 
-    const { funcName, args } = WindowUtils.HandleFunction(commandLine);
+    const { fnName, args } = WindowUtils.HandleFunction(cmdL);
+    const deepFunction = DeepFunctions.functions[fnName];
 
-    const deepFunction = DeepFunctions.functions[funcName];
     if (deepFunction) {
       if (deepFunction.need_args) {
         return await deepFunction.function(...args);

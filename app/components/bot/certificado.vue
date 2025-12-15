@@ -35,30 +35,11 @@ const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "prima
         />
       </BFormGroup>
       <div class="mt-3">
-        <BInputGroup id="senhaCertificado">
-          <BFormInput
-            :class="[exibeSenha ? 'border-warning' : 'border-primary']"
-            size="sm"
-            id="senhaCertificado"
-            :type="exibeSenha ? 'text' : 'password'"
-            placeholder="Senha certificado"
-            v-model="FormBot.senha_certificado"
-          />
-          <BTooltip>
-            <template #target>
-              <BButton
-                @click="exibeSenha = !exibeSenha"
-                :class="['border', 'border-1', 'rounded-end', borderBtn]"
-                :variant="variantBtn"
-              >
-                <Transition name="fade" mode="out-in">
-                  <component :is="IconBtn" />
-                </Transition>
-              </BButton>
-            </template>
-            Exibir senha
-          </BTooltip>
-        </BInputGroup>
+        <AppInputPassword
+          id="senhaCertificado"
+          placeholder="Senha certificado"
+          v-model="FormBot.senha_certificado"
+        />
       </div>
     </div>
     <div

@@ -4,6 +4,7 @@ import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
+import useBotService from "@/services/botService";
 import useThemeService from "@/services/themeService";
 
 export let mainWindow: BrowserWindow | null = null;
@@ -59,7 +60,7 @@ if (!gotTheLock) {
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
     IpcApp();
-
+    useBotService();
     createWindow();
     useThemeService();
   });

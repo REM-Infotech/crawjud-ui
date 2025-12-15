@@ -73,12 +73,13 @@ class FormBotManager {
     });
   }
   static async handleFiles(data: CertificadoFile | KbdxFile | File | File[] | null) {
-    if (data) progressBarValue.value = 0.1;
-    if (Array.isArray(data)) {
-      await FileUploader.uploadMultipleFile(data);
-      return;
+    if (data) {
+      if (Array.isArray(data)) {
+        await FileUploader.uploadMultipleFile(data);
+        return;
+      }
+      await FileUploader.uploadFile(data as File);
     }
-    await FileUploader.uploadFile(data as File);
   }
 }
 

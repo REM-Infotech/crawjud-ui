@@ -1,16 +1,17 @@
 type str = string;
 type int = number;
+type Numberish = string | number;
 
 interface Window {
   jQuery: typeof jQuery;
   $: typeof jQuery;
-  axios: typeof AxiosInstance;
   matchMedia: typeof window.matchMedia;
   windowApi: WindowApi;
   themeApi: ThemeApi;
   authApi: AuthApi;
   botApi: BotApi;
   storageApi: StorageApi;
+  botService: botService;
 }
 
 interface AuthPayload {

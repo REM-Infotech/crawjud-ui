@@ -114,9 +114,10 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
 
             <div style="height: 35px" class="d-flex gap-1">
               <BButton
+                v-if="execucao.pid"
                 size="md"
                 variant="primary"
-                @click="execucaoStore.encerrar_execucao(execucao.pid)"
+                @click="execucaoStore.download_execucao(execucao.pid)"
               >
                 <span class="fw-bold"> Baixar Arquivos </span>
               </BButton>

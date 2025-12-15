@@ -36,17 +36,6 @@ interface ThemeApi {
   currentPreset: () => Promise<Theme>;
 }
 
-interface AuthApi {
-  authenticateUser: (username: string, password: string) => Promise<unknown>;
-  isJwtToken: () => Promise<boolean>;
-}
-
-interface BotApi {
-  listagemBots: () => Promise<BotInfo[]>;
-  listagemCredenciais: (sistema: SystemBots) => Promise<CredenciaisSelect[]>;
-  iniciaExecucao: (form: FormBot, bot: BotInfo) => Promise<boolean>;
-}
-
-interface StorageApi {
-  uploadFiles: (files: File[]) => Promise<unknown>;
+interface botService {
+  downloadExecucao: (pid: str) => Promise<void>;
 }

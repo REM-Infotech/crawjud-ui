@@ -1,8 +1,8 @@
-import api from "@/utils/api";
-import { dialog, session } from "electron";
+import { dialog } from "electron";
 import { writeFileSync } from "fs";
 import { homedir } from "os";
 import { join } from "path";
+import apiService from "./apiService";
 
 const homeUser = homedir();
 
@@ -21,33 +21,27 @@ class DeepFunctions {
         defaultPath: join(homeUser, `${pid}.zip`),
         filters: [
           {
-            name: "Arquivo ZIP",
-            extensions: ["zip", "rar", "7z", "tar", "gz", "bz2", "xz"],
+            name: "Arquivo de execução",
+            extensions: ["zip"],
           },
         ],
       });
 
-      const cookies = await session.defaultSession.cookies.get({});
-      api.defaults.headers.common["Cookie"] = cookies
-        .map((cookie) => `${cookie.name}=${cookie.value}`)
-        .join("; ");
-
-      const response = api.get<ResponseDownloadExecucao>(`/bot/execucoes/${pid}/download`);
-
-      const content = (await response).data.content;
-      const _fileName = (await response).data.file_name;
-      const bytes_arquivo = Buffer.from(content, "base64");
-
       if (!savePath.canceled && savePath.filePath) {
+        const api = await apiService.setup();
+        const response = api.get<ResponseDownloadExecucao>(`/bot/execucoes/${pid}/download`);
+
+        const content = (await response).data.content;
+        const bytes_arquivo = Buffer.from(content, "base64");
+
         writeFileSync(savePath.filePath, bytes_arquivo);
         await dialog.showMessageBox({
           type: "info",
           title: "Download concluído",
-          message: "O arquivo de execução foi baixado com sucesso.",
+          message: "Arquivo salvo com sucesso!",
         });
       }
     } catch (error) {
-      console.error("Erro ao baixar execução:", error);
       dialog.showErrorBox(
         "Erro ao baixar execução",
         "Ocorreu um erro ao baixar o arquivo de execução.",
