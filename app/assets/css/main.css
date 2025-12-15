@@ -56,7 +56,7 @@
   --bg-card: var(--color-flirt-950);
   --bg-accent: var(--color-electric-violet-900);
   --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
-  --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(0.4 * 100%), transparent);
+  --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(1 * 100%), transparent);
   --bg-box-shadow: 0 0 5px rgba(255, 254, 254, 0.2);
   --background-color-container: #1e0416;
   --background-color-content: color-mix(
@@ -96,6 +96,11 @@
   height: 100dvh;
   background-color: var(--background-color-content);
   border-radius: 25.5px;
+}
+
+.bg-primary {
+  background-color: var(--bg-primary) !important;
+  border-radius: 7px;
 }
 
 /* =====================

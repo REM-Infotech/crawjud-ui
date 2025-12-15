@@ -7,24 +7,19 @@ import Xlsxfile from "./xlsxfile.vue";
 const execStore = useExecutionStore();
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: BotInfo | undefined }>();
-const fileUploader = new FileUploader();
 const toast = useToast();
 const bots = useBotStore();
 const { FormBot } = useBotForm();
-const { seed, isFileUploading } = storeToRefs(useBotForm());
+const { seed, isFileUploading, progressBarValue } = storeToRefs(useBotForm());
 const { execucaoBot, execucao } = storeToRefs(execStore);
 const ConfirmDados = ref(false);
 
 class FormBotManager {
-  static async clearForm(val: boolean) {
-    if (!val) {
-      Object.entries(FormBot).forEach(([key, _]) => {
-        FormBot[key as keyof typeof FormBot] = null;
-      });
-      bots.resetCredenciais();
-      return;
-    }
-    bots.listar_credenciais(props.bot as BotInfo);
+  static async clearForm() {
+    Object.entries(FormBot).forEach(([key, _]) => {
+      FormBot[key as keyof typeof FormBot] = null;
+    });
+    bots.resetCredenciais();
   }
   static async handleSubmit(e: Event) {
     e.preventDefault();
@@ -78,11 +73,12 @@ class FormBotManager {
     });
   }
   static async handleFiles(data: CertificadoFile | KbdxFile | File | File[] | null) {
+    if (data) progressBarValue.value = 0.1;
     if (Array.isArray(data)) {
-      await fileUploader.uploadMultipleFile(data);
+      await FileUploader.uploadMultipleFile(data);
       return;
     }
-    await fileUploader.uploadFile(data as File);
+    await FileUploader.uploadFile(data as File);
   }
 }
 
@@ -91,6 +87,9 @@ onMounted(() => {
   seed.value = uuid.v4().toString();
 });
 watch(model, FormBotManager.clearForm);
+watch(model, (newV) => {
+  if (newV) bots.listar_credenciais(props.bot as BotInfo);
+});
 
 watch(
   () => FormBot.certificado,
@@ -122,6 +121,8 @@ const botForms: Record<ConfigForm, Component[]> = {
   pje_protocolo: [Xlsxfile, Certificado],
   proc_parte: [Xlsxfile, Credencial],
 };
+
+onUnmounted(() => FormBotManager.clearForm());
 </script>
 
 <template>

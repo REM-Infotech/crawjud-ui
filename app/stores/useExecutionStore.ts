@@ -1,5 +1,5 @@
 export default defineStore("useExecutionStore", () => {
-  const logNs = socketio.socket("/bot_logs");
+  const logNs = socketio.socket("/bot");
   const itemLog: elementRef = ref<Element | ComponentPublicInstance | null>(null); // Ref para o ul
   const execucao = ref<Execucao>({} as Execucao);
   const queryExecucao: Ref<string> = ref("");

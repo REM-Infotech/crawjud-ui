@@ -2,20 +2,15 @@
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
 
 const modal = ref(false);
+
+const botStore = useBotStore();
+
+const { listagem, queryBot } = storeToRefs(botStore);
 const { current } = storeToRefs(useBotForm());
 const bots = useBotStore();
-const queryBot = ref("");
-const queryLower = computed(() => queryBot.value.toLowerCase());
-const listagem = computed<BotInfo[]>(() =>
-  bots.listagem.filter(
-    (item) =>
-      item.display_name.toLowerCase().includes(queryLower.value) ||
-      item.sistema.toLowerCase().includes(queryLower.value),
-  ),
-);
 
 onBeforeMount(async () => {
-  await bots.listar_robos();
+  botStore.botNs.connect();
   const configs: Record<string, string> = {};
   for (const bot of bots.listagem) {
     configs[bot.configuracao_form] = "ok";
@@ -32,8 +27,8 @@ watch(modal, async (val) => {
 <template>
   <BContainer>
     <BotForm v-model="modal" :bot="current" />
-    <BFormGroup>
-      <BFormInput placeholder="Filtre aqui" v-model="queryBot" />
+    <BFormGroup class="bg-primary mb-5">
+      <BFormInput size="lg" placeholder="Filtre aqui" v-model="queryBot" />
     </BFormGroup>
 
     <TransitionGroup tag="div" name="bots" class="row row-bots">
