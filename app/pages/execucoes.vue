@@ -105,12 +105,27 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
       </BCol>
       <BCol class="col-execucoes" md="6" lg="6" sm="6" xl="6" xxl="6">
         <div class="card card-exec">
-          <div class="card-header header-exec d-flex justify-content-between align-items-center">
-            <span class="fw-bold">
+          <div
+            class="card-header header-exec d-flex justify-content-between align-items-center p-3"
+          >
+            <span class="fw-bold fs-5">
               {{ execucao.pid ? `Execução ${execucao.pid}` : "Selecione uma Execução" }}
             </span>
-            <div style="height: 35px">
-              <BButton size="md" variant="outline-danger" v-if="execucao">
+
+            <div style="height: 35px" class="d-flex gap-1">
+              <BButton
+                size="md"
+                variant="primary"
+                @click="execucaoStore.encerrar_execucao(execucao.pid)"
+              >
+                <span class="fw-bold"> Baixar Arquivos </span>
+              </BButton>
+              <BButton
+                size="md"
+                variant="danger"
+                v-if="execucao && execucao.status === 'Em Execução'"
+                @click="execucaoStore.encerrar_execucao(execucao.pid)"
+              >
                 <span class="fw-bold"> Encerrar Execução </span>
               </BButton>
             </div>

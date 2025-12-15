@@ -24,6 +24,11 @@ export default defineStore("useExecutionStore", () => {
     }
   }
 
+  async function encerrar_execucao(pid: str) {
+    logNs.emit("bot_stop", { pid: pid });
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
   async function listar_execucoes(): Promise<void> {
     try {
       const response = await api.get<ExecucoesPayload>("/bot/execucoes");
@@ -59,6 +64,7 @@ export default defineStore("useExecutionStore", () => {
     logsExecucao,
     logNs,
     logs,
+    encerrar_execucao,
     execucao,
     itemLog,
   };
