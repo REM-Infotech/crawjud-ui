@@ -14,14 +14,15 @@ interface formBot {
   xlsx: File | null;
   anexos: File[] | null;
 
+  cpf_cnpj_certificado: string | null;
   credencial: number | null | undefined;
   senha_token: string | null;
 
   certificado: CertificadoFile;
   senha_certificado: string | null;
 
-  kbdx: KbdxFile;
-  senha_kbdx: string | null;
+  kdbx: KbdxFile;
+  senha_kdbx: string | null;
 
   sid_filesocket: string | null;
   bot_id: number | null;

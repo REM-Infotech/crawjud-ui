@@ -4,6 +4,7 @@ import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
+import useBotService from "@/services/botService";
 import useThemeService from "@/services/themeService";
 
 export let mainWindow: BrowserWindow | null = null;
@@ -12,8 +13,10 @@ let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 function createWindow() {
   mainWindow = new BrowserWindow({
     title: "CrawJUD",
-    width: 1360,
-    height: 768,
+    width: 1600,
+    height: 900,
+    resizable: false,
+    maximizable: false,
     frame: false,
     transparent: true,
     webPreferences: {
@@ -57,15 +60,9 @@ if (!gotTheLock) {
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
     IpcApp();
-
+    useBotService();
     createWindow();
     useThemeService();
-  });
-
-  app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
-      app.quit();
-    }
   });
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -73,6 +70,12 @@ if (!gotTheLock) {
     }
   });
 }
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {

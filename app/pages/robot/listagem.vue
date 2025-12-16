@@ -2,19 +2,25 @@
 import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
 
 const modal = ref(false);
+
+const botStore = useBotStore();
+
+const { listagem, queryBot } = storeToRefs(botStore);
 const { current } = storeToRefs(useBotForm());
 const bots = useBotStore();
-const listagem = computed<BotInfo[]>(() => bots.listagem);
 
 onBeforeMount(async () => {
-  await bots.listar_robos();
+  botStore.botNs.connect();
   const configs: Record<string, string> = {};
   for (const bot of bots.listagem) {
     configs[bot.configuracao_form] = "ok";
   }
-  console.clear();
-  console.log(configs);
 });
+
+onBeforeUnmount(async () => {
+  botStore.botNs.disconnect();
+});
+
 watch(modal, async (val) => {
   if (!val) {
     await new Promise((r) => setTimeout(r, 200));
@@ -26,7 +32,11 @@ watch(modal, async (val) => {
 <template>
   <BContainer>
     <BotForm v-model="modal" :bot="current" />
-    <TransitionGroup tag="div" name="bots" class="row">
+    <BFormGroup class="bg-primary mb-5">
+      <BFormInput size="lg" placeholder="Filtre aqui" v-model="queryBot" />
+    </BFormGroup>
+
+    <TransitionGroup tag="div" name="bots" class="row row-bots">
       <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
         <div class="card">
           <div class="card-header">
@@ -70,6 +80,11 @@ watch(modal, async (val) => {
 </template>
 
 <style lang="css">
+.row-bots {
+  height: calc(100dvh - 80px);
+  overflow: auto;
+}
+
 .bots-enter-active,
 .bots-leave-active {
   transition: all 0.5s;

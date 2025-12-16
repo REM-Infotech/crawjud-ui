@@ -1,0 +1,1 @@
+type ExecucoesPayload = Execucao[];

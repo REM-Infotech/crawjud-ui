@@ -10,7 +10,7 @@ padronização, legibilidade, tipagem explícita e documentação consistente.
 
 ---
 
-## 1. Regra Absoluta: Sempre usar JSDoc
+## 1. Regra Absoluta: Sempre usar JSDoc em arquivos **js**
 
 Toda função, método, classe e interface **DEVE** possuir comentário JSDoc.
 Nunca deixe código público ou exportado sem documentação.
@@ -87,7 +87,7 @@ function parse(valor) {
 
 ### TypeScript
 
-Mesmo com TypeScript, o JSDoc **não é opcional**:
+JSDoc apenas em arquivos **.js**:
 
 ```ts
 /**

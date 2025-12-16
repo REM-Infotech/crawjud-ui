@@ -15,8 +15,13 @@ const themeApi = {
   currentPreset: (): Promise<unknown> => ipcRenderer.invoke("dark-mode:current-preset"),
 };
 
-contextBridge.exposeInMainWorld("windowApi", windowApi);
-contextBridge.exposeInMainWorld("themeApi", themeApi);
+const botService = {
+  downloadExecucao: (pid: str): Promise<void> =>
+    ipcRenderer.invoke("execucao-bot:download-execucao", pid),
+};
+
+const exposes = { windowApi: windowApi, themeApi: themeApi, botService: botService };
+Object.entries(exposes).forEach(([k, v]) => contextBridge.exposeInMainWorld(k, v));
 
 window.addEventListener("keypress", (e) => {
   if (e) {

@@ -1,29 +1,51 @@
-export default defineStore("useBotStore", {
-  state: () => ({
-    listagem: [] as BotInfo[],
-    credenciais: [{ value: null, text: "Selecione" }] as CredenciaisSelect[],
-  }),
+export default defineStore("useBotStore", () => {
+  const botNs = socketio.socket("/bot");
 
-  actions: {
-    async listar_robos() {
-      try {
-        const listagem = (await api.get<BotPayload>("/bot/listagem")).data.listagem;
-        this.listagem = listagem;
-      } catch {}
-    },
-    async listar_credenciais(bot: BotInfo) {
-      try {
-        const sistema = bot.sistema.toLowerCase();
-        const credenciais = (await api.get<CredenciaisPayload>(`/bot/${sistema}/credenciais`)).data
-          .credenciais;
+  const queryBot = ref("");
+  const listagemBots: Ref<BotInfo[]> = ref([]);
+  const credenciaisBot: Ref<CredenciaisSelect[]> = ref([{ value: null, text: "Selecione" }]);
 
-        this.credenciais = [{ value: null, text: "Selecione" }, ...credenciais];
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    resetCredenciais() {
-      this.credenciais = [{ value: null, text: "Selecione" }];
-    },
-  },
+  const queryLower = computed(() => queryBot.value.toLowerCase());
+  const credenciais: ComputedRef<CredenciaisSelect[]> = computed(() => credenciaisBot.value);
+  const listagem: ComputedRef<BotInfo[]> = computed(() =>
+    listagemBots.value.filter(
+      (item) =>
+        item.display_name.toLowerCase().includes(queryLower.value) ||
+        item.sistema.toLowerCase().includes(queryLower.value),
+    ),
+  );
+
+  botNs.on("connect", () => {
+    listagemBots.value = [];
+    botNs.emit("listagem", (data: { listagem: BotInfo[] }) => {
+      listagemBots.value = data.listagem;
+    });
+
+    const { current } = storeToRefs(useBotForm());
+    if (current) listar_credenciais(current.value);
+  });
+
+  async function listar_credenciais(bot: BotInfo) {
+    if (!bot) return;
+
+    credenciaisBot.value = [{ value: null, text: "Carregando" }];
+    botNs.emit("provide_credentials", { sistema: bot.sistema }, (data: CredenciaisSelect[]) => {
+      credenciaisBot.value = data;
+    });
+  }
+
+  function resetCredenciais() {
+    credenciaisBot.value = [{ value: null, text: "Selecione" }];
+  }
+
+  return {
+    botNs,
+    listar_credenciais,
+    listagemBots,
+    credenciaisBot,
+    credenciais,
+    listagem,
+    resetCredenciais,
+    queryBot,
+  };
 });

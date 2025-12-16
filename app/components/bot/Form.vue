@@ -4,26 +4,22 @@ import Certificado from "./certificado.vue";
 import Credencial from "./credencial.vue";
 import Xlsxfile from "./xlsxfile.vue";
 
+const execStore = useExecutionStore();
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: BotInfo | undefined }>();
-const fileUploader = new FileUploader();
 const toast = useToast();
 const bots = useBotStore();
 const { FormBot } = useBotForm();
-const { seed, isFileUploading } = storeToRefs(useBotForm());
-
+const { seed, isFileUploading, progressBarValue } = storeToRefs(useBotForm());
+const { execucaoBot, execucao } = storeToRefs(execStore);
 const ConfirmDados = ref(false);
 
 class FormBotManager {
-  static async clearForm(val: boolean) {
-    if (!val) {
-      Object.entries(FormBot).forEach(([key, _]) => {
-        FormBot[key as keyof typeof FormBot] = null;
-      });
-      bots.resetCredenciais();
-      return;
-    }
-    bots.listar_credenciais(props.bot as BotInfo);
+  static async clearForm() {
+    Object.entries(FormBot).forEach(([key, _]) => {
+      FormBot[key as keyof typeof FormBot] = null;
+    });
+    bots.resetCredenciais();
   }
   static async handleSubmit(e: Event) {
     e.preventDefault();
@@ -54,6 +50,21 @@ class FormBotManager {
       const response = await api.post<StartBotPayload>(endpoint, form, {});
       message = response.data.message;
       title = response.data.title;
+
+      if (response.status === 200) {
+        const pid = response.data.pid;
+        execucaoBot.value = pid;
+        execucao.value = {
+          status: "Em Execução",
+          pid: pid,
+          data_fim: "",
+          data_inicio: "",
+          id: 0,
+          bot: "",
+        };
+
+        useRouter().push({ name: "execucoes" });
+      }
     } catch {}
 
     toast.create({
@@ -62,11 +73,13 @@ class FormBotManager {
     });
   }
   static async handleFiles(data: CertificadoFile | KbdxFile | File | File[] | null) {
-    if (Array.isArray(data)) {
-      await fileUploader.uploadMultipleFile(data);
-      return;
+    if (data) {
+      if (Array.isArray(data)) {
+        await FileUploader.uploadMultipleFile(data);
+        return;
+      }
+      await FileUploader.uploadFile(data as File);
     }
-    await fileUploader.uploadFile(data as File);
   }
 }
 
@@ -75,6 +88,9 @@ onMounted(() => {
   seed.value = uuid.v4().toString();
 });
 watch(model, FormBotManager.clearForm);
+watch(model, (newV) => {
+  if (newV) bots.listar_credenciais(props.bot as BotInfo);
+});
 
 watch(
   () => FormBot.certificado,
@@ -87,7 +103,7 @@ watch(
   { deep: true },
 );
 watch(
-  () => FormBot.kbdx,
+  () => FormBot.kdbx,
   async (newV) => FormBotManager.handleFiles(newV),
   { deep: true },
 );
@@ -106,6 +122,8 @@ const botForms: Record<ConfigForm, Component[]> = {
   pje_protocolo: [Xlsxfile, Certificado],
   proc_parte: [Xlsxfile, Credencial],
 };
+
+onUnmounted(() => FormBotManager.clearForm());
 </script>
 
 <template>
@@ -113,34 +131,38 @@ const botForms: Record<ConfigForm, Component[]> = {
     <template #header>
       {{ props.bot?.display_name }}
     </template>
-    <BForm class="d-flex flex-column" @submit="FormBotManager.handleSubmit">
-      <BotProgress />
-      <component
-        :is="ComponentForm"
-        v-for="(ComponentForm, idx) in botForms[bot?.configuracao_form as ConfigForm]"
-        :key="idx"
-      />
-      <div
-        class="d-flex flex-column p-3 gap-2 mt-5"
-        style="min-height: 120px; border-top: 1px solid black"
-      >
-        <BFormCheckbox v-model="ConfirmDados">
-          Confirmo que os dados inseridos estão corretos
-        </BFormCheckbox>
-        <div class="d-flex flex-column">
-          <Transition name="execbtn">
-            <BButton
-              v-if="ConfirmDados"
-              :variant="isFileUploading ? 'outline-success' : 'success'"
-              type="submit"
-              :disabled="isFileUploading"
-            >
-              Iniciar!
-            </BButton>
-          </Transition>
+    <div style="min-height: calc(100dvh - 150px)">
+      <BForm class="d-flex flex-column" @submit="FormBotManager.handleSubmit">
+        <component
+          :is="ComponentForm"
+          v-for="(ComponentForm, idx) in botForms[bot?.configuracao_form as ConfigForm]"
+          :key="idx"
+        />
+        <div style="min-height: 120px">
+          <BotProgress />
         </div>
-      </div>
-    </BForm>
+        <div
+          class="d-flex flex-column p-3 gap-2 mt-5"
+          style="min-height: 120px; border-top: 1px solid black"
+        >
+          <BFormCheckbox v-model="ConfirmDados">
+            Confirmo que os dados inseridos estão corretos
+          </BFormCheckbox>
+          <div class="d-flex flex-column">
+            <Transition name="execbtn">
+              <BButton
+                v-if="ConfirmDados"
+                :variant="isFileUploading ? 'outline-success' : 'success'"
+                type="submit"
+                :disabled="isFileUploading"
+              >
+                Iniciar!
+              </BButton>
+            </Transition>
+          </div>
+        </div>
+      </BForm>
+    </div>
   </BModal>
 </template>
 <style lang="css" scoped>

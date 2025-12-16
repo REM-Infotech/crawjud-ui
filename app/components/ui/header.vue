@@ -27,6 +27,8 @@ const maximizeWindow = () => {
   window.windowApi.maximizeWindow();
 };
 
+const iconMaximize = MaterialSymbolsLightOpenInFullRounded;
+
 watch(
   () => useRoute().name,
   (newName) => {
@@ -50,13 +52,13 @@ const iconTheme = () => {
         <Transition name="navbar-anim" mode="out-in">
           <ul class="nav-items" v-if="!isLoginOrIndex">
             <li class="nav-item">
-              <NuxtLink :to="{ name: 'dashboard' }">
-                <span> Dashboard </span>
+              <NuxtLink :to="{ name: 'robot-listagem' }">
+                <span> Robôs </span>
               </NuxtLink>
             </li>
             <li class="nav-item">
-              <NuxtLink :to="{ name: 'robot-listagem' }">
-                <span> Robôs </span>
+              <NuxtLink :to="{ name: 'execucoes' }">
+                <span> Execuções </span>
               </NuxtLink>
             </li>
             <li class="nav-item">
@@ -75,9 +77,7 @@ const iconTheme = () => {
           <button class="minimize-window">
             <MaterialSymbolsLightMinimizeRounded @click="minimizeWindow" />
           </button>
-          <button class="maximize-window">
-            <MaterialSymbolsLightOpenInFullRounded @click="maximizeWindow" />
-          </button>
+
           <button class="close-window" @click="closeWindow">
             <MaterialSymbolsLightCloseRounded />
           </button>

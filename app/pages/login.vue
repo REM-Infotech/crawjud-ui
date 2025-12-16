@@ -4,14 +4,11 @@ import { isAxiosError, type AxiosResponse } from "axios";
 const FormLogin = reactive({
   username: "",
   password: "",
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 });
 
-const isCapsOn = ref(false);
 const toast = useToast();
 const load = useLoad();
-function capsLockIndicator(e: Event) {
-  isCapsOn.value = (e as KeyboardEvent).getModifierState("CapsLock");
-}
 
 class authService {
   static async authUser(e: SubmitEvent) {
@@ -36,7 +33,7 @@ class authService {
           body: "Login efetuado com sucesso!",
           value: 1000,
         });
-        useRouter().push({ name: "dashboard" });
+        useRouter().push({ name: "robot-listagem" });
       }
     } catch (err) {
       if (isAxiosError(err) && err.response) {
@@ -62,17 +59,7 @@ class authService {
           <input type="text" class="form-control" id="username" v-model="FormLogin.username" />
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            v-model="FormLogin.password"
-            @keyup="capsLockIndicator"
-          />
-          <div v-if="isCapsOn" class="text-warning mt-1 fw-bold" style="font-size: 0.95em">
-            Caps Lock is ON
-          </div>
+          <AppInputPassword id="password" placeholder="Senha" v-model="FormLogin.password" />
         </div>
         <button type="submit" class="btn btn-primary w-100">Login</button>
       </form>

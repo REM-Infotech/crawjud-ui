@@ -56,7 +56,7 @@
   --bg-card: var(--color-flirt-950);
   --bg-accent: var(--color-electric-violet-900);
   --bg-primary: color-mix(in srgb, var(--color-flirt-950) calc(1 * 100%), transparent);
-  --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(0.4 * 100%), transparent);
+  --bg-secondary: color-mix(in srgb, var(--color-flirt-600) calc(1 * 100%), transparent);
   --bg-box-shadow: 0 0 5px rgba(255, 254, 254, 0.2);
   --background-color-container: #1e0416;
   --background-color-content: color-mix(
@@ -64,6 +64,9 @@
     var(--color-flirt-800) calc(0.2 * 100%),
     transparent
   );
+
+  --bg-card-log: rgba(246, 177, 235, 0.301);
+  --bg-executions: #86226d;
 }
 
 [app-theme="light"] {
@@ -83,11 +86,21 @@
     var(--color-flirt-100) calc(0.2 * 100%),
     transparent
   );
+
+  --bg-card-log: rgb(220, 170, 243);
+  --bg-executions: #fad4f4;
 }
 
 .content {
+  box-sizing: border-box;
+  height: 100dvh;
   background-color: var(--background-color-content);
   border-radius: 25.5px;
+}
+
+.bg-primary {
+  background-color: var(--bg-primary) !important;
+  border-radius: 7px;
 }
 
 /* =====================
@@ -102,8 +115,8 @@
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE e Edge antigo */
   transition:
-    color 0.5s,
-    background-color 0.5s;
+    color 0.2s,
+    background-color 0.2s;
 }
 
 html {
@@ -111,8 +124,13 @@ html {
   scroll-behavior: smooth;
 }
 
+.card-body {
+  border-radius: 0px;
+}
+
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
+  min-width: 100dvw;
   line-height: 1.5;
   color: var(--color-primary);
   background-color: rgba(0, 0, 0, 0);
@@ -204,10 +222,10 @@ option {
 .window-box {
   pointer-events: none; /* permite interação com conteúdo abaixo */
   position: fixed;
-  width: 100%;
-  height: 100%;
-  border: #000000 solid 2px;
-  border-radius: 15px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   transition:
     width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
@@ -232,15 +250,6 @@ option {
 ::-webkit-scrollbar-thumb {
   background: var(--bg-accent);
   border-radius: 8px;
-}
-
-/* =====================
-   Responsive
-   ===================== */
-@media (max-width: 600px) {
-  body {
-    font-size: 0.95rem;
-  }
 }
 
 .overlay {

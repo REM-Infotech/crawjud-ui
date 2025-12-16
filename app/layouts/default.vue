@@ -6,6 +6,7 @@
     <div class="layout">
       <NuxtPage />
     </div>
+    <UiFooter />
   </div>
 </template>
 
@@ -15,8 +16,9 @@
   padding: 25px;
   display: flex;
   flex-direction: column;
-  height: calc(100dvh - 55px);
-  width: 100%;
+  box-sizing: border-box;
+  max-height: calc(100% - 55px);
+  min-width: 100%;
   overflow-y: auto;
 }
 

@@ -24,7 +24,6 @@ const props = defineProps({
 .container {
   max-width: 960px; /* Limits the container width */
   margin: 0 auto; /* Centers the container horizontally */
-  padding: 20px; /* Adds space around the content inside the box */
   background-color: var(--background-color-container);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow */
   border-radius: 5px; /* Rounded corners */

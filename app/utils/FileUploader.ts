@@ -9,17 +9,20 @@ class FileUploader {
 
   constructor() {
     this.totalSent = 0;
-    this.chunkSize = 1024 * 90;
+    this.chunkSize = 1024 * 100;
     this.fileSocket = socketio.socket("/files");
-    this.fileSocket.connect();
   }
 
   public async uploadFile(file: File): Promise<void> {
+    this.fileSocket.connect();
     this.totalSent = 0;
     await this.uploadInChunks(file, file.size);
-    this.clearProgressBar(`Arquivo ${file.name} carregado!`);
+    await this.clearProgressBar(`Arquivo ${file.name} carregado!`);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    this.fileSocket.disconnect();
   }
   public async uploadMultipleFile(FileList: File[] | undefined): Promise<void> {
+    this.fileSocket.connect();
     this.totalSent = 0;
     if (FileList) {
       const totalFilesSizes = FileList.reduce((acc, f) => acc + f.size, 0);
@@ -28,13 +31,15 @@ class FileUploader {
       }
       this.clearProgressBar(`Seus ${FileList.length} foram carregados!`);
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    this.fileSocket.disconnect();
   }
 
   private async uploadInChunks(file: File, totalSize: number) {
     const totalChunks = Math.ceil(file.size / this.chunkSize);
     const { seed } = storeToRefs(useBotForm());
     for (let i = 0; i < totalChunks; i++) {
-      console.log(i);
       const start = i * this.chunkSize;
       const end = Math.min(file.size, start + this.chunkSize);
       const chunk = file.slice(start, end);
@@ -93,16 +98,16 @@ class FileUploader {
     const step = targetProgress > currentProgress ? 1 : -1;
     while (progressBarValue.value !== targetProgress) {
       progressBarValue.value += step;
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 5));
     }
   }
 
   private async clearProgressBar(message: string) {
     const { progressBarValue } = storeToRefs(useBotForm());
-
     await new Promise((r) => setTimeout(r, 2000));
-    progressBarValue.value = 0;
+    progressBarValue.value = 0.0;
+    console.log(progressBarValue.value);
   }
 }
 
-export default FileUploader;
+export default new FileUploader();

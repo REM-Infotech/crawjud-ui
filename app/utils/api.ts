@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default axios.create({
+const _api = axios.create({
   baseURL: new URL(import.meta.env.VITE_API_URL).toString(),
   withCredentials: true,
   xsrfCookieName: "x-xsrf-token",
@@ -10,3 +10,5 @@ export default axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export default _api;
