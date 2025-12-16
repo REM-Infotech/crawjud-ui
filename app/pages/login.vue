@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { isAxiosError, type AxiosResponse } from "axios";
-
 const FormLogin = reactive({
   username: "",
   password: "",
@@ -25,62 +23,72 @@ class authService {
       return;
     }
 
-    try {
-      const response = await api.post("/auth/login", FormLogin);
-      if (response.status === 200) {
-        toast.create({
-          title: "Sucesso!",
-          body: "Login efetuado com sucesso!",
-          value: 1000,
-        });
-        useRouter().push({ name: "robot-listagem" });
-      }
-    } catch (err) {
-      if (isAxiosError(err) && err.response) {
-        const message = (err.response as AxiosResponse<AuthPayload>).data.message;
-        toast.create({
-          title: "Erro",
-          body: message,
-        });
-      }
+    const FormAuth = Object.fromEntries(Object.entries(FormLogin));
+    const returnAuth = await window.authService.autenticarUsuario(FormAuth);
+
+    toast.create({
+      title: returnAuth.status.toUpperCase(),
+      body: returnAuth.mensagem,
+    });
+
+    if (returnAuth.status === "sucesso") {
     }
+
     load.hide();
   }
 }
 </script>
 
 <template>
-  <Container :main-class="'login-container'">
-    <div class="card-login">
-      <h2>Login</h2>
-      <form @submit="(e) => authService.authUser(e)">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control" id="username" v-model="FormLogin.username" />
-        </div>
-        <div class="mb-3">
-          <AppInputPassword id="password" placeholder="Senha" v-model="FormLogin.password" />
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-      </form>
+  <BContainer class="login-container">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="mb-3">Login</h2>
+      </div>
+      <div class="card-body">
+        <form @submit="(e) => authService.authUser(e)" for="username">
+          <BFormGroup class="mb-3">
+            <BFormInput
+              size="lg"
+              placeholder="Login"
+              type="text"
+              id="username"
+              v-model="FormLogin.username"
+            />
+          </BFormGroup>
+
+          <div class="mb-3">
+            <AppInputPassword
+              size="lg"
+              id="password"
+              placeholder="Senha"
+              v-model="FormLogin.password"
+            />
+          </div>
+          <div class="card-footer">
+            <BButton type="submit" class="btn mt-auto btn-primary w-100">Login</BButton>
+          </div>
+        </form>
+      </div>
     </div>
-  </Container>
+  </BContainer>
 </template>
 
-<style lang="css" scoped>
+<style lang="css">
 .login-container {
-  display: flex;
-  margin-top: 3.5em;
+  margin-top: 13.5em;
   background-color: rgba(255, 255, 255, 0);
   box-shadow: none;
+  display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-.card-login {
-  width: 400px;
-  padding: 30px;
+.card {
+  width: 480px;
+  min-height: 330px;
+  padding: 15px;
   background-color: var(--color-flirt-950);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;

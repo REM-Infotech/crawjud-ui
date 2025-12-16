@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { AxiosInstance } from "axios";
 import { ipcMain, type IpcMainInvokeEvent as IpcInvoke } from "electron";
-import useApiService from "./apiService.mjs";
+import useApiService from "./apiService.js";
 
 export default function useAuthService() {
   class AuthService {
@@ -15,9 +15,18 @@ export default function useAuthService() {
 
     async autenticarSessao(form: Record<string, any>): AuthReturn {
       try {
-        return (await this.api.post<AuthenticationPayload>("/auth/login", form)).data;
-      } catch {}
-      return;
+        const data = (await this.api.post<AuthenticationPayload>("/auth/login", form)).data;
+        return {
+          mensagem: data.message,
+          status: "sucesso",
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          mensagem: "Erro ao realizar autenticação",
+          status: "erro",
+        };
+      }
     }
   }
 

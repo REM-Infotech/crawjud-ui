@@ -1,5 +1,5 @@
 import { dialog, ipcMain } from "electron";
-import useApiService from "./apiService.mjs";
+import useApiService from "./apiService.js";
 
 export default function useBotService() {
   class BotService {

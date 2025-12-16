@@ -8,7 +8,7 @@ interface Window {
   matchMedia: typeof window.matchMedia;
   windowApi: WindowApi;
   themeApi: ThemeApi;
-  authApi: AuthApi;
+  authService: authService;
   botApi: BotApi;
   storageApi: StorageApi;
   botService: botService;
@@ -17,7 +17,13 @@ interface Window {
 interface AuthPayload {
   message: string;
 }
-type AuthReturn = Promise<AuthenticationPayload | void>;
+
+interface AuthResult {
+  mensagem: string;
+  status: "sucesso" | "erro";
+}
+
+type AuthReturn = Promise<AuthResult>;
 type elementRef = Ref<Element | ComponentPublicInstance | null>;
 
 declare module "~/assets/img/dark/elaw.png" {
