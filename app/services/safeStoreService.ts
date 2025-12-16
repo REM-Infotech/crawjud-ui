@@ -1,12 +1,13 @@
 import { app, safeStorage } from "electron";
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync } from "fs";
+import { readFile, writeFile } from "fs/promises";
 import path from "path";
 
 export default function useSafeStorage() {
   class safeStoreService implements ISafeStoreService {
     constructor() {}
 
-    save(opt: optSave) {
+    async save(opt: optSave) {
       if (!opt.key || !safeStorage.isEncryptionAvailable()) return;
 
       const encrypted = safeStorage.encryptString(opt.value);
@@ -14,19 +15,19 @@ export default function useSafeStorage() {
 
       let data: { [key: string]: string } = {};
       if (existsSync(file)) {
-        data = JSON.parse(readFileSync(file).toString());
+        data = JSON.parse((await readFile(file)).toString());
       }
       data[opt.key] = encrypted.toString("base64"); // salvar como base64
-      writeFileSync(file, JSON.stringify(data));
+      await writeFile(file, JSON.stringify(data));
     }
 
-    load(key: string): string | null | undefined {
+    async load(key: string): Promise<string | null | undefined> {
       if (!key || !safeStorage.isEncryptionAvailable()) return;
 
       const file = path.join(app.getPath("userData"), "dataStore.ec");
       if (!existsSync(file)) return null;
 
-      const data = JSON.parse(readFileSync(file).toString());
+      const data = JSON.parse((await readFile(file)).toString());
       if (!data[key]) return null;
 
       const encryptedBuffer = Buffer.from(data[key], "base64");
@@ -34,5 +35,6 @@ export default function useSafeStorage() {
     }
   }
 
-  return new safeStoreService();
+  const safeService = new safeStoreService();
+  return safeService;
 }

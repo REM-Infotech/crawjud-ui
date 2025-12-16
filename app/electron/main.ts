@@ -1,11 +1,14 @@
-import { app, BrowserWindow } from "electron";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { app, BrowserWindow, ipcMain } from "electron";
 
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
 import useAuthService from "@/services/authService";
-import useBotService from "@/services/botService.mjs";
+import useBotService from "@/services/botService";
+import useCookieService from "@/services/cookieService";
+import useSafeStorage from "@/services/safeStoreService";
 import useThemeService from "@/services/themeService";
 
 export let mainWindow: BrowserWindow | null = null;
@@ -21,6 +24,7 @@ function createWindow() {
     frame: false,
     transparent: true,
     webPreferences: {
+      nodeIntegration: false,
       devTools: !app.isPackaged,
       preload: preload_path,
     },
@@ -59,13 +63,26 @@ if (!gotTheLock) {
   app.on("second-instance", WindowUtils.DeepLink);
 
   // Create mainWindow, load the rest of the app, etc...
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
     IpcApp();
+    useCookieService();
     useBotService();
-    createWindow();
     useThemeService();
-    useAuthService();
+
+    const { CookieService } = useCookieService();
+    const safeService = useSafeStorage();
+    const authService = await useAuthService();
+
+    ipcMain.handle("get-cookies", async () => CookieService.loadCookies());
+    ipcMain.handle("safe-storage:load", async (_, key: string) => safeService.load(key));
+    ipcMain.handle("safe-storage:save", async (_, opt: optSave) => safeService.save(opt));
+    ipcMain.handle("crawjud:autenticar", (_, data: Record<string, any>) =>
+      authService.autenticarSessao(data),
+    );
+
+    createWindow();
   });
+
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();

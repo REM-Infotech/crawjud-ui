@@ -15,6 +15,8 @@ export default defineNuxtConfig({
     "~/plugins/bootstrap.client.ts",
     "~/plugins/datatables.client.ts",
     "~/plugins/uuid.client.ts",
+    "~/plugins/sync-cookies.client.ts",
+    "~/plugins/botservice.client.ts",
   ],
   telemetry: false,
   ssr: false,

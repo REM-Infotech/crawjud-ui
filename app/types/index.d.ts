@@ -12,6 +12,8 @@ interface Window {
   botApi: BotApi;
   storageApi: StorageApi;
   botService: botService;
+  cookieService: cookieService;
+  safeStorageApi: safeStorageApi;
 }
 
 interface AuthPayload {
@@ -54,4 +56,15 @@ declare module "~/assets/img/dark/pje.png" {
 declare module "~/assets/img/light/crawjud.png" {
   const logoCrawJUD: string;
   export default logoCrawJUD;
+}
+
+interface cookieApp {
+  url?: string;
+  name?: string;
+  value?: string;
+  domain?: string;
+  path?: string;
+  secure?: boolean;
+  httpOnly?: boolean;
+  expirationDate?: number;
 }

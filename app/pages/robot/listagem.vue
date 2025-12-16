@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Empty from "~/components/Empty.vue";
 import Elaw from "~/components/img/elaw.vue";
 import Esaj from "~/components/img/esaj.vue";
 import Pje from "~/components/img/pje.vue";
@@ -31,15 +32,11 @@ watch(modal, async (val) => {
   }
 });
 
-const EmptyComponent = {
-  template: "<h1> ok </h1>",
-};
-
 const imgSistema: Record<SystemBots, Component> = {
   PROJUDI: Projudi,
   ESAJ: Esaj,
   ELAW: Elaw,
-  JUSDS: EmptyComponent,
+  JUSDS: Empty,
   PJE: Pje,
 };
 </script>

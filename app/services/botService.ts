@@ -1,37 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { AxiosInstance } from "axios";
 import { dialog, ipcMain } from "electron";
-import useApiService from "./apiService.js";
+import { writeFileSync } from "fs";
+import { homedir } from "os";
+import { join } from "path";
+import useApiService from "./apiService";
 
-export default function useBotService() {
+const homeUser = homedir();
+
+export default async function useBotService() {
   class BotService {
+    public api: AxiosInstance;
     constructor() {
-      useApiService().then((instance) => {
-        this.api = instance;
-      });
+      this.api = undefined as unknown as AxiosInstance;
     }
-    /**
-     *
-     * Inicia a execução do robô
-     * @param {Record<string, any>} form
-     * @param {CrawJudBot} bot
-     * @returns {Promise<boolean>} Boleano para indicar se a execução iniciou
-     *
-     */
-    async iniciaExecucao(form, bot) {
-      /** @type {import("axios").AxiosResponse<StartBotPayload>} */
-      let response = { status: 500 };
+
+    async iniciaExecucao(form: Record<string, any>, bot: CrawJudBot): Promise<boolean> {
       const endpoint = `/bot/${bot.sistema.toLowerCase()}/run`;
 
       try {
-        response = this.api.post(endpoint, form);
-      } catch {}
-      return response.status === 200;
+        const response = await this.api.post<StartBotPayload>(endpoint, form);
+        return response.status === 200;
+      } catch {
+        return false;
+      }
     }
-    /**
-     * Baixa os arquivos de execução do robô
-     * @param {string} pid: ID de execução do robô
-     * @returns {Promise<void>}
-     */
-    async download_execucao(pid) {
+    async download_execucao(pid: string): Promise<void> {
       try {
         const savePath = await dialog.showSaveDialog({
           title: "Salvar arquivo de execução",
@@ -45,16 +39,12 @@ export default function useBotService() {
         });
 
         if (!savePath.canceled && savePath.filePath) {
-          const api = await useApiService();
-
-          /**
-           * @type {import("axios").AxiosResponse<ResponseDownloadExecucao>}
-           */
-          const response = await api.get(`/bot/execucoes/${pid}/download`);
-
+          const endpoint = `/bot/execucoes/${pid}/download`;
+          const response = await this.api.get<ResponseDownloadExecucao>(endpoint);
           const bytes_arquivo = Buffer.from(response.data.content, "base64");
 
           writeFileSync(savePath.filePath, bytes_arquivo);
+
           await dialog.showMessageBox({
             type: "info",
             title: "Download concluído",
@@ -71,5 +61,7 @@ export default function useBotService() {
   }
 
   const botService = new BotService();
+  botService.api = (await useApiService()).api;
+
   ipcMain.handle("bot-service:download-execucao", (_, pid) => botService.download_execucao(pid));
 }

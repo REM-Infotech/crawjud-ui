@@ -1,6 +1,7 @@
 export default defineStore("useBotForm", () => {
   const progressBarValue = ref(0);
-  const fileNs = socketio.socket("/files");
+  const mgr = socketio();
+  const fileNs = mgr.socket("/files");
   const seed = ref("");
   const isFileUploading = computed(() => progressBarValue.value > 0);
   const current = ref<CrawJudBot>({} as CrawJudBot);

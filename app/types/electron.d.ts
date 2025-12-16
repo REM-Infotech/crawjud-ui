@@ -41,6 +41,15 @@ interface authService {
   autenticarUsuario: (data: Record<string, any>) => Promise<AuthReturn>;
 }
 
+interface cookieService {
+  getCookies: () => Promise<cookieApp[]>;
+}
+
+interface safeStorageApi {
+  load: (key: string) => Promise<string>;
+  save: (opt: optSave) => Promise<string>;
+}
+
 interface botService {
   downloadExecucao: (pid: str) => Promise<void>;
 }

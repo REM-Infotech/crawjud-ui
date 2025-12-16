@@ -10,7 +10,7 @@ class FileUploader {
   constructor() {
     this.totalSent = 0;
     this.chunkSize = 1024 * 100;
-    this.fileSocket = socketio.socket("/files");
+    this.fileSocket = socketio().socket("/files");
   }
 
   public async uploadFile(file: File): Promise<void> {
@@ -103,6 +103,13 @@ class FileUploader {
   }
 
   private async clearProgressBar(message: string) {
+    const toast = useToast();
+    toast.create({
+      title: "Info",
+      body: message,
+      modelValue: 500,
+    });
+
     const { progressBarValue } = storeToRefs(useBotForm());
     await new Promise((r) => setTimeout(r, 2000));
     progressBarValue.value = 0.0;

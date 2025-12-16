@@ -6,7 +6,7 @@ watch(
   () => useRoute().name,
   (newV) => {
     if (newV && newV !== "index" && newV !== "login") {
-      const botNs = socketio.socket("/bot");
+      const botNs = socketio().socket("/bot");
       botNs.connect();
     }
   },

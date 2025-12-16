@@ -21,10 +21,21 @@ const botService = {
     ipcRenderer.invoke("bot-service:download-execucao", pid),
 };
 
+const cookieService = {
+  getCookies: (): Promise<cookieApp[]> => ipcRenderer.invoke("get-cookies"),
+};
+
+const safeStorageApi = {
+  load: (key: string): Promise<string> => ipcRenderer.invoke("safe-storage:load", key),
+  save: (opt: optSave): Promise<void> => ipcRenderer.invoke("safe-storage:save", opt),
+};
+
 const exposes = {
+  safeStorageApi: safeStorageApi,
   windowApi: windowApi,
   themeApi: themeApi,
   botService: botService,
+  cookieService: cookieService,
   authService: {
     autenticarUsuario: (data: Record<string, any>): AuthReturn =>
       ipcRenderer.invoke("crawjud:autenticar", data),

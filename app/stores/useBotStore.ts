@@ -1,5 +1,6 @@
 export default defineStore("useBotStore", () => {
-  const botNs = socketio.socket("/bot");
+  const mgr = socketio();
+  const botNs = mgr.socket("/bot");
 
   const queryBot = ref("");
   const listagemBots: Ref<CrawJudBot[]> = ref([]);
@@ -18,6 +19,7 @@ export default defineStore("useBotStore", () => {
   botNs.on("connect", () => {
     listagemBots.value = [];
     botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
+      console.log(data);
       listagemBots.value = data.listagem;
     });
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isAxiosError, type AxiosResponse } from "axios";
+
 const FormLogin = reactive({
   username: "",
   password: "",
@@ -23,17 +25,26 @@ class authService {
       return;
     }
 
-    const FormAuth = Object.fromEntries(Object.entries(FormLogin));
-    const returnAuth = await window.authService.autenticarUsuario(FormAuth);
-
-    toast.create({
-      title: returnAuth.status.toUpperCase(),
-      body: returnAuth.mensagem,
-    });
-
-    if (returnAuth.status === "sucesso") {
+    try {
+      const response = await api.post("/auth/login", FormLogin);
+      if (response.status === 200) {
+        toast.create({
+          title: "Sucesso!",
+          body: "Login efetuado com sucesso!",
+          value: 1000,
+        });
+        useRouter().push({ name: "robot-listagem" });
+      }
+    } catch (err) {
+      console.log(err);
+      if (isAxiosError(err) && err.response) {
+        const message = (err.response as AxiosResponse<AuthPayload>).data.message;
+        toast.create({
+          title: "Erro",
+          body: message,
+        });
+      }
     }
-
     load.hide();
   }
 }
@@ -41,7 +52,7 @@ class authService {
 
 <template>
   <BContainer class="login-container">
-    <div class="card">
+    <div class="card card-login">
       <div class="card-header">
         <h2 class="mb-3">Login</h2>
       </div>
@@ -74,7 +85,7 @@ class authService {
   </BContainer>
 </template>
 
-<style lang="css">
+<style lang="css" scoped>
 .login-container {
   margin-top: 13.5em;
   background-color: rgba(255, 255, 255, 0);
@@ -85,7 +96,7 @@ class authService {
   align-items: center;
 }
 
-.card {
+.card-login {
   width: 480px;
   min-height: 330px;
   padding: 15px;
