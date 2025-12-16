@@ -2,7 +2,7 @@ import { dialog } from "electron";
 import { writeFileSync } from "fs";
 import { homedir } from "os";
 import { join } from "path";
-import apiService from "./apiService";
+import { default as useApiService } from "./apiService.mjs";
 
 const homeUser = homedir();
 
@@ -28,7 +28,7 @@ class DeepFunctions {
       });
 
       if (!savePath.canceled && savePath.filePath) {
-        const api = await apiService.setup();
+        const api = await useApiService();
         const response = api.get<ResponseDownloadExecucao>(`/bot/execucoes/${pid}/download`);
 
         const content = (await response).data.content;

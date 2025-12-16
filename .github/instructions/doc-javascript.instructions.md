@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.ts, **/*.js"
+applyTo: "**/*.ts, **/*.js **/*.mjs"
 ---
 
 # Documentação js/ts
@@ -10,7 +10,7 @@ padronização, legibilidade, tipagem explícita e documentação consistente.
 
 ---
 
-## 1. Regra Absoluta: Sempre usar JSDoc em arquivos **js**
+## 1. Regra Absoluta: Sempre usar JSDoc em arquivos **js** e **.mjs**
 
 Toda função, método, classe e interface **DEVE** possuir comentário JSDoc.
 Nunca deixe código público ou exportado sem documentação.
