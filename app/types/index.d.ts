@@ -19,3 +19,33 @@ interface AuthPayload {
 }
 
 type elementRef = Ref<Element | ComponentPublicInstance | null>;
+
+declare module "~/assets/img/dark/elaw.png" {
+  const logoElaw: string;
+  export default logoElaw;
+}
+
+declare module "~/assets/img/dark/esaj.png" {
+  const logoEsaj: string;
+  export default logoEsaj;
+}
+
+declare module "~/assets/img/dark/esaj.png" {
+  const logoEsaj: string;
+  export default logoEsaj;
+}
+
+declare module "~/assets/img/light/projudi.png" {
+  const logoProjudi: string;
+  export default logoProjudi;
+}
+
+declare module "~/assets/img/dark/pje.png" {
+  const logoPJe: string;
+  export default logoPJe;
+}
+
+declare module "~/assets/img/light/crawjud.png" {
+  const logoCrawJUD: string;
+  export default logoCrawJUD;
+}

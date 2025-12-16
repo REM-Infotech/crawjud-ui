@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
+import Elaw from "~/components/img/elaw.vue";
+import Esaj from "~/components/img/esaj.vue";
+import Pje from "~/components/img/pje.vue";
+import Projudi from "~/components/img/projudi.vue";
 
 const modal = ref(false);
 
@@ -27,6 +30,18 @@ watch(modal, async (val) => {
     current.value = {} as BotInfo;
   }
 });
+
+const EmptyComponent = {
+  template: "<h1> ok </h1>",
+};
+
+const imgSistema: Record<SystemBots, Component> = {
+  PROJUDI: Projudi,
+  ESAJ: Esaj,
+  ELAW: Elaw,
+  JUSDS: EmptyComponent,
+  PJE: Pje,
+};
 </script>
 
 <template>
@@ -37,27 +52,22 @@ watch(modal, async (val) => {
     </BFormGroup>
 
     <TransitionGroup tag="div" name="bots" class="row row-bots">
-      <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
+      <div
+        class="col-lg-3 col-xl-3 col-md-3 col-sm-3 p-2"
+        v-for="(bot, index) in listagem"
+        :key="index"
+      >
         <div class="card">
           <div class="card-header">
             <span class="text-white fw-bold fs-6">
               {{ bot.display_name }}
             </span>
           </div>
-          <div class="card-body d-flex flex-column justify-content-center align-items-center gap-5">
+          <component :is="imgSistema[bot.sistema]" />
+          <div class="card-body">
             <span class="text-white text-desc">
               {{ bot.descricao }}
             </span>
-            <div class="d-flex gap-2 p-3">
-              <div class="box-info">
-                <div class="icon">
-                  <MaterialSymbolsLightMonitorHeartOutlineSharp />
-                </div>
-                <span> Execuções</span>
-                <span class="fw-bold"> 456</span>
-              </div>
-              <div class="box-info">testee</div>
-            </div>
           </div>
           <div class="card-footer d-flex">
             <button
@@ -83,6 +93,7 @@ watch(modal, async (val) => {
 .row-bots {
   height: calc(100dvh - 80px);
   overflow: auto;
+  box-shadow: 0;
 }
 
 .bots-enter-active,
@@ -137,7 +148,7 @@ watch(modal, async (val) => {
 }
 
 .card-body {
-  height: 280px;
+  min-height: 180px;
 }
 
 .box-info {
