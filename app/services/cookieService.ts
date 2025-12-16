@@ -1,19 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cookie, CookieJar } from "tough-cookie";
 
 class localSafeStorageHandler {
+  static loadContext() {
+    return typeof window !== "undefined" && window.safeStorageApi
+      ? window
+      : typeof (global as unknown as Global) !== "undefined" &&
+          (global as unknown as Global).safeStorageApi
+        ? (global as unknown as Global)
+        : undefined;
+  }
+
   static async load(key: string) {
-    if (typeof window !== "undefined" && window.safeStorageApi) {
-      return await window.safeStorageApi.load(key);
-    }
-    if (typeof global !== "undefined" && (global as any).safeStorageApi) {
-      console.log(global);
-      return await (global as any).safeStorageApi.load(key);
-    }
-    return;
+    const context = localSafeStorageHandler.loadContext();
+    if (!context) return;
+    return await context.safeStorageApi.load(key);
   }
   static async save(args: { key: string; value: string }) {
-    if (window) await window.safeStorageApi.save(args);
+    const context = localSafeStorageHandler.loadContext();
+
+    if (!context) return;
+    await context.safeStorageApi.save(args);
   }
 }
 
