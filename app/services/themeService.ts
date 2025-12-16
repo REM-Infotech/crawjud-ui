@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ipcMain, type IpcMainInvokeEvent, nativeTheme } from "electron";
 
 class ThemeService {

@@ -17,7 +17,7 @@ interface Window {
 interface AuthPayload {
   message: string;
 }
-
+type AuthReturn = Promise<AuthenticationPayload | void>;
 type elementRef = Ref<Element | ComponentPublicInstance | null>;
 
 declare module "~/assets/img/dark/elaw.png" {

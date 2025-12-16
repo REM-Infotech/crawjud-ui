@@ -6,7 +6,7 @@ import Xlsxfile from "./xlsxfile.vue";
 
 const execStore = useExecutionStore();
 const model = defineModel({ type: Boolean, required: true, default: false });
-const props = defineProps<{ bot: BotInfo | undefined }>();
+const props = defineProps<{ bot: CrawJudBot | undefined }>();
 const toast = useToast();
 const bots = useBotStore();
 const { FormBot } = useBotForm();
@@ -89,7 +89,7 @@ onMounted(() => {
 });
 watch(model, FormBotManager.clearForm);
 watch(model, (newV) => {
-  if (newV) bots.listar_credenciais(props.bot as BotInfo);
+  if (newV) bots.listar_credenciais(props.bot as CrawJudBot);
 });
 
 watch(

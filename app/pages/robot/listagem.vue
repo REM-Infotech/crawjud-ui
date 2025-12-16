@@ -27,7 +27,7 @@ onBeforeUnmount(async () => {
 watch(modal, async (val) => {
   if (!val) {
     await new Promise((r) => setTimeout(r, 200));
-    current.value = {} as BotInfo;
+    current.value = {} as CrawJudBot;
   }
 });
 

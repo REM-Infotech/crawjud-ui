@@ -4,11 +4,12 @@ import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
-import useBotService from "@/services/botService";
+import useAuthService from "@/services/authService";
+import useBotService from "@/services/botService.mjs";
 import useThemeService from "@/services/themeService";
 
 export let mainWindow: BrowserWindow | null = null;
-let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
+const preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -63,6 +64,7 @@ if (!gotTheLock) {
     useBotService();
     createWindow();
     useThemeService();
+    useAuthService();
   });
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

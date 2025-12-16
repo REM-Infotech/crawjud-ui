@@ -3,7 +3,7 @@ export default defineStore("useBotForm", () => {
   const fileNs = socketio.socket("/files");
   const seed = ref("");
   const isFileUploading = computed(() => progressBarValue.value > 0);
-  const current = ref<BotInfo>({} as BotInfo);
+  const current = ref<CrawJudBot>({} as CrawJudBot);
   const FormBot = reactive<formBot>({
     xlsx: null,
     anexos: null,

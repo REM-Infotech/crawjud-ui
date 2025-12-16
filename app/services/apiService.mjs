@@ -15,15 +15,31 @@ export default async function useApiService() {
   class ApiService {
     /**
      * Armazenamento seguro para persistência de dados.
+     *
      * @type {ISafeStoreService}
+     * @public
      */
     safeStorage;
 
     /**
+     * @type {import("tough-cookie").CookieJar}
+     * @public
+     */
+    cookieJar;
+    /**
      * Inicializar serviço e carregar armazenamento seguro.
      */
+
+    /**
+     * @type {import("axios").AxiosInstance}
+     * @public
+     */
+    api;
+
     constructor() {
       this.safeStorage = useSafeStorage();
+      this.cookieJar = this.loadCookieJar();
+      this.setup().then((instance) => (this.api = instance));
     }
 
     /**
@@ -42,8 +58,8 @@ export default async function useApiService() {
      *
      * @param {CookieJar} cookieJar - CookieJar a ser salvo.
      */
-    saveCookieJar(cookieJar) {
-      const json = JSON.stringify(cookieJar.toJSON());
+    saveCookieJar() {
+      const json = JSON.stringify(this.cookieJar.toJSON());
       this.safeStorage.save({ key: "cookieJar", value: json });
     }
 
@@ -53,7 +69,6 @@ export default async function useApiService() {
      * @returns {Promise<import("axios").AxiosInstance>} Instância Axios configurada.
      */
     async setup() {
-      const cookieJar = this.loadCookieJar();
       return wrapper(
         axios.create({
           baseURL: new URL(import.meta.env.VITE_API_URL).toString(),
@@ -64,10 +79,52 @@ export default async function useApiService() {
           headers: {
             "Content-Type": "application/json",
           },
-          jar: cookieJar,
+          jar: this.cookieJar,
         }),
       );
     }
+
+    async injectCookiesToElectron() {
+      /**
+       * Acesse o cookieJar conforme sua implementação
+       *  @type {CookieJar} */
+      const cookieJar = this.api.defaults.jar; // ou ajuste conforme necessário
+
+      /**
+       * Pegue todos os cookies do CookieJar
+       * @type {import("tough-cookie").Cookie[]} */
+      const cookies = await new Promise((resolve, reject) => {
+        cookieJar.getCookies(import.meta.env.VITE_API_URL, (err, cookies) => {
+          if (err) reject(err);
+          else resolve(cookies);
+        });
+      });
+
+      // Insira cada cookie no Electron
+      for (const cookie of cookies) {
+        await session.defaultSession.cookies.set({
+          url: import.meta.env.VITE_API_URL,
+          name: cookie.key,
+          value: cookie.value,
+          domain: cookie.domain,
+          path: cookie.path,
+          secure: cookie.secure,
+          httpOnly: cookie.httpOnly,
+          expirationDate: cookie.expires,
+        });
+      }
+    }
   }
-  return await new ApiService().setup();
+
+  const serviceApi = new ApiService();
+  /**
+   * Interceptar respostas para salvar sempre o CookieJar atualizado.
+   */
+  if (serviceApi.api) {
+    serviceApi.api.interceptors.response.use((response) => {
+      serviceApi.saveCookieJar();
+      return response;
+    });
+  }
+  return serviceApi.api;
 }

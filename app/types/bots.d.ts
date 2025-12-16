@@ -28,7 +28,7 @@ type Execucao = {
 
 type Execucoes = Execucao[];
 
-interface BotInfo {
+interface CrawJudBot {
   Id: number;
   configuracao_form: ConfigForm;
   display_name: string;
@@ -38,7 +38,7 @@ interface BotInfo {
 }
 
 interface BotPayload {
-  listagem: BotInfo[];
+  listagem: CrawJudBot[];
 }
 interface CredenciaisSelect {
   value: number | null | undefined;

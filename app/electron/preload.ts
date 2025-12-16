@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { contextBridge, ipcRenderer } from "electron";
 
 const windowApi = {
@@ -17,10 +18,18 @@ const themeApi = {
 
 const botService = {
   downloadExecucao: (pid: str): Promise<void> =>
-    ipcRenderer.invoke("execucao-bot:download-execucao", pid),
+    ipcRenderer.invoke("bot-service:download-execucao", pid),
 };
 
-const exposes = { windowApi: windowApi, themeApi: themeApi, botService: botService };
+const exposes = {
+  windowApi: windowApi,
+  themeApi: themeApi,
+  botService: botService,
+  authService: {
+    autenticarUsuario: (data: Record<string, any>): AuthReturn =>
+      ipcRenderer.invoke("crawjud:autenticar", data),
+  },
+};
 Object.entries(exposes).forEach(([k, v]) => contextBridge.exposeInMainWorld(k, v));
 
 window.addEventListener("keypress", (e) => {

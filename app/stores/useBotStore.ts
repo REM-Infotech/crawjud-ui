@@ -2,12 +2,12 @@ export default defineStore("useBotStore", () => {
   const botNs = socketio.socket("/bot");
 
   const queryBot = ref("");
-  const listagemBots: Ref<BotInfo[]> = ref([]);
+  const listagemBots: Ref<CrawJudBot[]> = ref([]);
   const credenciaisBot: Ref<CredenciaisSelect[]> = ref([{ value: null, text: "Selecione" }]);
 
   const queryLower = computed(() => queryBot.value.toLowerCase());
   const credenciais: ComputedRef<CredenciaisSelect[]> = computed(() => credenciaisBot.value);
-  const listagem: ComputedRef<BotInfo[]> = computed(() =>
+  const listagem: ComputedRef<CrawJudBot[]> = computed(() =>
     listagemBots.value.filter(
       (item) =>
         item.display_name.toLowerCase().includes(queryLower.value) ||
@@ -17,7 +17,7 @@ export default defineStore("useBotStore", () => {
 
   botNs.on("connect", () => {
     listagemBots.value = [];
-    botNs.emit("listagem", (data: { listagem: BotInfo[] }) => {
+    botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
       listagemBots.value = data.listagem;
     });
 
@@ -25,7 +25,7 @@ export default defineStore("useBotStore", () => {
     if (current) listar_credenciais(current.value);
   });
 
-  async function listar_credenciais(bot: BotInfo) {
+  async function listar_credenciais(bot: CrawJudBot) {
     if (!bot) return;
 
     credenciaisBot.value = [{ value: null, text: "Carregando" }];
