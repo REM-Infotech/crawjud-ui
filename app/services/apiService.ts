@@ -37,5 +37,10 @@ export default async function useApiService() {
   serviceApi.api = await serviceApi.setup();
   const api = serviceApi.api;
 
+  serviceApi.api.interceptors.response.use(async (response) => {
+    await serviceApi.saveCookieJar();
+    return response;
+  });
+
   return { api, serviceApi };
 }

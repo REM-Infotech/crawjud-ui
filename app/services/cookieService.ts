@@ -1,23 +1,22 @@
 import { Cookie, CookieJar } from "tough-cookie";
 
 class localSafeStorageHandler {
-  static loadContext() {
-    return typeof window !== "undefined" && window.safeStorageApi
-      ? window
-      : typeof (global as unknown as Global) !== "undefined" &&
-          (global as unknown as Global).safeStorageApi
-        ? (global as unknown as Global)
-        : undefined;
+  static async loadContext() {
+    if (typeof window !== "undefined" && window.safeStorageApi) {
+      return window;
+    }
+
+    const safeService = (await import("./safeStoreService")).default();
+    return { safeStorageApi: safeService };
   }
 
   static async load(key: string) {
-    const context = localSafeStorageHandler.loadContext();
+    const context = await localSafeStorageHandler.loadContext();
     if (!context) return;
     return await context.safeStorageApi.load(key);
   }
   static async save(args: { key: string; value: string }) {
-    const context = localSafeStorageHandler.loadContext();
-
+    const context = await localSafeStorageHandler.loadContext();
     if (!context) return;
     await context.safeStorageApi.save(args);
   }
@@ -67,6 +66,8 @@ class cookieService {
         expirationDate: expires,
       });
     }
+
+    return cookieSet;
   }
 }
 

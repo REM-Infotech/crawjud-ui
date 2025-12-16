@@ -113,7 +113,6 @@ class FileUploader {
     const { progressBarValue } = storeToRefs(useBotForm());
     await new Promise((r) => setTimeout(r, 2000));
     progressBarValue.value = 0.0;
-    console.log(progressBarValue.value);
   }
 }
 

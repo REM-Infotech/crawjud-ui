@@ -36,7 +36,6 @@ class authService {
         useRouter().push({ name: "robot-listagem" });
       }
     } catch (err) {
-      console.log(err);
       if (isAxiosError(err) && err.response) {
         const message = (err.response as AxiosResponse<AuthPayload>).data.message;
         toast.create({

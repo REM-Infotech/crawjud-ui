@@ -19,7 +19,6 @@ export default defineStore("useBotStore", () => {
   botNs.on("connect", () => {
     listagemBots.value = [];
     botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
-      console.log(data);
       listagemBots.value = data.listagem;
     });
 

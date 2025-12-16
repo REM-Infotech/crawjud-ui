@@ -16,8 +16,7 @@ export default async function useAuthService() {
           mensagem: data.message,
           status: "sucesso",
         };
-      } catch (err) {
-        console.log(err);
+      } catch {
         return {
           mensagem: "Erro ao realizar autenticação",
           status: "erro",
