@@ -1,7 +1,7 @@
 export default defineNuxtPlugin(async () => {
   return {
     provide: {
-      hasCookie: true,
+      hasCookie: (await window.cookieService.getCookies()) ? true : false,
     },
   };
 });

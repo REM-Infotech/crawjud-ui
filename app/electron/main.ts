@@ -93,8 +93,9 @@ if (!gotTheLock) {
         expirationDate: cookie.expirationDate,
         sameSite: "no_restriction",
       });
-      console.log(cookie);
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     createWindow();
   });

@@ -16,8 +16,13 @@ export default defineStore("useBotStore", () => {
   );
 
   botNs.on("connect", () => {
-    listagemBots.value = [];
     botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
+      if (listagemBots.value.length > 0) {
+        if (data.listagem !== listagemBots.value) {
+          listagemBots.value = data.listagem;
+          return;
+        }
+      }
       listagemBots.value = data.listagem;
     });
 
