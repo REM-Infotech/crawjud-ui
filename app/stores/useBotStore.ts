@@ -1,6 +1,5 @@
 export default defineStore("useBotStore", () => {
-  const mgr = socketio();
-  const botNs = mgr.socket("/bot");
+  const botNs = socketio.socket("/bot");
 
   const queryBot = ref("");
   const listagemBots: Ref<CrawJudBot[]> = ref([]);

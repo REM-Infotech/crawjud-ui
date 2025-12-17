@@ -67,7 +67,13 @@ class cookieService {
       });
     }
 
-    return cookieSet;
+    try {
+      const { api } = await (await import("@/services/apiService")).default();
+      const response = await api.get("/sessao-valida");
+      return response.status === 200 ? cookieSet : [];
+    } catch {
+      return [];
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 export default defineStore("useExecutionStore", () => {
-  const logNs = socketio().socket("/bot");
+  const logNs = socketio.socket("/bot");
 
   const execucaoBot: Ref<string> = ref("");
   const queryExecucao: Ref<string> = ref("");

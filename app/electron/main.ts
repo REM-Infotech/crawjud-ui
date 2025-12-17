@@ -68,7 +68,6 @@ if (!gotTheLock) {
     useCookieService();
     useBotService();
     useThemeService();
-
     const { CookieService } = useCookieService();
     const safeService = useSafeStorage();
     const authService = await useAuthService();
@@ -79,6 +78,23 @@ if (!gotTheLock) {
     ipcMain.handle("crawjud:autenticar", (_, data: Record<string, any>) =>
       authService.autenticarSessao(data),
     );
+
+    const cookieSet = await CookieService.loadCookies();
+    const { session } = await import("electron");
+    for (const cookie of cookieSet) {
+      await session.defaultSession.cookies.set({
+        url: new URL("/", import.meta.env.VITE_API_URL).toString(),
+        name: cookie.name,
+        value: cookie.value,
+        domain: cookie.domain,
+        path: cookie.path as string,
+        secure: cookie.secure,
+        httpOnly: cookie.httpOnly,
+        expirationDate: cookie.expirationDate,
+        sameSite: "no_restriction",
+      });
+      console.log(cookie);
+    }
 
     createWindow();
   });

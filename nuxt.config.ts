@@ -17,6 +17,8 @@ export default defineNuxtConfig({
     "~/plugins/uuid.client.ts",
     "~/plugins/sync-cookies.client.ts",
     "~/plugins/botservice.client.ts",
+    "~/plugins/socketio.client.ts",
+    "~/plugins/api.client.ts",
   ],
   telemetry: false,
   ssr: false,

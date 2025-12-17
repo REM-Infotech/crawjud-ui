@@ -47,6 +47,18 @@ class authService {
     load.hide();
   }
 }
+
+onMounted(async () => {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const { $hasCookie } = useNuxtApp();
+  if ($hasCookie) {
+    useRouter().push({ name: "robot-listagem" });
+    toast.create({
+      title: "Info",
+      body: "Sessão recuperada!",
+    });
+  }
+});
 </script>
 
 <template>

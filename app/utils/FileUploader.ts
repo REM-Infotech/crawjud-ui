@@ -10,7 +10,7 @@ class FileUploader {
   constructor() {
     this.totalSent = 0;
     this.chunkSize = 1024 * 100;
-    this.fileSocket = socketio().socket("/files");
+    this.fileSocket = socketio.socket("/files");
   }
 
   public async uploadFile(file: File): Promise<void> {
