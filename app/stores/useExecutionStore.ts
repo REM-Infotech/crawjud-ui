@@ -2,6 +2,8 @@ export default defineStore("useExecutionStore", () => {
   const logNs = socketio.socket("/bot");
 
   const execucaoBot: Ref<string> = ref("");
+
+  const querySistema: Ref<string> = ref("");
   const queryExecucao: Ref<string> = ref("");
   const execucao = ref<Execucao>({} as Execucao);
   const logs: Ref<Message[]> = ref<Message[]>([]);
@@ -11,9 +13,13 @@ export default defineStore("useExecutionStore", () => {
 
   const logsExecucao: ComputedRef<Message[]> = computed(() => logs.value);
   const execucoes: ComputedRef<Execucao[]> = computed(() =>
-    listagemExecucoes.value.filter((item) =>
-      item.pid.toLowerCase().includes(queryExecucao.value.toLowerCase()),
-    ),
+    listagemExecucoes.value.filter((item) => {
+      if (!querySistema) {
+        return item.pid.toLowerCase().includes(queryExecucao.value.toLowerCase());
+      }
+
+      return item.bot === queryExecucao.value;
+    }),
   );
 
   async function pushLog(msg: Message) {
@@ -68,17 +74,24 @@ export default defineStore("useExecutionStore", () => {
   });
 
   return {
-    execucoes,
-    queryExecucao,
-    pushLog,
-    listar_execucoes,
-    execucaoBot,
-    logsExecucao,
-    logNs,
-    logs,
-    encerrar_execucao,
+    // 1. Estados reativos
     execucao,
+    execucaoBot,
+    execucoes,
     itemLog,
+    listagemExecucoes,
+    logs,
+    logsExecucao,
+    queryExecucao,
+    querySistema,
+
+    // 2. Ações
     download_execucao,
+    encerrar_execucao,
+    listar_execucoes,
+    pushLog,
+
+    // 3. Utilitários
+    logNs,
   };
 });

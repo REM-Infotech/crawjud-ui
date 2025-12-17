@@ -23,5 +23,17 @@ export default defineStore("useBotForm", () => {
     bot_id: null,
   });
 
-  return { seed, FormBot, current, fileNs, progressBarValue, isFileUploading };
+  return {
+    // Estados reativos
+    FormBot,
+    current,
+    progressBarValue,
+    seed,
+
+    // Ações
+
+    // Utilitários
+    fileNs,
+    isFileUploading,
+  };
 });

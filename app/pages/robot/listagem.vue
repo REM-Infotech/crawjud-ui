@@ -6,7 +6,7 @@ import Pje from "~/components/img/pje.vue";
 import Projudi from "~/components/img/projudi.vue";
 
 const modal = ref(false);
-
+const { querySistema } = storeToRefs(useExecutionStore());
 const botStore = useBotStore();
 
 const { listagem, queryBot } = storeToRefs(botStore);
@@ -20,6 +20,17 @@ onBeforeMount(async () => {
     configs[bot.configuracao_form] = "ok";
   }
 });
+
+function execucoesFiltrar(bot: CrawJudBot) {
+  querySistema.value = bot.display_name;
+
+  useRouter().push({ name: "execucoes" });
+}
+
+function loadForm(bot: CrawJudBot) {
+  modal.value = true;
+  current.value = bot;
+}
 
 onBeforeUnmount(async () => {
   botStore.botNs.disconnect();
@@ -70,18 +81,8 @@ const imgSistema: Record<sistemasRobos, Component> = {
             </span>
           </div>
           <div class="card-footer d-flex">
-            <button
-              class="button-execute"
-              @click="
-                () => {
-                  modal = true;
-                  current = bot;
-                }
-              "
-            >
-              Executar
-            </button>
-            <button class="button-bot">Ver Logs</button>
+            <BButton class="button-execute" @click="loadForm(bot)"> Executar </BButton>
+            <BButton class="button-bot" @click="execucoesFiltrar(bot)"> Ver Logs </BButton>
           </div>
         </div>
       </div>
@@ -119,11 +120,11 @@ const imgSistema: Record<sistemasRobos, Component> = {
   height: 2.5em;
   padding: 5px;
   font-weight: bold;
-  background-color: rgba(35, 180, 6, 0.568);
+  background-color: rgba(35, 180, 6, 0.568) !important;
 }
 
 .button-execute:hover {
-  background-color: rgb(63, 94, 17);
+  background-color: rgb(63, 94, 17) !important;
 }
 
 .button-bot {
