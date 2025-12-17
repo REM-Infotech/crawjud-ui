@@ -5,12 +5,14 @@ export default defineNuxtPlugin(() => {
   const sio = new Manager(uri, {
     transports: ["websocket", "webtransport"],
     withCredentials: true,
-    autoConnect: false,
+    autoConnect: true,
+    reconnection: true,
   });
 
   return {
     provide: {
-      sio: sio,
+      botNs: sio.socket("/bot"),
+      fileNs: sio.socket("/files"),
     },
   };
 });

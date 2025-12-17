@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import AppToast from "./components/AppToast.vue";
 const { loadTheme } = useThemeStore();
+const { $botNs: botNs } = useNuxtApp();
 onBeforeMount(loadTheme);
 watch(
   () => useRoute().name,
   (newV) => {
     if (newV && newV !== "index" && newV !== "login") {
-      const botNs = socketio.socket("/bot");
       botNs.connect();
     }
   },

@@ -1,7 +1,6 @@
 export default defineStore("useBotForm", () => {
+  const { $fileNs: fileNs } = useNuxtApp();
   const progressBarValue = ref(0);
-
-  const fileNs = socketio.socket("/files");
   const seed = ref("");
   const isFileUploading = computed(() => progressBarValue.value > 0);
   const current = ref<CrawJudBot>({} as CrawJudBot);

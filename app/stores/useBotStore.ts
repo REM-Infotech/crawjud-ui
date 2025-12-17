@@ -1,5 +1,5 @@
 export default defineStore("useBotStore", () => {
-  const botNs = socketio.socket("/bot");
+  const { $botNs: botNs } = useNuxtApp();
 
   const queryBot = ref("");
   const listagemBots: Ref<CrawJudBot[]> = ref([]);
@@ -16,18 +16,18 @@ export default defineStore("useBotStore", () => {
   );
 
   botNs.on("connect", () => {
-    botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
-      if (listagemBots.value.length > 0) {
-        if (data.listagem !== listagemBots.value) {
-          listagemBots.value = data.listagem;
-          return;
-        }
-      }
-      listagemBots.value = data.listagem;
-    });
-
     const { current } = storeToRefs(useBotForm());
     if (current) listar_credenciais(current.value);
+  });
+
+  botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
+    if (listagemBots.value.length > 0) {
+      if (data.listagem !== listagemBots.value) {
+        listagemBots.value = data.listagem;
+        return;
+      }
+    }
+    listagemBots.value = data.listagem;
   });
 
   async function listar_credenciais(bot: CrawJudBot) {

@@ -32,10 +32,6 @@ function loadForm(bot: CrawJudBot) {
   current.value = bot;
 }
 
-onBeforeUnmount(async () => {
-  botStore.botNs.disconnect();
-});
-
 watch(modal, async (val) => {
   if (!val) {
     await new Promise((r) => setTimeout(r, 200));
@@ -90,7 +86,7 @@ const imgSistema: Record<sistemasRobos, Component> = {
   </BContainer>
 </template>
 
-<style lang="css">
+<style lang="css" scoped>
 .row-bots {
   height: calc(100dvh - 80px);
   overflow: auto;

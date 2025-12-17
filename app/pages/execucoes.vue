@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import type { BaseColorVariant } from "bootstrap-vue-next";
 
+const { $botNs: botNs } = useNuxtApp();
 const execucaoStore = useExecutionStore();
 const execToRef = storeToRefs(execucaoStore);
-const { queryExecucao, execucoes, logsExecucao, execucao, itemLog } = execToRef;
+const { queryExecucao, execucoes, logsExecucao, execucao, itemLog, listagemExecucoes } = execToRef;
 
 const bodyListagem = ref<elementRef>(null as unknown as elementRef);
 const hoveredExecId = ref();
 const SetExec = ref(false);
 
-onBeforeMount(async () => {
-  execucaoStore.logNs.connect();
-  await execucaoStore.listar_execucoes();
-});
-
-onBeforeUnmount(() => {
-  execucaoStore.logNs.disconnect();
+botNs.emit("listagem_execucoes", (data: Execucoes) => {
+  listagemExecucoes.value = data;
 });
 
 watch(itemLog, async (newValue) => {
