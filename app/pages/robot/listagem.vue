@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Empty from "~/components/Empty.vue";
+import Crawjud from "~/components/img/crawjud.vue";
 import Elaw from "~/components/img/elaw.vue";
 import Esaj from "~/components/img/esaj.vue";
 import Pje from "~/components/img/pje.vue";
@@ -32,12 +32,15 @@ watch(modal, async (val) => {
   }
 });
 
-const imgSistema: Record<SystemBots, Component> = {
+const imgSistema: Record<sistemasRobos, Component> = {
   PROJUDI: Projudi,
   ESAJ: Esaj,
   ELAW: Elaw,
-  JUSDS: Empty,
+  JUSDS: Crawjud,
   PJE: Pje,
+  CAIXA: Crawjud,
+  TJDFT: Crawjud,
+  CSI: Crawjud,
 };
 </script>
 
@@ -109,20 +112,6 @@ const imgSistema: Record<SystemBots, Component> = {
 
 .text-desc {
   font-size: 1.2rem;
-}
-
-.card-header {
-  border-bottom: 00.1px solid rgba(0, 0, 0, 0.233);
-  font-weight: bold;
-}
-
-.card-header,
-.card-footer {
-  background-color: rgba(255, 255, 255, 0.226);
-}
-
-.card-footer {
-  justify-content: space-around;
 }
 
 .button-execute {
