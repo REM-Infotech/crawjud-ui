@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import DeepFunctions from "@/services/deepService";
 import { mainWindow } from "./main";
 
@@ -12,7 +13,6 @@ class WindowUtils {
     if (FuncAndArg.length > 1) {
       args = FuncAndArg.slice(1);
     }
-    console.log(args);
     return { fnName, args };
   }
 

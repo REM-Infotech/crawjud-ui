@@ -9,7 +9,12 @@ const workDir = process.cwd();
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  css: ["bootstrap/dist/css/bootstrap.css", "~/assets/css/main.css"],
+  css: [
+    "bootstrap/dist/css/bootstrap.css",
+    "~/assets/css/main.css",
+    "~/assets/css/bot/index.css",
+    "~/assets/css/cards.css",
+  ],
   modules: ["@bootstrap-vue-next/nuxt", "@pinia/nuxt"],
   plugins: [
     "~/plugins/bootstrap.client.ts",
@@ -65,6 +70,8 @@ export default defineNuxtConfig({
   typescript: {
     tsConfig: {
       compilerOptions: {
+        jsx: "preserve",
+        jsxImportSource: "vue",
         types: ["unplugin-icons/types/vue"],
       },
     },

@@ -18,7 +18,12 @@ watch(kdbx, (newV) => (FormBot.value.kdbx = newV));
       />
     </BFormGroup>
     <div class="mt-2">
-      <AppInputPassword id="senhaKdbx" placeholder="Senha database" v-model="FormBot.senha_kdbx" />
+      <AppInputPassword
+        id="senhaKdbx"
+        placeholder="Senha database"
+        v-model="FormBot.senha_kdbx"
+        :disabled="false"
+      />
     </div>
   </div>
 </template>

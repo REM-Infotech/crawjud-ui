@@ -23,7 +23,7 @@ type RecordPJeFileAuthForm = {
 
 interface formManager {
   FormBot: FormData;
-  bot: Ref<BotInfo>;
+  bot: Ref<CrawJudBot>;
   fileSocket: Socket;
   LoadCredential(selectedCredential: string | undefined): void;
   uploadXlsx(xlsxFile: File | undefined): Promise<void>;
