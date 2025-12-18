@@ -62,7 +62,7 @@ const iconTheme = () => {
               </NuxtLink>
             </li>
             <li class="nav-item">
-              <NuxtLink :to="{ name: 'index' }">
+              <NuxtLink :to="{ name: 'configuracao' }">
                 <span> Configurações </span>
               </NuxtLink>
             </li>

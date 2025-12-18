@@ -8,7 +8,6 @@ const props = defineProps<{
   id: string;
   placeholder: string;
   size?: "sm" | "md" | "lg";
-  disabled: boolean;
 }>();
 const exibeSenha = ref(false);
 
@@ -33,7 +32,6 @@ function capsLockIndicator(e: Event) {
       :type="exibeSenha ? 'text' : 'password'"
       :placeholder="placeholder"
       v-model="model"
-      :disabled="disabled"
       @keyup="capsLockIndicator"
     />
     <BTooltip>

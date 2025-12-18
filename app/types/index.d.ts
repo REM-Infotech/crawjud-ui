@@ -69,3 +69,8 @@ interface cookieApp {
   expirationDate?: number;
   sameSite: "unspecified" | "no_restriction" | "lax" | "strict";
 }
+
+interface ComponentsConfiguracaoPage extends Record<string, Component> {
+  usuarios: Component;
+  credenciais: Component;
+}

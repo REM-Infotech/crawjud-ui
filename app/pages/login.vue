@@ -9,7 +9,6 @@ const FormLogin = reactive({
 
 const toast = useToast();
 const load = useLoad();
-const recuperandoSessao = ref(true);
 
 class authService {
   static async authUser(e: SubmitEvent) {
@@ -37,46 +36,19 @@ class authService {
         useRouter().push({ name: "robot-listagem" });
       }
     } catch (err) {
-      console.log(err);
+      let message = "Erro ao realizar login";
       if (isAxiosError(err) && err.response) {
-        const message = (err.response as AxiosResponse<AuthPayload>).data.message;
-        toast.create({
-          title: "Erro",
-          body: message,
-        });
+        message = (err.response as AxiosResponse<AuthPayload>).data.message;
       }
+
+      toast.create({
+        title: "Erro",
+        body: message,
+      });
     }
     load.hide();
   }
 }
-
-onMounted(async () => {
-  const tst = toast.create({
-    title: "Info",
-    body: "Recuperando sessão salva",
-    modelValue: true,
-  });
-  let message = "Nenhuma sessão encontrada!";
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  const { $hasCookie } = useNuxtApp();
-
-  load.show();
-
-  if ($hasCookie) {
-    message = "Sessão recuperada!";
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    useRouter().push({ name: "robot-listagem" });
-  }
-  tst.hide();
-  toast.create({
-    title: "Info",
-    body: message,
-    modelValue: 2000,
-  });
-
-  load.hide();
-  recuperandoSessao.value = false;
-});
 </script>
 
 <template>
@@ -94,7 +66,6 @@ onMounted(async () => {
               type="text"
               id="username"
               v-model="FormLogin.username"
-              :disabled="recuperandoSessao"
             />
           </BFormGroup>
 
@@ -104,16 +75,10 @@ onMounted(async () => {
               id="password"
               placeholder="Senha"
               v-model="FormLogin.password"
-              :disabled="recuperandoSessao"
             />
           </div>
           <div class="card-footer">
-            <BButton
-              type="submit"
-              class="btn mt-auto btn-primary w-100"
-              :disabled="recuperandoSessao"
-              >Login</BButton
-            >
+            <BButton type="submit" class="btn mt-auto btn-primary w-100"> Login </BButton>
           </div>
         </form>
       </div>
