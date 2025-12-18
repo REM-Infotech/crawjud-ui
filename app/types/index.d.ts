@@ -8,16 +8,24 @@ interface Window {
   matchMedia: typeof window.matchMedia;
   windowApi: WindowApi;
   themeApi: ThemeApi;
-  authApi: AuthApi;
+  authService: authService;
   botApi: BotApi;
   storageApi: StorageApi;
   botService: botService;
+  cookieService: cookieService;
+  safeStorageApi: safeStorageApi;
 }
 
 interface AuthPayload {
   message: string;
 }
 
+interface AuthResult {
+  mensagem: string;
+  status: "sucesso" | "erro";
+}
+
+type AuthReturn = Promise<AuthResult>;
 type elementRef = Ref<Element | ComponentPublicInstance | null>;
 
 declare module "~/assets/img/dark/elaw.png" {
@@ -48,4 +56,16 @@ declare module "~/assets/img/dark/pje.png" {
 declare module "~/assets/img/light/crawjud.png" {
   const logoCrawJUD: string;
   export default logoCrawJUD;
+}
+
+interface cookieApp {
+  url: string;
+  name?: string;
+  value?: string;
+  domain?: string;
+  path?: string;
+  secure?: boolean;
+  httpOnly?: boolean;
+  expirationDate?: number;
+  sameSite: "unspecified" | "no_restriction" | "lax" | "strict";
 }

@@ -1,16 +1,37 @@
 <script setup lang="ts">
+import Crawjud from "~/components/img/crawjud.vue";
 import Elaw from "~/components/img/elaw.vue";
 import Esaj from "~/components/img/esaj.vue";
 import Pje from "~/components/img/pje.vue";
 import Projudi from "~/components/img/projudi.vue";
 
 const modal = ref(false);
-
+const { querySistema } = storeToRefs(useExecutionStore());
 const botStore = useBotStore();
 
-const { listagem, queryBot } = storeToRefs(botStore);
+const { botNs, listar_credenciais } = botStore;
+const { listagem, queryBot, listagemBots } = storeToRefs(botStore);
 const { current } = storeToRefs(useBotForm());
 const bots = useBotStore();
+
+onMounted(() => {
+  botNs.on("connect", () => {
+    const { current } = storeToRefs(useBotForm());
+    if (current) listar_credenciais(current.value);
+  });
+
+  botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
+    if (!data) return;
+
+    if (listagemBots.value.length > 0) {
+      if (data.listagem !== listagemBots.value) {
+        listagemBots.value = data.listagem;
+        return;
+      }
+    }
+    listagemBots.value = data.listagem;
+  });
+});
 
 onBeforeMount(async () => {
   botStore.botNs.connect();
@@ -20,27 +41,33 @@ onBeforeMount(async () => {
   }
 });
 
-onBeforeUnmount(async () => {
-  botStore.botNs.disconnect();
-});
+function execucoesFiltrar(bot: CrawJudBot) {
+  querySistema.value = bot.display_name;
+
+  useRouter().push({ name: "execucoes" });
+}
+
+function loadForm(bot: CrawJudBot) {
+  modal.value = true;
+  current.value = bot;
+}
 
 watch(modal, async (val) => {
   if (!val) {
     await new Promise((r) => setTimeout(r, 200));
-    current.value = {} as BotInfo;
+    current.value = {} as CrawJudBot;
   }
 });
 
-const EmptyComponent = {
-  template: "<h1> ok </h1>",
-};
-
-const imgSistema: Record<SystemBots, Component> = {
+const imgSistema: Record<sistemasRobos, Component> = {
   PROJUDI: Projudi,
   ESAJ: Esaj,
   ELAW: Elaw,
-  JUSDS: EmptyComponent,
+  JUSDS: Crawjud,
   PJE: Pje,
+  CAIXA: Crawjud,
+  TJDFT: Crawjud,
+  CSI: Crawjud,
 };
 </script>
 
@@ -70,18 +97,8 @@ const imgSistema: Record<SystemBots, Component> = {
             </span>
           </div>
           <div class="card-footer d-flex">
-            <button
-              class="button-execute"
-              @click="
-                () => {
-                  modal = true;
-                  current = bot;
-                }
-              "
-            >
-              Executar
-            </button>
-            <button class="button-bot">Ver Logs</button>
+            <BButton class="button-execute" @click="loadForm(bot)"> Executar </BButton>
+            <BButton class="button-bot" @click="execucoesFiltrar(bot)"> Ver Logs </BButton>
           </div>
         </div>
       </div>
@@ -89,7 +106,7 @@ const imgSistema: Record<SystemBots, Component> = {
   </BContainer>
 </template>
 
-<style lang="css">
+<style lang="css" scoped>
 .row-bots {
   height: calc(100dvh - 80px);
   overflow: auto;
@@ -114,30 +131,16 @@ const imgSistema: Record<SystemBots, Component> = {
   font-size: 1.2rem;
 }
 
-.card-header {
-  border-bottom: 00.1px solid rgba(0, 0, 0, 0.233);
-  font-weight: bold;
-}
-
-.card-header,
-.card-footer {
-  background-color: rgba(255, 255, 255, 0.226);
-}
-
-.card-footer {
-  justify-content: space-around;
-}
-
 .button-execute {
   width: 7.2em;
   height: 2.5em;
   padding: 5px;
   font-weight: bold;
-  background-color: rgba(35, 180, 6, 0.568);
+  background-color: rgba(35, 180, 6, 0.568) !important;
 }
 
 .button-execute:hover {
-  background-color: rgb(63, 94, 17);
+  background-color: rgb(63, 94, 17) !important;
 }
 
 .button-bot {

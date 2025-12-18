@@ -3,7 +3,7 @@
  */
 
 type FileInput = File[] | File | undefined;
-type SystemBots = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE";
+type sistemasRobos = "PROJUDI" | "ESAJ" | "ELAW" | "JUSDS" | "PJE" | "CAIXA" | "TJDFT" | "CSI";
 type Contadores = "total" | "sucessos" | "erros" | "restantes";
 type CertificadoFile = (File & { name: `${string}.pfx` }) | null;
 type KbdxFile = (File & { name: `${string}.kdbx` }) | null;
@@ -28,17 +28,17 @@ type Execucao = {
 
 type Execucoes = Execucao[];
 
-interface BotInfo {
+interface CrawJudBot {
   Id: number;
   configuracao_form: ConfigForm;
   display_name: string;
-  sistema: SystemBots;
+  sistema: sistemasRobos;
   descricao: string;
   categoria: string;
 }
 
 interface BotPayload {
-  listagem: BotInfo[];
+  listagem: CrawJudBot[];
 }
 interface CredenciaisSelect {
   value: number | null | undefined;

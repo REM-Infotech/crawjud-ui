@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 class Utils {
   static camelToSnake(name: string): string {
     const s1 = name.replace(/(.)([A-Z][a-z]+)/g, "$1_$2");

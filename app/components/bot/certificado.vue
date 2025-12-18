@@ -39,6 +39,7 @@ const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "prima
           id="senhaCertificado"
           placeholder="Senha certificado"
           v-model="FormBot.senha_certificado"
+          :disabled="false"
         />
       </div>
     </div>

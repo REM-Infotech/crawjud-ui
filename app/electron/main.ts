@@ -4,11 +4,10 @@ import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
-import useBotService from "@/services/botService";
 import useThemeService from "@/services/themeService";
 
 export let mainWindow: BrowserWindow | null = null;
-let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
+const preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -20,8 +19,10 @@ function createWindow() {
     frame: false,
     transparent: true,
     webPreferences: {
+      nodeIntegration: false,
       devTools: !app.isPackaged,
       preload: preload_path,
+      partition: "persist:mySessionName", // Key for persistence
     },
   });
   mainWindow.webContents.on("will-navigate", (event, url) => {
@@ -58,12 +59,12 @@ if (!gotTheLock) {
   app.on("second-instance", WindowUtils.DeepLink);
 
   // Create mainWindow, load the rest of the app, etc...
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
     IpcApp();
-    useBotService();
-    createWindow();
     useThemeService();
+    createWindow();
   });
+
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();

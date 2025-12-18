@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import AppToast from "./components/AppToast.vue";
 const { loadTheme } = useThemeStore();
+const botNs = socketio.socket("/bot");
 onBeforeMount(loadTheme);
 watch(
   () => useRoute().name,
   (newV) => {
     if (newV && newV !== "index" && newV !== "login") {
-      const botNs = socketio.socket("/bot");
       botNs.connect();
     }
+  },
+  {
+    deep: true,
   },
 );
 </script>

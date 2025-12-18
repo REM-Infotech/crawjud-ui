@@ -6,13 +6,15 @@ import Xlsxfile from "./xlsxfile.vue";
 
 const execStore = useExecutionStore();
 const model = defineModel({ type: Boolean, required: true, default: false });
-const props = defineProps<{ bot: BotInfo | undefined }>();
+const props = defineProps<{ bot: CrawJudBot | undefined }>();
 const toast = useToast();
 const bots = useBotStore();
 const { FormBot } = useBotForm();
 const { seed, isFileUploading, progressBarValue } = storeToRefs(useBotForm());
 const { execucaoBot, execucao } = storeToRefs(execStore);
 const ConfirmDados = ref(false);
+
+const uploader = FileUploader();
 
 class FormBotManager {
   static async clearForm() {
@@ -59,13 +61,15 @@ class FormBotManager {
           pid: pid,
           data_fim: "",
           data_inicio: "",
-          id: 0,
+          Id: 0,
           bot: "",
         };
 
         useRouter().push({ name: "execucoes" });
       }
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
 
     toast.create({
       title: title,
@@ -75,10 +79,10 @@ class FormBotManager {
   static async handleFiles(data: CertificadoFile | KbdxFile | File | File[] | null) {
     if (data) {
       if (Array.isArray(data)) {
-        await FileUploader.uploadMultipleFile(data);
+        await uploader.uploadMultipleFile(data);
         return;
       }
-      await FileUploader.uploadFile(data as File);
+      await uploader.uploadFile(data as File);
     }
   }
 }
@@ -89,7 +93,7 @@ onMounted(() => {
 });
 watch(model, FormBotManager.clearForm);
 watch(model, (newV) => {
-  if (newV) bots.listar_credenciais(props.bot as BotInfo);
+  if (newV) bots.listar_credenciais(props.bot as CrawJudBot);
 });
 
 watch(
