@@ -4,7 +4,6 @@ import Certificado from "./certificado.vue";
 import Credencial from "./credencial.vue";
 import Xlsxfile from "./xlsxfile.vue";
 
-const { $api: api } = useNuxtApp();
 const execStore = useExecutionStore();
 const model = defineModel({ type: Boolean, required: true, default: false });
 const props = defineProps<{ bot: CrawJudBot | undefined }>();

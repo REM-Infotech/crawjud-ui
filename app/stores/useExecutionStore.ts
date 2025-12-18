@@ -1,6 +1,5 @@
 export default defineStore("useExecutionStore", () => {
-  const { $botNs: botNs } = useNuxtApp();
-
+  const botNs = socketio.socket("/bot");
   const execucaoBot: Ref<string> = ref("");
   const querySistema: Ref<string> = ref("");
   const queryExecucao: Ref<string> = ref("");
@@ -34,11 +33,10 @@ export default defineStore("useExecutionStore", () => {
   }
 
   async function download_execucao(pid: str) {
-    const { $botService: botService } = useNuxtApp();
     const { toggle } = useLoad();
 
     toggle();
-    await botService.downloadExecucao(pid);
+    alert(pid);
     toggle();
   }
 

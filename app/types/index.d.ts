@@ -59,7 +59,7 @@ declare module "~/assets/img/light/crawjud.png" {
 }
 
 interface cookieApp {
-  url?: string;
+  url: string;
   name?: string;
   value?: string;
   domain?: string;
@@ -67,4 +67,5 @@ interface cookieApp {
   secure?: boolean;
   httpOnly?: boolean;
   expirationDate?: number;
+  sameSite: "unspecified" | "no_restriction" | "lax" | "strict";
 }

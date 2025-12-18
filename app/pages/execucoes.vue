@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BaseColorVariant } from "bootstrap-vue-next";
 
-const { $botNs: botNs } = useNuxtApp();
+const botNs = socketio.socket("/bot");
 const execucaoStore = useExecutionStore();
 const execToRef = storeToRefs(execucaoStore);
 const { queryExecucao, execucoes, logsExecucao, execucao, itemLog, listagemExecucoes } = execToRef;
@@ -11,6 +11,7 @@ const hoveredExecId = ref();
 const SetExec = ref(false);
 
 botNs.emit("listagem_execucoes", (data: Execucoes) => {
+  if (!data) return;
   listagemExecucoes.value = data;
 });
 

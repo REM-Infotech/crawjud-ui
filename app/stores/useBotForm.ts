@@ -1,5 +1,5 @@
 export default defineStore("useBotForm", () => {
-  const { $fileNs: fileNs } = useNuxtApp();
+  const fileNs = socketio.socket("/file");
   const progressBarValue = ref(0);
   const seed = ref("");
   const isFileUploading = computed(() => progressBarValue.value > 0);

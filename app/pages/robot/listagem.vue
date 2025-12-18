@@ -9,9 +9,29 @@ const modal = ref(false);
 const { querySistema } = storeToRefs(useExecutionStore());
 const botStore = useBotStore();
 
-const { listagem, queryBot } = storeToRefs(botStore);
+const { botNs, listar_credenciais } = botStore;
+const { listagem, queryBot, listagemBots } = storeToRefs(botStore);
 const { current } = storeToRefs(useBotForm());
 const bots = useBotStore();
+
+onMounted(() => {
+  botNs.on("connect", () => {
+    const { current } = storeToRefs(useBotForm());
+    if (current) listar_credenciais(current.value);
+  });
+
+  botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
+    if (!data) return;
+
+    if (listagemBots.value.length > 0) {
+      if (data.listagem !== listagemBots.value) {
+        listagemBots.value = data.listagem;
+        return;
+      }
+    }
+    listagemBots.value = data.listagem;
+  });
+});
 
 onBeforeMount(async () => {
   botStore.botNs.connect();
