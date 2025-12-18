@@ -37,14 +37,15 @@ class authService {
         useRouter().push({ name: "robot-listagem" });
       }
     } catch (err) {
-      console.log(err);
+      let message = "Erro ao realizar login";
       if (isAxiosError(err) && err.response) {
-        const message = (err.response as AxiosResponse<AuthPayload>).data.message;
-        toast.create({
-          title: "Erro",
-          body: message,
-        });
+        message = (err.response as AxiosResponse<AuthPayload>).data.message;
       }
+
+      toast.create({
+        title: "Erro",
+        body: message,
+      });
     }
     load.hide();
   }
@@ -94,7 +95,6 @@ onMounted(async () => {
               type="text"
               id="username"
               v-model="FormLogin.username"
-              :disabled="recuperandoSessao"
             />
           </BFormGroup>
 
@@ -104,16 +104,10 @@ onMounted(async () => {
               id="password"
               placeholder="Senha"
               v-model="FormLogin.password"
-              :disabled="recuperandoSessao"
             />
           </div>
           <div class="card-footer">
-            <BButton
-              type="submit"
-              class="btn mt-auto btn-primary w-100"
-              :disabled="recuperandoSessao"
-              >Login</BButton
-            >
+            <BButton type="submit" class="btn mt-auto btn-primary w-100"> Login </BButton>
           </div>
         </form>
       </div>

@@ -70,6 +70,8 @@ export default defineNuxtConfig({
   typescript: {
     tsConfig: {
       compilerOptions: {
+        jsx: "preserve",
+        jsxImportSource: "vue",
         types: ["unplugin-icons/types/vue"],
       },
     },

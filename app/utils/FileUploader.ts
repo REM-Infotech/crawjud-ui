@@ -9,10 +9,9 @@ function FileUploader() {
     public fileSocket: Socket;
 
     constructor() {
-      const { $fileNs: fileNs } = useNuxtApp();
       this.totalSent = 0;
       this.chunkSize = 1024 * 100;
-      this.fileSocket = fileNs;
+      this.fileSocket = socketio.socket("/files");
     }
 
     public async uploadFile(file: File): Promise<void> {
