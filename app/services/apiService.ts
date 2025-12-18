@@ -5,18 +5,16 @@ import useCookieService from "./cookieService";
 
 class ApiService {
   public api: AxiosInstance;
-  loadCookieJar: () => Promise<CookieJar>;
-  saveCookieJar: () => Promise<void>;
+  CookieJar: CookieJar;
 
   constructor() {
     const { CookieService } = useCookieService();
-    this.loadCookieJar = CookieService.loadCookieJar;
-    this.saveCookieJar = CookieService.saveCookieJar;
+    this.CookieJar = CookieService.cookieJar;
     this.api = undefined as unknown as AxiosInstance;
   }
 
   async setup(): Promise<AxiosInstance> {
-    return wrapper(
+    this.api = wrapper(
       axios.create({
         baseURL: new URL(import.meta.env.VITE_API_URL).toString(),
         withCredentials: true,
@@ -26,21 +24,16 @@ class ApiService {
         headers: {
           "Content-Type": "application/json",
         },
-        jar: await this.loadCookieJar(),
+        jar: this.CookieJar,
       }),
     );
+    return this.api;
   }
 }
 
 export default async function useApiService() {
   const serviceApi = new ApiService();
-  serviceApi.api = await serviceApi.setup();
-  const api = serviceApi.api;
-
-  serviceApi.api.interceptors.response.use(async (response) => {
-    await serviceApi.saveCookieJar();
-    return response;
-  });
+  const api = await serviceApi.setup();
 
   return { api, serviceApi };
 }

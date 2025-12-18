@@ -1,5 +1,5 @@
 export default defineStore("useExecutionStore", () => {
-  const { $botNs: logNs } = useNuxtApp();
+  const { $botNs: botNs } = useNuxtApp();
 
   const execucaoBot: Ref<string> = ref("");
   const querySistema: Ref<string> = ref("");
@@ -30,7 +30,7 @@ export default defineStore("useExecutionStore", () => {
   }
 
   async function encerrar_execucao(pid: str) {
-    logNs.emit("bot_stop", { pid: pid });
+    botNs.emit("bot_stop", { pid: pid });
   }
 
   async function download_execucao(pid: str) {
@@ -47,7 +47,11 @@ export default defineStore("useExecutionStore", () => {
   watch(execucao, (newV) => {
     execucaoBot.value = newV?.pid as string;
     logs.value = [];
-    logNs.emit("join_room", { room: execucaoBot.value }, pushLogs);
+    botNs.emit("join_room", { room: execucaoBot.value }, pushLogs);
+  });
+
+  botNs.on("logbot", async (data: Message) => {
+    await pushLog(data);
   });
 
   return {
@@ -69,6 +73,6 @@ export default defineStore("useExecutionStore", () => {
     pushLog,
 
     // 3. Utilitários
-    logNs,
+    botNs,
   };
 });

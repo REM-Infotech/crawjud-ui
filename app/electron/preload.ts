@@ -30,18 +30,22 @@ const safeStorageApi = {
   save: (opt: optSave): Promise<void> => ipcRenderer.invoke("safe-storage:save", opt),
 };
 
-const exposes = {
-  safeStorageApi: safeStorageApi,
-  windowApi: windowApi,
-  themeApi: themeApi,
-  botService: botService,
-  cookieService: cookieService,
-  authService: {
-    autenticarUsuario: (data: Record<string, any>): AuthReturn =>
-      ipcRenderer.invoke("crawjud:autenticar", data),
-  },
-};
-Object.entries(exposes).forEach(([k, v]) => contextBridge.exposeInMainWorld(k, v));
+try {
+  const exposes = {
+    safeStorageApi: safeStorageApi,
+    windowApi: windowApi,
+    themeApi: themeApi,
+    botService: botService,
+    cookieService: cookieService,
+    authService: {
+      autenticarUsuario: (data: Record<string, any>): AuthReturn =>
+        ipcRenderer.invoke("crawjud:autenticar", data),
+    },
+  };
+  Object.entries(exposes).forEach(([k, v]) => contextBridge.exposeInMainWorld(k, v));
+} catch (err) {
+  console.log(err);
+}
 
 window.addEventListener("keypress", (e) => {
   if (e) {

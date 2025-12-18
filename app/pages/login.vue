@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { isAxiosError, type AxiosResponse } from "axios";
 
+const { $api: api } = useNuxtApp();
 const FormLogin = reactive({
   username: "",
   password: "",
