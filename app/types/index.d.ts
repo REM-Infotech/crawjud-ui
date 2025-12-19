@@ -74,3 +74,10 @@ interface ComponentsConfiguracaoPage extends Record<string, Component> {
   usuarios: Component;
   credenciais: Component;
 }
+
+interface CredencialItem {
+  Id: number;
+  nome_credencial: string;
+  tipo_autenticacao: string;
+  acoesComponent: Component;
+}
