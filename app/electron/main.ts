@@ -1,5 +1,5 @@
+import CrawJUD2 from "@/assets/img/crawjud2.ico";
 import { app, BrowserWindow } from "electron";
-
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
@@ -18,6 +18,7 @@ function createWindow() {
     maximizable: false,
     frame: false,
     transparent: true,
+    icon: CrawJUD2,
     webPreferences: {
       nodeIntegration: false,
       devTools: !app.isPackaged,

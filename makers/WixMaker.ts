@@ -18,7 +18,7 @@ const wixOptions: MakerWixConfig = {
     chooseDirectory: true,
   },
   features: {
-    autoLaunch: true,
+    autoLaunch: false,
     autoUpdate: false,
   },
   version: version,

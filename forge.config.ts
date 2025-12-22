@@ -9,6 +9,7 @@ import { AutoUnpackNativesPlugin } from "@electron-forge/plugin-auto-unpack-nati
 
 import type { ForgeConfig } from "@electron-forge/shared-types";
 
+import SquirrelMaker from "./makers/SquirrelMaker";
 import WixMaker from "./makers/WixMaker";
 import NuxtFixesPlugin from "./plugins/NuxtFixes";
 import ViteForgePlugin from "./plugins/ViteForgePlugin";
@@ -24,6 +25,7 @@ const config: ForgeConfig = {
   plugins: [new AutoUnpackNativesPlugin({}), NuxtFixesPlugin, ViteForgePlugin],
   makers: [
     WixMaker,
+    SquirrelMaker,
     new MakerZIP({}, ["darwin"]),
     new MakerDeb({}, ["linux"]),
     new MakerRpm({}, ["linux"]),

@@ -58,6 +58,11 @@ declare module "~/assets/img/light/crawjud.png" {
   export default logoCrawJUD;
 }
 
+declare module "@/assets/img/crawjud2.ico" {
+  const CrawJUD2: string;
+  export default CrawJUD2;
+}
+
 interface cookieApp {
   url: string;
   name?: string;
