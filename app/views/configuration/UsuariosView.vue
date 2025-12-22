@@ -2,6 +2,8 @@
 const usuariosRef: Ref<UsuarioItem[]> = ref([]);
 const usuarios: ComputedRef<UsuarioItem[]> = computed(() => usuariosRef.value);
 
+const toast = useToast();
+const load = useLoad();
 const { adminNamespace } = useAdminStore();
 
 onMounted(() => {
@@ -10,21 +12,72 @@ onMounted(() => {
   });
 });
 
-const model = ref(false);
+const modal = ref(false);
+
+async function handleSubmit(ev: Event) {
+  ev.preventDefault();
+  load.show();
+
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  modal.value = false;
+  load.hide();
+
+  await new Promise((resolve) => setTimeout(resolve, 250));
+
+  toast.create({
+    title: "Info",
+    body: "Usuário cadastrado com sucesso!",
+  });
+}
 </script>
 
 <template>
   <div id="usuarios-view" class="card">
-    <BModal no-footer centered size="lg" header-class="fs-3" v-model="model">
+    <BModal no-footer centered size="lg" header-class="fs-4" v-model="modal">
       <template #header>
         <span class="fw-bold"> Novo usuário </span>
       </template>
 
-      <BForm>
-        <div class="row">
-          <BFormGroup label="Nome">
-            <BFormInput />
-          </BFormGroup>
+      <BForm @submit="handleSubmit">
+        <div class="row gap-3">
+          <BCol md="12" sm="12" lg="12" xl="12" xxl="12">
+            <BFormGroup label="Nome">
+              <BFormInput />
+            </BFormGroup>
+          </BCol>
+          <BCol md="12" sm="12" lg="12" xl="12" xxl="12">
+            <BFormGroup label="Username">
+              <BFormInput />
+            </BFormGroup>
+          </BCol>
+          <BCol md="12" sm="12" lg="12" xl="12" xxl="12">
+            <BFormGroup label="E-mail">
+              <BFormInput />
+            </BFormGroup>
+          </BCol>
+          <BCol md="12" sm="12" lg="12" xl="12" xxl="12">
+            <BRow>
+              <BCol md="6" sm="6" lg="6" xl="6" xxl="6">
+                <BFormGroup label="Senha">
+                  <BFormInput />
+                </BFormGroup>
+              </BCol>
+
+              <BCol md="6" sm="6" lg="6" xl="6" xxl="6">
+                <BFormGroup label="Repetir Senha">
+                  <BFormInput />
+                </BFormGroup>
+              </BCol>
+            </BRow>
+          </BCol>
+        </div>
+
+        <div class="d-flex flex-column mt-auto">
+          <hr />
+          <BButton type="submit" variant="outline-success">
+            <span class="fw-bold"> Salvar </span>
+          </BButton>
         </div>
       </BForm>
     </BModal>
@@ -32,7 +85,7 @@ const model = ref(false);
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
         <h4 id="Usuario-branding-text" class="align-text-center">Usuarios</h4>
-        <BButton variant="outline-success" @click="model = true">
+        <BButton variant="outline-success" @click="modal = true">
           <span class="fw-bold"> Novo Usuário </span>
         </BButton>
       </div>
