@@ -8,14 +8,7 @@ type Contadores = "total" | "sucessos" | "erros" | "restantes";
 type CertificadoFile = (File & { name: `${string}.pfx` }) | null;
 type KbdxFile = (File & { name: `${string}.kdbx` }) | null;
 type StatusBot = "Inicializando" | "Em Execução" | "Finalizado";
-type ConfigForm =
-  | "file_auth"
-  | "multiple_files"
-  | "only_auth"
-  | "only_file"
-  | "pje"
-  | "pje_protocolo"
-  | "proc_parte";
+type ConfigForm = "file_auth" | "multiple_files" | "only_auth" | "only_file" | "proc_parte";
 
 type Execucao = {
   Id: number;

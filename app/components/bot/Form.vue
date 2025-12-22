@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Anexos from "./anexos.vue";
-import Certificado from "./certificado.vue";
 import Credencial from "./credencial.vue";
 import Xlsxfile from "./xlsxfile.vue";
 
@@ -122,8 +121,6 @@ const botForms: Record<ConfigForm, Component[]> = {
   multiple_files: [Xlsxfile, Anexos, Credencial],
   only_auth: [Credencial],
   only_file: [Xlsxfile],
-  pje: [Xlsxfile, Certificado],
-  pje_protocolo: [Xlsxfile, Certificado],
   proc_parte: [Xlsxfile, Credencial],
 };
 
