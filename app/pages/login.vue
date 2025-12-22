@@ -9,7 +9,6 @@ const FormLogin = reactive({
 
 const toast = useToast();
 const load = useLoad();
-const recuperandoSessao = ref(true);
 
 class authService {
   static async authUser(e: SubmitEvent) {
@@ -50,34 +49,6 @@ class authService {
     load.hide();
   }
 }
-
-onMounted(async () => {
-  const tst = toast.create({
-    title: "Info",
-    body: "Recuperando sessão salva",
-    modelValue: true,
-  });
-  let message = "Nenhuma sessão encontrada!";
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  const { $hasCookie } = useNuxtApp();
-
-  load.show();
-
-  if ($hasCookie) {
-    message = "Sessão recuperada!";
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    useRouter().push({ name: "robot-listagem" });
-  }
-  tst.hide();
-  toast.create({
-    title: "Info",
-    body: message,
-    modelValue: 2000,
-  });
-
-  load.hide();
-  recuperandoSessao.value = false;
-});
 </script>
 
 <template>

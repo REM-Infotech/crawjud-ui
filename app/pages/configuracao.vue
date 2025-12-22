@@ -9,6 +9,16 @@ const compomentConfig: ComponentsConfiguracaoPage = {
 };
 
 const paginaSelecionada = computed(() => compomentConfig[currentConfig.value]);
+
+const { adminNamespace } = useAdminStore();
+
+onMounted(() => {
+  adminNamespace.connect();
+});
+
+onUnmounted(() => {
+  adminNamespace.disconnect();
+});
 </script>
 
 <template>

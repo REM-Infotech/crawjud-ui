@@ -81,3 +81,12 @@ interface CredencialItem {
   tipo_autenticacao: string;
   acoesComponent: Component;
 }
+
+interface UsuarioItem {
+  Id: number;
+  nome_Usuario: string;
+  login_usuario: string;
+  email: string;
+  ultimo_login: string;
+  acoesComponent: Component;
+}
