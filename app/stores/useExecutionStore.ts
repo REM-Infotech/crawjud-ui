@@ -24,8 +24,10 @@ export default defineStore("useExecutionStore", () => {
   }
 
   async function pushLogs(msgs: Message[]) {
+    logs.value = [];
     for (const msg of msgs) {
       await pushLog(msg);
+      if (!botNs.connected) return;
       await new Promise((resolve) => setTimeout(resolve, 200));
     }
   }

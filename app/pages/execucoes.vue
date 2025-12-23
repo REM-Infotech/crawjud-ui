@@ -15,6 +15,13 @@ botNs.emit("listagem_execucoes", (data: Execucoes) => {
   listagemExecucoes.value = data;
 });
 
+botNs.on("connect", () => {
+  botNs.emit("listagem_execucoes", (data: Execucoes) => {
+    if (!data) return;
+    listagemExecucoes.value = data;
+  });
+});
+
 const valores = computed(() => {
   const sucessos = logsExecucao.value.filter(
     (item) => item.message_type === "success" && item.row > 0,
@@ -24,9 +31,10 @@ const valores = computed(() => {
     (item) => item.message_type === "error" && item.row > 0,
   ).length;
 
-  const total = logsExecucao.value.filter((item) => {
+  const filtered = logsExecucao.value.filter((item) => {
     return item.row > 0 && item.message !== "Fim da execução";
-  })[-1]?.total as number;
+  });
+  const total = (filtered.length > 0 ? (filtered.reverse()[0]?.total as number) : 0) as number;
 
   let restantes = total - erros - sucessos;
 
@@ -52,13 +60,14 @@ watch(itemLog, async (newValue) => {
 
 async function performSelecaoExec(e: Event, exec: Execucao) {
   e.preventDefault();
-
+  botNs.disconnect();
   if (SetExec.value) return;
   if (execucao.value === exec) return;
   SetExec.value = true;
   execucao.value = exec;
   await new Promise((resolve) => setTimeout(resolve, 1000));
   SetExec.value = false;
+  botNs.connect();
 }
 
 const classLogs: Record<MessageType, string> = {
