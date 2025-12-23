@@ -16,9 +16,9 @@ const themeApi = {
   currentPreset: (): Promise<unknown> => ipcRenderer.invoke("dark-mode:current-preset"),
 };
 
-const botService = {
-  downloadExecucao: (pid: str): Promise<void> =>
-    ipcRenderer.invoke("bot-service:download-execucao", pid),
+const fileService = {
+  downloadExecucao: (kw: PayloadDownloadExecucao): Promise<void> =>
+    ipcRenderer.invoke("file-service:download-execucao", kw),
 };
 
 const cookieService = {
@@ -35,7 +35,7 @@ try {
     safeStorageApi: safeStorageApi,
     windowApi: windowApi,
     themeApi: themeApi,
-    botService: botService,
+    fileService: fileService,
     cookieService: cookieService,
     authService: {
       autenticarUsuario: (data: Record<string, any>): AuthReturn =>

@@ -1,30 +1,4 @@
-type str = string;
-type int = number;
 type Numberish = string | number;
-
-interface Window {
-  jQuery: typeof jQuery;
-  $: typeof jQuery;
-  matchMedia: typeof window.matchMedia;
-  windowApi: WindowApi;
-  themeApi: ThemeApi;
-  authService: authService;
-  botApi: BotApi;
-  storageApi: StorageApi;
-  botService: botService;
-  cookieService: cookieService;
-  safeStorageApi: safeStorageApi;
-}
-
-interface AuthPayload {
-  message: string;
-}
-
-interface AuthResult {
-  mensagem: string;
-  status: "sucesso" | "erro";
-}
-
 type AuthReturn = Promise<AuthResult>;
 type elementRef = Ref<Element | ComponentPublicInstance | null>;
 
@@ -73,6 +47,27 @@ interface cookieApp {
   httpOnly?: boolean;
   expirationDate?: number;
   sameSite: "unspecified" | "no_restriction" | "lax" | "strict";
+}
+
+interface Window {
+  jQuery: typeof jQuery;
+  $: typeof jQuery;
+  matchMedia: typeof window.matchMedia;
+  windowApi: WindowApi;
+  themeApi: ThemeApi;
+  storageApi: StorageApi;
+  fileService: fileService;
+  cookieService: cookieService;
+  safeStorageApi: safeStorageApi;
+}
+
+interface AuthPayload {
+  message: string;
+}
+
+interface AuthResult {
+  mensagem: string;
+  status: "sucesso" | "erro";
 }
 
 interface ComponentsConfiguracaoPage extends Record<string, Component> {

@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CrawJUD2 from "@/assets/img/crawjud2.ico";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
 import WindowUtils from "./window";
 
 import useThemeService from "@/services/themeService";
+import { writeFile } from "fs/promises";
+import { homedir } from "os";
 
 export let mainWindow: BrowserWindow | null = null;
 const preload_path = resolve(join(__dirname, "../preload", "preload.js"));
@@ -64,6 +67,27 @@ if (!gotTheLock) {
     IpcApp();
     useThemeService();
     createWindow();
+  });
+
+  ipcMain.handle("file-service:download-execucao", async (_: any, kw: PayloadDownloadExecucao) => {
+    if (!mainWindow) return;
+    const dialogFile = await dialog.showSaveDialog(mainWindow, {
+      title: "Escolha onde salvar a execução",
+      defaultPath: resolve(homedir(), kw.file_name),
+      filters: [
+        {
+          name: "Arquivo de execução compactado",
+          extensions: ["zip"],
+        },
+      ],
+    });
+
+    if (dialogFile.canceled) return;
+
+    const filePath = join(dialogFile.filePath);
+    const buff = Uint8Array.fromBase64(kw.content);
+    await writeFile(filePath, buff);
+    return dialogFile.filePath;
   });
 
   app.on("activate", () => {

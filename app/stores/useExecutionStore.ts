@@ -1,4 +1,6 @@
 export default defineStore("useExecutionStore", () => {
+  const toast = useToast();
+
   const botNs = socketio.socket("/bot");
   const execucaoBot: Ref<string> = ref("");
   const querySistema: Ref<string> = ref("");
@@ -19,25 +21,41 @@ export default defineStore("useExecutionStore", () => {
 
   async function pushLog(msg: Message) {
     logs.value = [...logs.value, msg];
-    await new Promise((resolve) => setTimeout(resolve, 200));
   }
 
   async function pushLogs(msgs: Message[]) {
     for (const msg of msgs) {
       await pushLog(msg);
+      await new Promise((resolve) => setTimeout(resolve, 200));
     }
   }
 
-  async function encerrar_execucao(pid: str) {
+  async function encerrar_execucao(pid: string) {
     botNs.emit("bot_stop", { pid: pid });
   }
 
-  async function download_execucao(pid: str) {
-    const { toggle } = useLoad();
+  async function download_execucao(pid: string) {
+    const { show, hide } = useLoad();
+    botNs.emit("bot_stop", { pid: pid });
+    show();
+    try {
+      const endpoint = `/bot/execucoes/${pid}/download`;
+      const response = await api.get<PayloadDownloadExecucao>(endpoint);
+      if (response.status === 200) {
+        const result = await window.fileService.downloadExecucao(response.data);
+        if (result) {
+          toast.create({
+            title: "Info",
+            body: `Arquivo "${response.data.file_name}" salvo com sucesso em ${result}`,
+            modelValue: 2500,
+          });
+        }
+      }
+    } catch {
+      toast.create({ title: "Erro", body: "Não foi possivel baixar execução" });
+    }
 
-    toggle();
-    alert(pid);
-    toggle();
+    hide();
   }
 
   async function listar_execucoes(): Promise<void> {}

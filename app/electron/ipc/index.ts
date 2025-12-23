@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseWindow, BrowserWindow, dialog, ipcMain } from "electron";
 
 class IpcUtils {

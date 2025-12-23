@@ -50,6 +50,6 @@ interface safeStorageApi {
   save: (opt: optSave) => Promise<string>;
 }
 
-interface botService {
-  downloadExecucao: (pid: str) => Promise<void>;
+interface fileService {
+  downloadExecucao: (kw: PayloadDownloadExecucao) => Promise<string | void>;
 }

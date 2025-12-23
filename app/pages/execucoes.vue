@@ -15,6 +15,28 @@ botNs.emit("listagem_execucoes", (data: Execucoes) => {
   listagemExecucoes.value = data;
 });
 
+const valores = computed(() => {
+  const sucessos = logsExecucao.value.filter(
+    (item) => item.message_type === "success" && item.row > 0,
+  ).length;
+
+  const erros = logsExecucao.value.filter(
+    (item) => item.message_type === "error" && item.row > 0,
+  ).length;
+
+  const total = logsExecucao.value.filter((item) => {
+    return item.row > 0 && item.message !== "Fim da execução";
+  })[-1]?.total as number;
+
+  let restantes = total - erros - sucessos;
+
+  if (restantes < 0) {
+    restantes = 0;
+  }
+
+  return { sucessos: sucessos, erros: erros, total: total, restantes: restantes };
+});
+
 watch(itemLog, async (newValue) => {
   if (!newValue) return;
 
@@ -168,8 +190,30 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
               </div>
             </TransitionGroup>
           </div>
-          <div class="card-footer footer-exec">
-            {{ execucao.status ? `Status ${execucao.status}` : "" }}
+          <div class="card-footer footer-exec d-flex justify-content-between">
+            <span class="fw-bold">
+              {{ execucao.status ? `Status ${execucao.status}` : "" }}
+            </span>
+
+            <div>
+              <span>
+                Total: <strong>{{ valores.total }}</strong>
+              </span>
+              |
+              <span>
+                Sucessos: <strong>{{ valores.sucessos }}</strong>
+              </span>
+              |
+              <span
+                >Erros:
+                <strong>{{ valores.erros }}</strong>
+              </span>
+              |
+              <span
+                >Restantes
+                <strong>{{ valores.restantes }}</strong>
+              </span>
+            </div>
           </div>
         </div>
       </BCol>
