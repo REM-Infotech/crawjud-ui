@@ -23,24 +23,12 @@ botNs.on("connect", () => {
 });
 
 const valores = computed(() => {
-  const sucessos = logsExecucao.value.filter(
-    (item) => item.message_type === "success" && item.row > 0,
-  ).length;
-
-  const erros = logsExecucao.value.filter(
-    (item) => item.message_type === "error" && item.row > 0,
-  ).length;
-
-  const filtered = logsExecucao.value.filter((item) => {
-    return item.row > 0 && item.message !== "Fim da execução";
-  });
-  const total = (filtered.length > 0 ? (filtered.reverse()[0]?.total as number) : 0) as number;
-
-  let restantes = total - erros - sucessos;
-
-  if (restantes < 0) {
-    restantes = 0;
-  }
+  const execucoes = [...logsExecucao.value];
+  const item = (execucoes.reverse()[0] as Message) || {};
+  const sucessos = item.sucessos || 0;
+  const erros = item.erros || 0;
+  const restantes = item.restantes || 0;
+  const total = item.total || 0;
 
   return { sucessos: sucessos, erros: erros, total: total, restantes: restantes };
 });
