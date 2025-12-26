@@ -24,9 +24,12 @@ botNs.on("connect", () => {
 
 const valores = computed(() => {
   const execucoes = [...logsExecucao.value];
+
+  const sucessos0 = execucoes.filter((item) => item.message_type === "success" && item.row > 0);
+  const erros0 = execucoes.filter((item) => item.message_type === "error" && item.row > 0);
   const item = (execucoes.reverse()[0] as Message) || {};
-  const sucessos = item.sucessos || 0;
-  const erros = item.erros || 0;
+  const sucessos = item.sucessos || sucessos0.length;
+  const erros = item.erros || erros0.length;
   const restantes = item.restantes || 0;
   const total = item.total || 0;
 
@@ -169,7 +172,9 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
                 class="list-group-item"
               >
                 <div class="ms-2 me-auto">
-                  <div class="fw-bold" style="line-break: anywhere">{{ log.message }}</div>
+                  <div class="fw-bold" style="line-break: anywhere">
+                    {{ log.message }}
+                  </div>
                   <div class="d-flex gap-1">
                     <BBadge :variant="VariantLogs[log.message_type]">
                       {{ log.message_type }}

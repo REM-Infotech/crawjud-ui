@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseWindow, BrowserWindow, dialog, ipcMain } from "electron";
+import { writeFile } from "fs/promises";
+import { homedir } from "os";
+import { join, resolve } from "path";
 
 class IpcUtils {
   static beforeInputEvent(event: Electron.Event, input: Electron.Input) {
@@ -50,4 +53,25 @@ export default function IpcApp() {
   ipcMain.on("close-window", IpcUtils.CloseWindow);
   ipcMain.on("minimize-window", IpcUtils.MinimizeWindow);
   ipcMain.on("maximize-window", IpcUtils.MaximizeWindow);
+
+  ipcMain.handle("file-service:download-execucao", async (_: any, kw: PayloadDownloadExecucao) => {
+    if (!mainWindow) return;
+    const dialogFile = await dialog.showSaveDialog(mainWindow, {
+      title: "Escolha onde salvar a execução",
+      defaultPath: resolve(homedir(), kw.file_name),
+      filters: [
+        {
+          name: "Arquivo de execução compactado",
+          extensions: ["zip"],
+        },
+      ],
+    });
+
+    if (dialogFile.canceled) return;
+
+    const filePath = join(dialogFile.filePath);
+    const buff = Uint8Array.fromBase64(kw.content);
+    await writeFile(filePath, buff);
+    return dialogFile.filePath;
+  });
 }
