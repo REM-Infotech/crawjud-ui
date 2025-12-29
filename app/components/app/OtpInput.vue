@@ -16,7 +16,7 @@ function AbrirTutorial(ev: Event) {
 
 <template>
   <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="p-3">
-    <div class="mb-3 p-3 border border-secondary border-2 rounded-2" style="min-height: 230px">
+    <div class="mb-3 p-3 border border-secondary border-2 rounded-2">
       <BFormCheckbox switch class="mb-3" @click="requerDoisFatores = !requerDoisFatores">
         Requer MFA (autenticação de dois fatores) ?
       </BFormCheckbox>
