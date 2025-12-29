@@ -94,3 +94,20 @@ interface UsuarioItem {
 type OpcoesSistema = { value: sistemasRobos | null; text: string; disabled?: boolean };
 type OpcoesTipoCredencial = { value?: metodoLogin; text: string; disabled?: boolean };
 type metodoLogin = "pw" | "cert" | null;
+
+interface formCredencial {
+  nome_credencial?: string | null;
+
+  sistema_credencial?: string | null;
+  metodo_login?: metodoLogin | null;
+
+  username?: string | null;
+  password?: string | null;
+
+  certificado?: CertificadoFile | null;
+  cpf_cnpj_certificado?: string | null;
+  senha_certificado?: string | null;
+
+  otp_uri?: string | null;
+  requer_duplo_fator: boolean;
+}

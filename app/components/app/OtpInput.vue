@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const requerDoisFatores = ref(false);
+const { FormCredencial } = useCredencialFormStore();
 
 function AbrirTutorial(ev: Event) {
   ev.preventDefault();
@@ -16,11 +16,15 @@ function AbrirTutorial(ev: Event) {
 
 <template>
   <div class="mb-3 p-3 border border-secondary border-1 rounded-1">
-    <BFormCheckbox switch class="mb-3" @click="requerDoisFatores = !requerDoisFatores">
+    <BFormCheckbox
+      switch
+      class="mb-3"
+      @click="FormCredencial.requer_duplo_fator = !FormCredencial.requer_duplo_fator"
+    >
       Requer MFA (autenticação de dois fatores) ?
     </BFormCheckbox>
 
-    <BRow v-if="requerDoisFatores">
+    <BRow v-if="FormCredencial.requer_duplo_fator">
       <BCol md="12" sm="12" lg="12" xl="12" xxl="12">
         <BTooltip interactive>
           <template #target>

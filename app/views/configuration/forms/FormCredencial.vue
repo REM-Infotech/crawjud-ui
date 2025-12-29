@@ -1,13 +1,87 @@
 <script setup lang="ts">
 const novaCredencial = defineModel<boolean>();
 
-function handleSubmit(ev: Event) {
+const load = useLoad();
+const toast = useToast();
+
+function validarCampos(campos: { campo: any; mensagem: string }[]): boolean {
+  for (const { campo, mensagem } of campos) {
+    if (!campo) {
+      toast.create({ title: "Erro", body: mensagem });
+      load.hide();
+      return false;
+    }
+  }
+  return true;
+}
+
+function ValidarLoginESenha() {
+  return validarCampos([
+    { campo: FormCredencial.username, mensagem: "É necessário informar o login do sistema!" },
+    { campo: FormCredencial.password, mensagem: "É necessário informar a senha do sistema!" },
+  ]);
+}
+
+function ValidarCertificado() {
+  return validarCampos([
+    { campo: FormCredencial.certificado, mensagem: "Necessário enviar o certificado!" },
+    {
+      campo: FormCredencial.cpf_cnpj_certificado,
+      mensagem: "Necessário identificação do certificado!",
+    },
+    { campo: FormCredencial.senha_certificado, mensagem: "Necessário senha do certificado!" },
+  ]);
+}
+
+function ValidaDuploFator() {
+  return validarCampos([
+    { campo: FormCredencial.otp_uri, mensagem: "É necessário informar o OTP!" },
+  ]);
+}
+
+async function handleSubmit(ev: Event) {
+  load.show();
   ev.preventDefault();
+
+  if (
+    !validarCampos([
+      { campo: FormCredencial.nome_credencial, mensagem: "É necessário informar o nome!" },
+      { campo: FormCredencial.sistema_credencial, mensagem: "É necessário informar o sistema!" },
+      { campo: FormCredencial.metodo_login, mensagem: "É necessário informar o método de login!" },
+    ])
+  )
+    return;
+
+  if (FormCredencial.metodo_login === "pw" && !ValidarLoginESenha()) return;
+  if (FormCredencial.metodo_login === "cert" && !ValidarCertificado()) return;
+  if (FormCredencial.requer_duplo_fator && !ValidaDuploFator()) return;
+
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  let message = `Erro ao cadastrar credencial "${FormCredencial.nome_credencial}"`;
+  let message_type = "Erro";
+  try {
+    const response = await api.post("/bot/cadastro_credencial", FormCredencial);
+
+    if (response.status === 200) {
+      message_type = "Sucesso!";
+      message = `Credencial "${FormCredencial.nome_credencial}" cadastrada!`;
+    }
+  } catch {}
+
+  toast.show({
+    title: message_type,
+    body: message,
+  });
+
+  load.hide();
+
+  novaCredencial.value = false;
 }
 
 const credencialFormStore = useCredencialFormStore();
 const { FormCredencial } = credencialFormStore;
-const { MetodoLogin } = storeToRefs(credencialFormStore);
+const { metodo_login } = storeToRefs(credencialFormStore);
 
 const opcoesTipoCredencial: OpcoesTipoCredencial[] = [
   { value: null, text: "Selecione uma opção", disabled: true },
@@ -36,22 +110,22 @@ const opcoesSistema: OpcoesSistema[] = [
       <div class="row gap-1 justify-content-center">
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
           <BFormGroup label="Nome Credencial">
-            <BFormInput v-model="FormCredencial.nomeCredencial" />
+            <BFormInput v-model="FormCredencial.nome_credencial" />
           </BFormGroup>
         </BCol>
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
-          <BFormGroup label="Sistema">
-            <BFormSelect v-model="FormCredencial.Sistema" :options="opcoesSistema" />
+          <BFormGroup label="sistema_credencial">
+            <BFormSelect v-model="FormCredencial.sistema_credencial" :options="opcoesSistema" />
           </BFormGroup>
         </BCol>
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
           <BFormGroup label="Método de autenticação">
-            <BFormSelect v-model="FormCredencial.MetodoLogin" :options="opcoesTipoCredencial" />
+            <BFormSelect v-model="FormCredencial.metodo_login" :options="opcoesTipoCredencial" />
           </BFormGroup>
         </BCol>
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="p-3" style="min-height: 100px">
-          <BotSimpleAuth v-if="MetodoLogin === 'pw'" />
-          <BotCertificado v-else-if="MetodoLogin === 'cert'" />
+          <BotSimpleAuth v-if="metodo_login === 'pw'" />
+          <BotCertificado v-else-if="metodo_login === 'cert'" />
         </BCol>
       </div>
 

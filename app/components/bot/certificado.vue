@@ -1,26 +1,14 @@
 <script setup lang="ts">
-import MaterialSymbolsLightPassword2 from "~icons/material-symbols-light/password-2?width=24px&height=24px";
-import MaterialSymbolsLightPassword from "~icons/material-symbols-light/password?width=24px&height=24px";
-
-const { FormBot, current, isFileUploading } = storeToRefs(useBotForm());
-
+const { isFileUploading } = storeToRefs(useBotForm());
+const { FormCredencial } = storeToRefs(useCredencialFormStore());
 const certificado = ref<CertificadoFile>(null);
-
-watch(certificado, (newV) => (FormBot.value.certificado = newV));
-
-const exibeSenha = ref(false);
-
-const IconBtn = computed(() =>
-  exibeSenha.value ? MaterialSymbolsLightPassword2 : MaterialSymbolsLightPassword,
-);
-const borderBtn = computed(() => (exibeSenha.value ? "border-warning" : "border-primary"));
-const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "primary"));
+watch(certificado, (newV) => (FormCredencial.value.certificado = newV));
 </script>
 
 <template>
   <div class="p-3 border border-secondary border-2 rounded-2">
     <BFormGroup label="CPF/CNPJ" label-size="md">
-      <BFormInput class="mb-3" size="md" v-model="FormBot.cpf_cnpj_certificado" required />
+      <BFormInput class="mb-3" size="md" v-model="FormCredencial.cpf_cnpj_certificado" required />
     </BFormGroup>
     <hr />
     <BFormGroup label="Certificado digital (A1)" label-size="md">
@@ -37,7 +25,7 @@ const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "prima
       <AppInputPassword
         id="senhaCertificado"
         placeholder="Senha certificado"
-        v-model="FormBot.senha_certificado"
+        v-model="FormCredencial.senha_certificado"
         :disabled="false"
       />
     </div>
