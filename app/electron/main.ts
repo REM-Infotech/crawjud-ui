@@ -2,7 +2,6 @@ import CrawJUD2 from "@/assets/img/crawjud2.ico";
 import { app, BrowserWindow } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
-import WindowUtils from "./window";
 
 import useThemeService from "@/services/themeService";
 
@@ -23,7 +22,7 @@ function createWindow() {
       nodeIntegration: false,
       devTools: true,
       preload: preload_path,
-      partition: "persist:mySessionName", // Key for persistence
+      partition: "persist:CrawJudApp",
     },
   });
   mainWindow.webContents.on("will-navigate", (event, url) => {
@@ -52,30 +51,30 @@ function createWindow() {
   mainWindow.loadURL("http://localhost:3000/#/");
 }
 
-const gotTheLock = app.requestSingleInstanceLock();
+// const gotTheLock = app.requestSingleInstanceLock();
 
-if (!gotTheLock) {
-  app.quit();
-} else {
-  app.on("second-instance", WindowUtils.DeepLink);
+// if (!gotTheLock) {
+//   app.quit();
+// } else {
 
-  // Create mainWindow, load the rest of the app, etc...
-  app.whenReady().then(async () => {
-    IpcApp();
-    useThemeService();
+// }
+
+// Create mainWindow, load the rest of the app, etc...
+app.whenReady().then(async () => {
+  IpcApp();
+  useThemeService();
+  createWindow();
+  app.configureHostResolver({
+    enableBuiltInResolver: true,
+    secureDnsServers: ["https://one.one.one.one/dns-query"],
+  });
+});
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
-    app.configureHostResolver({
-      enableBuiltInResolver: true,
-      secureDnsServers: ["https://one.one.one.one/dns-query"],
-    });
-  });
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
-}
+  }
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -83,12 +82,12 @@ app.on("window-all-closed", () => {
   }
 });
 
-if (process.defaultApp) {
-  if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient("crawjud", process.execPath, [
-      resolve(process.argv[1] as string),
-    ]);
-  }
-} else {
-  app.setAsDefaultProtocolClient("crawjud");
-}
+// if (process.defaultApp) {
+//   if (process.argv.length >= 2) {
+//     app.setAsDefaultProtocolClient("crawjud", process.execPath, [
+//       resolve(process.argv[1] as string),
+//     ]);
+//   }
+// } else {
+//   app.setAsDefaultProtocolClient("crawjud");
+// }
