@@ -8,7 +8,7 @@ const { FormCredencial } = credencialFormStore;
     <BRow>
       <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
         <BFormGroup label="Login sistema">
-          <BFormInput v-model="FormCredencial.username" />
+          <BFormInput v-model="FormCredencial.login" />
         </BFormGroup>
       </BCol>
       <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">

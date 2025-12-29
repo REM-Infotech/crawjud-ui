@@ -17,7 +17,7 @@ function validarCampos(campos: { campo: any; mensagem: string }[]): boolean {
 
 function ValidarLoginESenha() {
   return validarCampos([
-    { campo: FormCredencial.username, mensagem: "É necessário informar o login do sistema!" },
+    { campo: FormCredencial.login, mensagem: "É necessário informar o login do sistema!" },
     { campo: FormCredencial.password, mensagem: "É necessário informar a senha do sistema!" },
   ]);
 }
@@ -34,9 +34,7 @@ function ValidarCertificado() {
 }
 
 function ValidaDuploFator() {
-  return validarCampos([
-    { campo: FormCredencial.otp_uri, mensagem: "É necessário informar o OTP!" },
-  ]);
+  return validarCampos([{ campo: FormCredencial.otp, mensagem: "É necessário informar o OTP!" }]);
 }
 
 async function handleSubmit(ev: Event) {
@@ -46,14 +44,14 @@ async function handleSubmit(ev: Event) {
   if (
     !validarCampos([
       { campo: FormCredencial.nome_credencial, mensagem: "É necessário informar o nome!" },
-      { campo: FormCredencial.sistema_credencial, mensagem: "É necessário informar o sistema!" },
-      { campo: FormCredencial.metodo_login, mensagem: "É necessário informar o método de login!" },
+      { campo: FormCredencial.sistema, mensagem: "É necessário informar o sistema!" },
+      { campo: FormCredencial.login_metodo, mensagem: "É necessário informar o método de login!" },
     ])
   )
     return;
 
-  if (FormCredencial.metodo_login === "pw" && !ValidarLoginESenha()) return;
-  if (FormCredencial.metodo_login === "cert" && !ValidarCertificado()) return;
+  if (FormCredencial.login_metodo === "pw" && !ValidarLoginESenha()) return;
+  if (FormCredencial.login_metodo === "cert" && !ValidarCertificado()) return;
   if (FormCredencial.requer_duplo_fator && !ValidaDuploFator()) return;
 
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -61,7 +59,11 @@ async function handleSubmit(ev: Event) {
   let message = `Erro ao cadastrar credencial "${FormCredencial.nome_credencial}"`;
   let message_type = "Erro";
   try {
-    const response = await api.post("/bot/cadastro_credencial", FormCredencial);
+    const response = await api.post("/bot/cadastro_credencial", FormCredencial, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     if (response.status === 200) {
       message_type = "Sucesso!";
@@ -81,7 +83,7 @@ async function handleSubmit(ev: Event) {
 
 const credencialFormStore = useCredencialFormStore();
 const { FormCredencial } = credencialFormStore;
-const { metodo_login } = storeToRefs(credencialFormStore);
+const { login_metodo } = storeToRefs(credencialFormStore);
 
 const opcoesTipoCredencial: OpcoesTipoCredencial[] = [
   { value: null, text: "Selecione uma opção", disabled: true },
@@ -114,18 +116,18 @@ const opcoesSistema: OpcoesSistema[] = [
           </BFormGroup>
         </BCol>
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
-          <BFormGroup label="sistema_credencial">
-            <BFormSelect v-model="FormCredencial.sistema_credencial" :options="opcoesSistema" />
+          <BFormGroup label="sistema">
+            <BFormSelect v-model="FormCredencial.sistema" :options="opcoesSistema" />
           </BFormGroup>
         </BCol>
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
           <BFormGroup label="Método de autenticação">
-            <BFormSelect v-model="FormCredencial.metodo_login" :options="opcoesTipoCredencial" />
+            <BFormSelect v-model="FormCredencial.login_metodo" :options="opcoesTipoCredencial" />
           </BFormGroup>
         </BCol>
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="p-3" style="min-height: 100px">
-          <BotSimpleAuth v-if="metodo_login === 'pw'" />
-          <BotCertificado v-else-if="metodo_login === 'cert'" />
+          <BotSimpleAuth v-if="login_metodo === 'pw'" />
+          <BotCertificado v-else-if="login_metodo === 'cert'" />
         </BCol>
       </div>
 

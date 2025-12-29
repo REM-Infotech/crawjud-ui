@@ -2,22 +2,22 @@ export default defineStore("useCredencialFormStore", () => {
   const FormCredencial = reactive<formCredencial>({
     nome_credencial: null,
 
-    sistema_credencial: null,
-    metodo_login: null,
+    sistema: null,
+    login_metodo: null,
 
-    username: null,
+    login: null,
     password: null,
 
     certificado: null,
     cpf_cnpj_certificado: null,
     senha_certificado: null,
 
-    otp_uri: null,
+    otp: null,
     requer_duplo_fator: false,
   });
 
-  const metodo_login = computed(() => FormCredencial.metodo_login);
-  const SistemaCredencial = computed(() => FormCredencial.sistema_credencial);
+  const login_metodo = computed(() => FormCredencial.login_metodo);
+  const SistemaCredencial = computed(() => FormCredencial.sistema);
 
-  return { FormCredencial, metodo_login, SistemaCredencial };
+  return { FormCredencial, login_metodo, SistemaCredencial };
 });
