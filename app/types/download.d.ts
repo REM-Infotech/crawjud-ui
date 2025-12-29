@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // ... Tipos relacionados a download e funções deep link
 
 /**

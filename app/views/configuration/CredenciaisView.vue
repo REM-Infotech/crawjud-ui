@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import CadastroCredencial from "./forms/CadastroCredencial.vue";
+import FormCredencial from "./forms/FormCredencial.vue";
 
 const credenciaisRef: Ref<CredencialItem[]> = ref([]);
 const credenciais: ComputedRef<CredencialItem[]> = computed(() => credenciaisRef.value);
@@ -17,7 +17,7 @@ const novaCredencial = ref(false);
 
 <template>
   <div>
-    <CadastroCredencial v-model="novaCredencial" />
+    <FormCredencial v-model="novaCredencial" />
     <div id="credenciais-view" class="card">
       <div class="card-header d-flex justify-content-between">
         <h4 id="credencial-branding-text" class="align-text-center">Credenciais</h4>
@@ -59,9 +59,15 @@ const novaCredencial = ref(false);
                     {{ credencial.tipo_autenticacao }}
                   </td>
                   <td>
-                    <BButton variant="outline-danger" size="sm">
-                      <span class="fw-bold"> Deletar </span>
-                    </BButton>
+                    <BTooltip>
+                      <template #target>
+                        <BButton variant="outline-danger" size="sm">
+                          <span class="fw-bold"> Deletar </span>
+                        </BButton>
+                      </template>
+
+                      <span>Apenas opção de deletar para evitar vazamentos</span>
+                    </BTooltip>
                   </td>
                 </tr>
                 <tr v-if="credenciais.length === 0">

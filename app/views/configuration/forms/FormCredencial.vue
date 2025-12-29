@@ -5,29 +5,25 @@ function handleSubmit(ev: Event) {
   ev.preventDefault();
 }
 
-type metodoLogin = "pw" | "cert" | null;
+const credencialFormStore = useCredencialFormStore();
+const { FormCredencial } = credencialFormStore;
+const { MetodoLogin } = storeToRefs(credencialFormStore);
 
-const MetodoLogin = ref(null);
-
-const requerDoisFatores = ref(false);
-type OpcoesTipoCredencial = { value?: metodoLogin; text: string; disabled?: boolean };
 const opcoesTipoCredencial: OpcoesTipoCredencial[] = [
   { value: null, text: "Selecione uma opção", disabled: true },
   { value: "pw", text: "Usuário e Senha" },
   { value: "cert", text: "Certificado" },
 ];
 
-function AbrirTutorial(ev: Event) {
-  ev.preventDefault();
-
-  alert("Caso não saibar usar o App, veja o vídeo inteiro!");
-
-  alert(
-    'Após configurar, Vá em "Configurar entrada > avançado > otp". Clique em "revelar" e copie o link inteiro do OTP',
-  );
-
-  window.open("https://youtu.be/0CYzSJOAJFQ?t=687");
-}
+const opcoesSistema: OpcoesSistema[] = [
+  { value: null, text: "Selecione uma opção", disabled: true },
+  { value: "PROJUDI", text: "PROJUDI" },
+  { value: "ESAJ", text: "ESAJ" },
+  { value: "ELAW", text: "ELAW" },
+  { value: "JUSDS", text: "JUSDS" },
+  { value: "PJE", text: "PJE" },
+  { value: "CSI", text: "CSI" },
+];
 </script>
 
 <template>
@@ -38,15 +34,19 @@ function AbrirTutorial(ev: Event) {
 
     <BForm @submit="handleSubmit">
       <div class="row gap-1 justify-content-center">
-        <BCol md="12" sm="12" lg="12" xl="12" xxl="12">
+        <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
           <BFormGroup label="Nome Credencial">
-            <BFormInput />
+            <BFormInput v-model="FormCredencial.nomeCredencial" />
           </BFormGroup>
         </BCol>
-
-        <BCol md="12" sm="12" lg="12" xl="12" xxl="12">
+        <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
+          <BFormGroup label="Sistema">
+            <BFormSelect v-model="FormCredencial.Sistema" :options="opcoesSistema" />
+          </BFormGroup>
+        </BCol>
+        <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="mb-3">
           <BFormGroup label="Método de autenticação">
-            <BFormSelect v-model="MetodoLogin" :options="opcoesTipoCredencial" />
+            <BFormSelect v-model="FormCredencial.MetodoLogin" :options="opcoesTipoCredencial" />
           </BFormGroup>
         </BCol>
         <BCol md="12" sm="12" lg="12" xl="12" xxl="12" class="p-3" style="min-height: 100px">

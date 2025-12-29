@@ -90,3 +90,7 @@ interface UsuarioItem {
   ultimo_login: string;
   acoesComponent: Component;
 }
+
+type OpcoesSistema = { value: sistemasRobos | null; text: string; disabled?: boolean };
+type OpcoesTipoCredencial = { value?: metodoLogin; text: string; disabled?: boolean };
+type metodoLogin = "pw" | "cert" | null;

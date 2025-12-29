@@ -33,7 +33,7 @@ const variantBtn = computed(() => (exibeSenha.value ? "outline-warning" : "prima
         required
       />
     </BFormGroup>
-    <div class="mt-3">
+    <div class="mt-3 mb-3">
       <AppInputPassword
         id="senhaCertificado"
         placeholder="Senha certificado"
