@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+import CadastroCredencial from "./forms/CadastroCredencial.vue";
+
 const credenciaisRef: Ref<CredencialItem[]> = ref([]);
 const credenciais: ComputedRef<CredencialItem[]> = computed(() => credenciaisRef.value);
 
@@ -9,64 +11,67 @@ onMounted(() => {
     credenciaisRef.value = data;
   });
 });
+
+const novaCredencial = ref(false);
 </script>
 
 <template>
-  <div id="credenciais-view" class="card">
-    <div class="card-header">
-      <h4 id="credencial-branding-text" class="align-text-center">Credenciais</h4>
-    </div>
-    <div class="card-body bg-secondary bg-opacity-50">
-      <div class="card">
-        <div class="card-header"></div>
-        <div class="card-body">
-          <table class="table table table-striped" style="height: 50dvh">
-            <thead>
-              <tr>
-                <th scope="col">
-                  <span class="fw-bold"> # </span>
-                </th>
-                <th scope="col">
-                  <span> Nome Credencial </span>
-                </th>
-                <th scope="col">
-                  <span> Tipo Autenticacao </span>
-                </th>
-                <th scope="col">
-                  <span> Ações </span>
-                </th>
-              </tr>
-            </thead>
+  <div>
+    <CadastroCredencial v-model="novaCredencial" />
+    <div id="credenciais-view" class="card">
+      <div class="card-header d-flex justify-content-between">
+        <h4 id="credencial-branding-text" class="align-text-center">Credenciais</h4>
+        <BButton size="sm" variant="success" @click="novaCredencial = true">
+          Cadastrar nova
+        </BButton>
+      </div>
+      <div class="card-body bg-secondary bg-opacity-50">
+        <div class="card">
+          <div class="card-header"></div>
+          <div class="card-body">
+            <table class="table table table-striped" style="height: 50dvh">
+              <thead>
+                <tr>
+                  <th scope="col">
+                    <span class="fw-bold"> # </span>
+                  </th>
+                  <th scope="col">
+                    <span> Nome Credencial </span>
+                  </th>
+                  <th scope="col">
+                    <span> Tipo Autenticacao </span>
+                  </th>
+                  <th scope="col">
+                    <span> Ações </span>
+                  </th>
+                </tr>
+              </thead>
 
-            <TransitionGroup tag="tbody" name="credenciais">
-              <tr v-for="(credencial, idx) in credenciais" :key="idx">
-                <th scope="row">
-                  {{ credencial.Id }}
-                </th>
-                <td>
-                  {{ credencial.nome_credencial }}
-                </td>
-                <td>
-                  {{ credencial.tipo_autenticacao }}
-                </td>
-                <td>
-                  <BDropdown variant="outline-secondary" text="Ações" class="me-2">
-                    <BDropdownItem variant="primary">
-                      <span class="fw-bold"> Editar </span>
-                    </BDropdownItem>
-                    <BDropdownItem variant="danger">
+              <TransitionGroup tag="tbody" name="credenciais">
+                <tr v-for="(credencial, idx) in credenciais" :key="idx">
+                  <th scope="row">
+                    {{ credencial.Id }}
+                  </th>
+                  <td>
+                    {{ credencial.nome_credencial }}
+                  </td>
+                  <td>
+                    {{ credencial.tipo_autenticacao }}
+                  </td>
+                  <td>
+                    <BButton variant="outline-danger" size="sm">
                       <span class="fw-bold"> Deletar </span>
-                    </BDropdownItem>
-                  </BDropdown>
-                </td>
-              </tr>
-              <tr v-if="credenciais.length === 0">
-                <td colspan="6" class="text-center fw-bold">Carregando</td>
-              </tr>
-            </TransitionGroup>
-          </table>
+                    </BButton>
+                  </td>
+                </tr>
+                <tr v-if="credenciais.length === 0">
+                  <td colspan="6" class="text-center fw-bold">Carregando</td>
+                </tr>
+              </TransitionGroup>
+            </table>
+          </div>
+          <div class="card-footer"></div>
         </div>
-        <div class="card-footer"></div>
       </div>
     </div>
   </div>

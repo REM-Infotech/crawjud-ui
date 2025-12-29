@@ -1,5 +1,5 @@
 import CrawJUD2 from "@/assets/img/crawjud2.ico";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
 
@@ -30,6 +30,11 @@ function createWindow() {
     if (url !== currentUrl) {
       event.preventDefault();
     }
+  });
+
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url); // Open the URL in the user's default browser
+    return { action: "deny" }; // Prevent the app from opening it internally
   });
 
   mainWindow.webContents.on("before-input-event", (event, input) => {
