@@ -34,7 +34,7 @@ const safeStorageApi = {
 };
 
 contextBridge.exposeInMainWorld("electron", {
-  showFile: (filePath: string) => ipcRenderer.invoke("show-file", filePath),
+  showFile: (filePath: string) => ipcRenderer.invoke("show-file-execution", filePath),
 });
 
 try {

@@ -72,14 +72,14 @@ export default function IpcApp(mainWindow: BrowserWindow) {
 
     if (dialogFile.canceled) return;
 
-    ipcMain.handle("show-file", (_: IpcMainInvokeEvent, filePath: string) => {
-      console.log(filePath);
-      shell.showItemInFolder(filePath);
-    });
-
     const filePath = join(dialogFile.filePath);
     const buff = Uint8Array.fromBase64(kw.content);
     await writeFile(filePath, buff);
     return dialogFile.filePath;
+  });
+
+  ipcMain.handle("show-file-execution", (_: IpcMainInvokeEvent, filePath: string) => {
+    console.log(filePath);
+    shell.showItemInFolder(filePath);
   });
 }
