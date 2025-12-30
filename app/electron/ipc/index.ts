@@ -79,7 +79,6 @@ export default function IpcApp(mainWindow: BrowserWindow) {
   });
 
   ipcMain.handle("show-file-execution", (_: IpcMainInvokeEvent, filePath: string) => {
-    console.log(filePath);
     shell.showItemInFolder(filePath);
   });
 }
