@@ -1,6 +1,8 @@
+import MessageArquivo from "~/components/MessageArquivo.vue";
+
 export default defineStore("useExecutionStore", () => {
   const toast = useToast();
-
+  const linkArquivo = ref("");
   const botNs = socketio.socket("/bot");
   const execucaoBot: Ref<string> = ref("");
   const querySistema: Ref<string> = ref("");
@@ -46,9 +48,13 @@ export default defineStore("useExecutionStore", () => {
       if (response.status === 200) {
         const result = await window.fileService.downloadExecucao(response.data);
         if (result) {
+          linkArquivo.value = result;
+          const render = h(MessageArquivo, { filePath: result as string });
           toast.create({
             title: "Info",
-            body: `Arquivo "${response.data.file_name}" salvo com sucesso em ${result}`,
+            slots: {
+              default: () => render,
+            },
             modelValue: 2500,
           });
         }
@@ -92,5 +98,6 @@ export default defineStore("useExecutionStore", () => {
 
     // 3. Utilitários
     botNs,
+    linkArquivo,
   };
 });

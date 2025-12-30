@@ -52,4 +52,5 @@ interface safeStorageApi {
 
 interface fileService {
   downloadExecucao: (kw: PayloadDownloadExecucao) => Promise<string | void>;
+  toFileUrl: (pathFile: string) => Promise<string>;
 }

@@ -3,8 +3,10 @@ import FormCredencial from "./forms/FormCredencial.vue";
 
 const credenciaisRef: Ref<CredencialItem[]> = ref([]);
 const credenciais: ComputedRef<CredencialItem[]> = computed(() => credenciaisRef.value);
-
 const { adminNamespace } = useAdminStore();
+
+const toast = useToast();
+const load = useLoad();
 
 onMounted(() => {
   adminNamespace.emit("listagem_credenciais", (data: CredencialItem[]) => {
@@ -13,6 +15,42 @@ onMounted(() => {
 });
 
 const novaCredencial = ref(false);
+
+function formataMetodoLogin(item: CredencialItem) {
+  if (!item.tipo_autenticacao) return "Usuário / Senha";
+  if (item.tipo_autenticacao === "pw") return "Usuário / Senha";
+  else if (item.tipo_autenticacao === "certificado") return "Certificado";
+}
+
+async function deletarCredencial(ev: Event, credencial: CredencialItem) {
+  ev.preventDefault();
+  load.show();
+  let args_toast = {
+    title: "Erro",
+    body: "Erro ao deletar credencial",
+  };
+
+  try {
+    const response = await api.post("/admin/deletar_credencial", credencial, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 200) {
+      args_toast = {
+        title: "Sucesso",
+        body: `Credencial "${credencial.nome_credencial}" deletada!`,
+      };
+    }
+  } catch {}
+
+  const new_data = [...credenciaisRef.value].filter((item) => item != credencial);
+  credenciaisRef.value = new_data;
+
+  toast.create(args_toast);
+  load.hide();
+}
 </script>
 
 <template>
@@ -56,12 +94,16 @@ const novaCredencial = ref(false);
                     {{ credencial.nome_credencial }}
                   </td>
                   <td>
-                    {{ credencial.tipo_autenticacao }}
+                    {{ formataMetodoLogin(credencial) }}
                   </td>
                   <td>
                     <BTooltip>
                       <template #target>
-                        <BButton variant="outline-danger" size="sm">
+                        <BButton
+                          @click="(ev: Event) => deletarCredencial(ev, credencial)"
+                          variant="outline-danger"
+                          size="sm"
+                        >
                           <span class="fw-bold"> Deletar </span>
                         </BButton>
                       </template>

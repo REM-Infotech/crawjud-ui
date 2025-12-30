@@ -59,6 +59,9 @@ interface Window {
   fileService: fileService;
   cookieService: cookieService;
   safeStorageApi: safeStorageApi;
+  electron: {
+    showFile: (filePath: string) => Promise<void>;
+  };
 }
 
 interface AuthPayload {

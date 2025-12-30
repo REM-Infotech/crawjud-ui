@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BaseWindow, BrowserWindow, dialog, ipcMain } from "electron";
+import { BrowserWindow, dialog, ipcMain, shell, type IpcMainInvokeEvent } from "electron";
 import { writeFile } from "fs/promises";
 import { homedir } from "os";
 import { join, resolve } from "path";
+import { pathToFileURL } from "url";
 
 class IpcUtils {
   static beforeInputEvent(event: Electron.Event, input: Electron.Input) {
@@ -46,14 +47,16 @@ class IpcUtils {
   }
 }
 
-export default function IpcApp() {
-  const mainWindow = BaseWindow.getAllWindows()[0];
+export default function IpcApp(mainWindow: BrowserWindow) {
   const browserWindow = mainWindow ? BrowserWindow.fromId(mainWindow.id) : undefined;
   browserWindow?.webContents.on("before-input-event", IpcUtils.beforeInputEvent);
   ipcMain.on("close-window", IpcUtils.CloseWindow);
   ipcMain.on("minimize-window", IpcUtils.MinimizeWindow);
   ipcMain.on("maximize-window", IpcUtils.MaximizeWindow);
-
+  ipcMain.handle(
+    "file-service:to-file-url",
+    (_: IpcMainInvokeEvent, pathFile: string) => pathToFileURL(pathFile).href,
+  );
   ipcMain.handle("file-service:download-execucao", async (_: any, kw: PayloadDownloadExecucao) => {
     if (!mainWindow) return;
     const dialogFile = await dialog.showSaveDialog(mainWindow, {
@@ -68,6 +71,11 @@ export default function IpcApp() {
     });
 
     if (dialogFile.canceled) return;
+
+    ipcMain.handle("show-file", (_: IpcMainInvokeEvent, filePath: string) => {
+      console.log(filePath);
+      shell.showItemInFolder(filePath);
+    });
 
     const filePath = join(dialogFile.filePath);
     const buff = Uint8Array.fromBase64(kw.content);

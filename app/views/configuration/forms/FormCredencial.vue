@@ -59,7 +59,7 @@ async function handleSubmit(ev: Event) {
   let message = `Erro ao cadastrar credencial "${FormCredencial.nome_credencial}"`;
   let message_type = "Erro";
   try {
-    const response = await api.post("/bot/cadastro_credencial", FormCredencial, {
+    const response = await api.post("/admin/cadastro_credencial", FormCredencial, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

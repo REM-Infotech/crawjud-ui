@@ -20,14 +20,14 @@ class MainWindow {
       maxHeight: 900,
       resizable: false,
       maximizable: false,
-      frame: false,
+      frame: !app.isPackaged,
       transparent: true,
       icon: CrawJUD2,
       fullscreen: false,
       fullscreenable: false,
       webPreferences: {
         nodeIntegration: false,
-        devTools: true,
+        devTools: !app.isPackaged,
         preload: preload_path,
         partition: "persist:CrawJudApp",
       },
@@ -92,9 +92,11 @@ const mainWindowInstance = new MainWindow();
 
 // Create mainWindow, load the rest of the app, etc...
 app.whenReady().then(async () => {
-  IpcApp();
-  useThemeService();
   mainWindowInstance.create();
+
+  IpcApp(mainWindowInstance.window as BrowserWindow);
+  useThemeService();
+
   app.configureHostResolver({
     enableBuiltInResolver: true,
     secureDnsServers: ["https://one.one.one.one/dns-query"],

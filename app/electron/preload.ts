@@ -19,6 +19,9 @@ const themeApi = {
 const fileService = {
   downloadExecucao: (kw: PayloadDownloadExecucao): Promise<void> =>
     ipcRenderer.invoke("file-service:download-execucao", kw),
+
+  toFileUrl: (pathFile: string): Promise<string> =>
+    ipcRenderer.invoke("file-service:to-file-url", pathFile),
 };
 
 const cookieService = {
@@ -29,6 +32,10 @@ const safeStorageApi = {
   load: (key: string): Promise<string> => ipcRenderer.invoke("safe-storage:load", key),
   save: (opt: optSave): Promise<void> => ipcRenderer.invoke("safe-storage:save", opt),
 };
+
+contextBridge.exposeInMainWorld("electron", {
+  showFile: (filePath: string) => ipcRenderer.invoke("show-file", filePath),
+});
 
 try {
   const exposes = {
