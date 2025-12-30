@@ -1,78 +1,100 @@
 import CrawJUD2 from "@/assets/img/crawjud2.ico";
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, nativeImage, shell } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
 
 import useThemeService from "@/services/themeService";
 
-export let mainWindow: BrowserWindow | null = null;
+export const mainWindow: BrowserWindow | null = null;
 const preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    title: "CrawJUD",
-    width: 1600,
-    height: 900,
-    maxWidth: 1600,
-    maxHeight: 900,
-    resizable: false,
-    maximizable: false,
-    frame: false,
-    transparent: true,
-    icon: CrawJUD2,
-    fullscreen: false,
-    fullscreenable: false,
-    webPreferences: {
-      nodeIntegration: false,
-      devTools: true,
-      preload: preload_path,
-      partition: "persist:CrawJudApp",
-    },
-  });
-  mainWindow.webContents.on("will-navigate", (event, url) => {
-    const currentUrl = mainWindow?.webContents.getURL();
-    if (url !== currentUrl) {
-      event.preventDefault();
-    }
-  });
+class MainWindow {
+  public window: BrowserWindow | null = null;
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url); // Open the URL in the user's default browser
-    return { action: "deny" }; // Prevent the app from opening it internally
-  });
-
-  mainWindow.webContents.on("before-input-event", (event, input) => {
-    const isBack = input.key === "BrowserBack" || (input.key === "ArrowLeft" && input.alt);
-
-    if (isBack) {
-      event.preventDefault();
-    }
-  });
-
-  if (process.argv.includes("--devtools") || !app.isPackaged) {
-    mainWindow.webContents.openDevTools();
-  }
-  if (app.isPackaged) {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
-    return;
+  private getWindowOptions(): Electron.BrowserWindowConstructorOptions {
+    return {
+      title: "CrawJUD",
+      width: 1600,
+      height: 900,
+      maxWidth: 1600,
+      maxHeight: 900,
+      resizable: false,
+      maximizable: false,
+      frame: false,
+      transparent: true,
+      icon: CrawJUD2,
+      fullscreen: false,
+      fullscreenable: false,
+      webPreferences: {
+        nodeIntegration: false,
+        devTools: true,
+        preload: preload_path,
+        partition: "persist:CrawJudApp",
+      },
+    };
   }
 
-  mainWindow.loadURL("http://localhost:3000/#/");
+  private applyWindowSettings(win: BrowserWindow) {
+    const iconBase64 = CrawJUD2.split(",")[1] ?? CrawJUD2;
+    win.setTitle("CrawJUD");
+    win.setResizable(false);
+    win.setMaximizable(false);
+    win.setFullScreenable(false);
+    win.setFullScreen(false);
+    win.setSize(1600, 900);
+    win.setMaximumSize(1600, 900);
+    win.setMinimumSize(1600, 900);
+    win.setIcon(nativeImage.createFromBuffer(Buffer.from(iconBase64, "base64")));
+    win.setMenuBarVisibility(false);
+    // Transparent and frame settings must be set at construction time
+    // so they are omitted here, but you can document this if needed.
+  }
+
+  private setupWebContents(win: BrowserWindow) {
+    win.webContents.on("will-navigate", (event, url) => {
+      const currentUrl = win.webContents.getURL();
+      if (url !== currentUrl) {
+        event.preventDefault();
+      }
+    });
+
+    win.webContents.setWindowOpenHandler((details) => {
+      shell.openExternal(details.url);
+      return { action: "deny" };
+    });
+
+    win.webContents.on("before-input-event", (event, input) => {
+      const isBack = input.key === "BrowserBack" || (input.key === "ArrowLeft" && input.alt);
+      if (isBack) {
+        event.preventDefault();
+      }
+    });
+
+    if (process.argv.includes("--devtools") || !app.isPackaged) {
+      win.webContents.openDevTools();
+    }
+  }
+
+  public create() {
+    this.window = new BrowserWindow(this.getWindowOptions());
+
+    this.setupWebContents(this.window);
+
+    if (app.isPackaged) {
+      this.window.loadFile(join(__dirname, "../renderer/index.html"));
+    } else {
+      this.window.loadURL("http://localhost:3000/#/");
+    }
+  }
 }
 
-// const gotTheLock = app.requestSingleInstanceLock();
-
-// if (!gotTheLock) {
-//   app.quit();
-// } else {
-
-// }
+const mainWindowInstance = new MainWindow();
 
 // Create mainWindow, load the rest of the app, etc...
 app.whenReady().then(async () => {
   IpcApp();
   useThemeService();
-  createWindow();
+  mainWindowInstance.create();
   app.configureHostResolver({
     enableBuiltInResolver: true,
     secureDnsServers: ["https://one.one.one.one/dns-query"],
@@ -81,7 +103,7 @@ app.whenReady().then(async () => {
 
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    mainWindowInstance.create();
   }
 });
 
