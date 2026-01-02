@@ -29,7 +29,11 @@ function AbrirTutorial(ev: Event) {
         <BTooltip interactive>
           <template #target>
             <BFormGroup label="URI OTP">
-              <AppInputPassword id="opt-input" placeholder="otpauth://totp/otp-mfa" />
+              <AppInputPassword
+                id="opt-input"
+                placeholder="otpauth://totp/otp-mfa"
+                v-model="FormCredencial.otp"
+              />
             </BFormGroup>
           </template>
           Válido apenas se estiver usando o KeePassXC como gerenciador de MFA.

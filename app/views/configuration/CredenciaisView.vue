@@ -17,9 +17,11 @@ onMounted(() => {
 const novaCredencial = ref(false);
 
 function formataMetodoLogin(item: CredencialItem) {
+  console.log(item);
   if (!item.tipo_autenticacao) return "Usuário / Senha";
   if (item.tipo_autenticacao === "pw") return "Usuário / Senha";
-  else if (item.tipo_autenticacao === "certificado") return "Certificado";
+  else if (item.tipo_autenticacao === "certificado" || item.tipo_autenticacao === "cert")
+    return "Certificado";
 }
 
 async function deletarCredencial(ev: Event, credencial: CredencialItem) {

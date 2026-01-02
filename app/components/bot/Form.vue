@@ -125,6 +125,20 @@ const botForms: Record<ConfigForm, Component[]> = {
 };
 
 onUnmounted(() => FormBotManager.clearForm());
+
+watch(model, async (newValue) => {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  if (newValue) {
+    if (props.bot?.configuracao_form !== "only_file" && bots.credenciais.length === 1) {
+      toast.create({
+        title: "Erro",
+        body: "É necessário ter ao menos uma credencial cadastrada para usar este robô",
+      });
+      model.value = false;
+    }
+  }
+});
 </script>
 
 <template>

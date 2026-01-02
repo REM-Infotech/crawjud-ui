@@ -1,5 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { BrowserWindow, dialog, ipcMain, shell, type IpcMainInvokeEvent } from "electron";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  shell,
+  type IpcMainInvokeEvent,
+  type WebContents,
+} from "electron";
 import { writeFile } from "fs/promises";
 import { homedir } from "os";
 import { join, resolve } from "path";
@@ -12,7 +19,7 @@ class IpcUtils {
     if (input.control && input.alt) event.preventDefault();
   }
 
-  static CloseWindow(event: { sender: any }) {
+  static CloseWindow(event: { sender: WebContents }) {
     const webContents = event.sender;
 
     const diag = dialog.showMessageBoxSync({
@@ -30,13 +37,13 @@ class IpcUtils {
     mainWindow?.close();
   }
 
-  static MinimizeWindow(event: { sender: any }) {
+  static MinimizeWindow(event: { sender: WebContents }) {
     const webContents = event.sender;
     const mainWindow = BrowserWindow.fromWebContents(webContents);
     mainWindow?.minimize();
   }
 
-  static MaximizeWindow(event: { sender: any }) {
+  static MaximizeWindow(event: { sender: WebContents }) {
     const webContents = event.sender;
     const mainWindow = BrowserWindow.fromWebContents(webContents);
     if (mainWindow?.isMaximized()) {
@@ -49,7 +56,7 @@ class IpcUtils {
 
 export default function IpcApp(mainWindow: BrowserWindow) {
   const browserWindow = mainWindow ? BrowserWindow.fromId(mainWindow.id) : undefined;
-  browserWindow?.webContents.on("before-input-event", IpcUtils.beforeInputEvent);
+
   ipcMain.on("close-window", IpcUtils.CloseWindow);
   ipcMain.on("minimize-window", IpcUtils.MinimizeWindow);
   ipcMain.on("maximize-window", IpcUtils.MaximizeWindow);
@@ -57,26 +64,29 @@ export default function IpcApp(mainWindow: BrowserWindow) {
     "file-service:to-file-url",
     (_: IpcMainInvokeEvent, pathFile: string) => pathToFileURL(pathFile).href,
   );
-  ipcMain.handle("file-service:download-execucao", async (_: any, kw: PayloadDownloadExecucao) => {
-    if (!mainWindow) return;
-    const dialogFile = await dialog.showSaveDialog(mainWindow, {
-      title: "Escolha onde salvar a execução",
-      defaultPath: resolve(homedir(), kw.file_name),
-      filters: [
-        {
-          name: "Arquivo de execução compactado",
-          extensions: ["zip"],
-        },
-      ],
-    });
+  ipcMain.handle(
+    "file-service:download-execucao",
+    async (_: IpcMainInvokeEvent, kw: PayloadDownloadExecucao) => {
+      if (!mainWindow) return;
+      const dialogFile = await dialog.showSaveDialog(mainWindow, {
+        title: "Escolha onde salvar a execução",
+        defaultPath: resolve(homedir(), kw.file_name),
+        filters: [
+          {
+            name: "Arquivo de execução compactado",
+            extensions: ["zip"],
+          },
+        ],
+      });
 
-    if (dialogFile.canceled) return;
+      if (dialogFile.canceled) return;
 
-    const filePath = join(dialogFile.filePath);
-    const buff = Uint8Array.fromBase64(kw.content);
-    await writeFile(filePath, buff);
-    return dialogFile.filePath;
-  });
+      const filePath = join(dialogFile.filePath);
+      const buff = Uint8Array.fromBase64(kw.content);
+      await writeFile(filePath, buff);
+      return dialogFile.filePath;
+    },
+  );
 
   ipcMain.handle("show-file-execution", (_: IpcMainInvokeEvent, filePath: string) => {
     shell.showItemInFolder(filePath);
