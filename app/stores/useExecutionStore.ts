@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import MessageArquivo from "~/components/MessageArquivo.vue";
 
 export default defineStore("useExecutionStore", () => {
@@ -29,13 +30,7 @@ export default defineStore("useExecutionStore", () => {
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
 
-  async function pushLogs(msgs: Message[]) {
-    for (const msg of msgs) {
-      if (!botNs.connected) return;
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      logs.value = [...logs.value, msg];
-    }
-  }
+  async function pushLogs(_msgs: Message[]) {}
 
   async function encerrar_execucao(pid: string) {
     botNs.emit("bot_stop", { pid: pid });

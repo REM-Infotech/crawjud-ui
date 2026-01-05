@@ -12,7 +12,7 @@ const { FormBot } = useBotForm();
 const { seed, isFileUploading, progressBarValue } = storeToRefs(useBotForm());
 const { execucaoBot, execucao } = storeToRefs(execStore);
 const ConfirmDados = ref(false);
-
+const load = useLoad();
 const uploader = FileUploader();
 
 class FormBotManager {
@@ -24,7 +24,7 @@ class FormBotManager {
   }
   static async handleSubmit(e: Event) {
     e.preventDefault();
-
+    load.show();
     let title = "Erro";
     let message = "Erro ao iniciar robô";
 
@@ -63,17 +63,19 @@ class FormBotManager {
           Id: 0,
           bot: "",
         };
-
+        load.hide();
         useRouter().push({ name: "execucoes" });
       }
-    } catch (err) {
-      console.log(err);
+    } catch {
+      //
     }
 
     toast.create({
       title: title,
       body: message,
     });
+
+    load.hide();
   }
   static async handleFiles(data: CertificadoFile | KbdxFile | File | File[] | null) {
     if (data) {
@@ -127,7 +129,7 @@ const botForms: Record<ConfigForm, Component[]> = {
 onUnmounted(() => FormBotManager.clearForm());
 
 watch(model, async (newValue) => {
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  await new Promise((resolve) => setTimeout(resolve, 2500));
 
   if (newValue) {
     if (props.bot?.configuracao_form !== "only_file" && bots.credenciais.length === 1) {
