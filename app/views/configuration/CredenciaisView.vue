@@ -109,7 +109,6 @@ async function deletarCredencial(ev: Event, credencial: CredencialItem) {
                           <span class="fw-bold"> Deletar </span>
                         </BButton>
                       </template>
-
                       <span>Apenas opção de deletar para evitar vazamentos</span>
                     </BTooltip>
                   </td>

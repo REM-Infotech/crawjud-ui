@@ -81,7 +81,7 @@ interface ComponentsConfiguracaoPage extends Record<string, Component> {
 interface CredencialItem {
   Id: number;
   nome_credencial: string;
-  tipo_autenticacao: string;
+  tipo_autenticacao: "cert" | "certificado" | "pw";
   acoesComponent: Component;
 }
 
