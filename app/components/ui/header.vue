@@ -28,6 +28,8 @@ const maximizeWindow = () => {
 };
 
 const iconMaximize = MaterialSymbolsLightOpenInFullRounded;
+const iconClose = MaterialSymbolsLightCloseRounded;
+const iconMinimize = MaterialSymbolsLightMinimizeRounded;
 
 watch(
   () => useRoute().name,
@@ -74,13 +76,6 @@ const iconTheme = () => {
               <component :is="iconTheme()" class="icon-button" />
             </Transition>
           </button>
-          <button class="minimize-window">
-            <MaterialSymbolsLightMinimizeRounded @click="minimizeWindow" />
-          </button>
-
-          <button class="close-window" @click="closeWindow">
-            <MaterialSymbolsLightCloseRounded />
-          </button>
         </div>
       </div>
     </Transition>
@@ -100,7 +95,6 @@ const iconTheme = () => {
   padding: 2px;
   align-items: center;
   justify-content: center;
-  border-radius: 20.5px;
   app-region: drag;
   width: 100%;
 }

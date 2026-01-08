@@ -86,7 +86,7 @@ const imgSistema: Record<sistemasRobos, Component> = {
       >
         <div class="card">
           <div class="card-header">
-            <span class="text-white fw-bold fs-6">
+            <span class="text-white fw-bold titulo-robo">
               {{ bot.display_name }}
             </span>
           </div>
@@ -96,9 +96,9 @@ const imgSistema: Record<sistemasRobos, Component> = {
               {{ bot.descricao }}
             </span>
           </div>
-          <div class="card-footer d-flex">
+          <div class="card-footer d-flex gap-3">
             <BButton class="button-execute" @click="loadForm(bot)"> Executar </BButton>
-            <BButton class="button-bot" @click="execucoesFiltrar(bot)"> Ver Logs </BButton>
+            <BButton class="button-bot" @click="execucoesFiltrar(bot)" disabled> Ver Logs </BButton>
           </div>
         </div>
       </div>
@@ -128,7 +128,7 @@ const imgSistema: Record<sistemasRobos, Component> = {
 }
 
 .text-desc {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
 }
 
 .button-execute {
@@ -171,5 +171,10 @@ const imgSistema: Record<sistemasRobos, Component> = {
 
 .modal-app {
   min-width: 960px !important;
+}
+
+.titulo-robo {
+  font-size: 0.75em;
+  font-weight: bold;
 }
 </style>

@@ -134,7 +134,7 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
               {{ execucao.pid ? `Execução ${execucao.pid}` : "Selecione uma Execução" }}
             </span>
 
-            <div style="height: 35px" class="d-flex gap-1">
+            <div style="min-height: 35px" class="d-flex gap-1">
               <BButton
                 v-if="execucao.pid"
                 size="md"
