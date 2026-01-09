@@ -1,13 +1,37 @@
 <script setup lang="ts">
-import MaterialSymbolsLightMonitorHeartOutlineSharp from "~icons/material-symbols-light/monitor-heart-outline-sharp?width=48px&height=48px";
+import Crawjud from "~/components/img/crawjud.vue";
+import Elaw from "~/components/img/elaw.vue";
+import Esaj from "~/components/img/esaj.vue";
+import Pje from "~/components/img/pje.vue";
+import Projudi from "~/components/img/projudi.vue";
 
 const modal = ref(false);
-
+const { querySistema } = storeToRefs(useExecutionStore());
 const botStore = useBotStore();
 
-const { listagem, queryBot } = storeToRefs(botStore);
+const { botNs, listar_credenciais } = botStore;
+const { listagem, queryBot, listagemBots } = storeToRefs(botStore);
 const { current } = storeToRefs(useBotForm());
 const bots = useBotStore();
+
+onMounted(() => {
+  botNs.on("connect", () => {
+    const { current } = storeToRefs(useBotForm());
+    if (current) listar_credenciais(current.value);
+  });
+
+  botNs.emit("listagem", (data: { listagem: CrawJudBot[] }) => {
+    if (!data) return;
+
+    if (listagemBots.value.length > 0) {
+      if (data.listagem !== listagemBots.value) {
+        listagemBots.value = data.listagem;
+        return;
+      }
+    }
+    listagemBots.value = data.listagem;
+  });
+});
 
 onBeforeMount(async () => {
   botStore.botNs.connect();
@@ -17,16 +41,34 @@ onBeforeMount(async () => {
   }
 });
 
-onBeforeUnmount(async () => {
-  botStore.botNs.disconnect();
-});
+function execucoesFiltrar(bot: CrawJudBot) {
+  querySistema.value = bot.display_name;
+
+  useRouter().push({ name: "execucoes" });
+}
+
+function loadForm(bot: CrawJudBot) {
+  modal.value = true;
+  current.value = bot;
+}
 
 watch(modal, async (val) => {
   if (!val) {
     await new Promise((r) => setTimeout(r, 200));
-    current.value = {} as BotInfo;
+    current.value = {} as CrawJudBot;
   }
 });
+
+const imgSistema: Record<sistemasRobos, Component> = {
+  PROJUDI: Projudi,
+  ESAJ: Esaj,
+  ELAW: Elaw,
+  JUSDS: Crawjud,
+  PJE: Pje,
+  CAIXA: Crawjud,
+  TJDFT: Crawjud,
+  CSI: Crawjud,
+};
 </script>
 
 <template>
@@ -37,41 +79,26 @@ watch(modal, async (val) => {
     </BFormGroup>
 
     <TransitionGroup tag="div" name="bots" class="row row-bots">
-      <div class="col-lg-4 col-xl-4 p-2" v-for="(bot, index) in listagem" :key="index">
+      <div
+        class="col-lg-3 col-xl-3 col-md-3 col-sm-3 p-2"
+        v-for="(bot, index) in listagem"
+        :key="index"
+      >
         <div class="card">
           <div class="card-header">
-            <span class="text-white fw-bold fs-6">
+            <span class="text-white fw-bold titulo-robo">
               {{ bot.display_name }}
             </span>
           </div>
-          <div class="card-body d-flex flex-column justify-content-center align-items-center gap-5">
+          <component :is="imgSistema[bot.sistema]" />
+          <div class="card-body">
             <span class="text-white text-desc">
               {{ bot.descricao }}
             </span>
-            <div class="d-flex gap-2 p-3">
-              <div class="box-info">
-                <div class="icon">
-                  <MaterialSymbolsLightMonitorHeartOutlineSharp />
-                </div>
-                <span> Execuções</span>
-                <span class="fw-bold"> 456</span>
-              </div>
-              <div class="box-info">testee</div>
-            </div>
           </div>
-          <div class="card-footer d-flex">
-            <button
-              class="button-execute"
-              @click="
-                () => {
-                  modal = true;
-                  current = bot;
-                }
-              "
-            >
-              Executar
-            </button>
-            <button class="button-bot">Ver Logs</button>
+          <div class="card-footer d-flex gap-3">
+            <BButton class="button-execute" @click="loadForm(bot)"> Executar </BButton>
+            <BButton class="button-bot" @click="execucoesFiltrar(bot)" disabled> Ver Logs </BButton>
           </div>
         </div>
       </div>
@@ -79,10 +106,11 @@ watch(modal, async (val) => {
   </BContainer>
 </template>
 
-<style lang="css">
+<style lang="css" scoped>
 .row-bots {
   height: calc(100dvh - 80px);
   overflow: auto;
+  box-shadow: 0;
 }
 
 .bots-enter-active,
@@ -100,21 +128,7 @@ watch(modal, async (val) => {
 }
 
 .text-desc {
-  font-size: 1.2rem;
-}
-
-.card-header {
-  border-bottom: 00.1px solid rgba(0, 0, 0, 0.233);
-  font-weight: bold;
-}
-
-.card-header,
-.card-footer {
-  background-color: rgba(255, 255, 255, 0.226);
-}
-
-.card-footer {
-  justify-content: space-around;
+  font-size: 1.05rem;
 }
 
 .button-execute {
@@ -122,11 +136,11 @@ watch(modal, async (val) => {
   height: 2.5em;
   padding: 5px;
   font-weight: bold;
-  background-color: rgba(35, 180, 6, 0.568);
+  background-color: rgba(35, 180, 6, 0.568) !important;
 }
 
 .button-execute:hover {
-  background-color: rgb(63, 94, 17);
+  background-color: rgb(63, 94, 17) !important;
 }
 
 .button-bot {
@@ -137,7 +151,7 @@ watch(modal, async (val) => {
 }
 
 .card-body {
-  height: 280px;
+  min-height: 180px;
 }
 
 .box-info {
@@ -157,5 +171,10 @@ watch(modal, async (val) => {
 
 .modal-app {
   min-width: 960px !important;
+}
+
+.titulo-robo {
+  font-size: 0.75em;
+  font-weight: bold;
 }
 </style>

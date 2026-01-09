@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import Anexos from "./anexos.vue";
-import Certificado from "./certificado.vue";
 import Credencial from "./credencial.vue";
 import Xlsxfile from "./xlsxfile.vue";
 
 const execStore = useExecutionStore();
 const model = defineModel({ type: Boolean, required: true, default: false });
-const props = defineProps<{ bot: BotInfo | undefined }>();
+const props = defineProps<{ bot: CrawJudBot | undefined }>();
 const toast = useToast();
 const bots = useBotStore();
 const { FormBot } = useBotForm();
 const { seed, isFileUploading, progressBarValue } = storeToRefs(useBotForm());
 const { execucaoBot, execucao } = storeToRefs(execStore);
 const ConfirmDados = ref(false);
+const load = useLoad();
+const uploader = FileUploader();
 
 class FormBotManager {
   static async clearForm() {
@@ -23,7 +24,7 @@ class FormBotManager {
   }
   static async handleSubmit(e: Event) {
     e.preventDefault();
-
+    load.show();
     let title = "Erro";
     let message = "Erro ao iniciar robô";
 
@@ -59,26 +60,30 @@ class FormBotManager {
           pid: pid,
           data_fim: "",
           data_inicio: "",
-          id: 0,
+          Id: 0,
           bot: "",
         };
-
+        load.hide();
         useRouter().push({ name: "execucoes" });
       }
-    } catch {}
+    } catch {
+      //
+    }
 
     toast.create({
       title: title,
       body: message,
     });
+
+    load.hide();
   }
   static async handleFiles(data: CertificadoFile | KbdxFile | File | File[] | null) {
     if (data) {
       if (Array.isArray(data)) {
-        await FileUploader.uploadMultipleFile(data);
+        await uploader.uploadMultipleFile(data);
         return;
       }
-      await FileUploader.uploadFile(data as File);
+      await uploader.uploadFile(data as File);
     }
   }
 }
@@ -89,7 +94,7 @@ onMounted(() => {
 });
 watch(model, FormBotManager.clearForm);
 watch(model, (newV) => {
-  if (newV) bots.listar_credenciais(props.bot as BotInfo);
+  if (newV) bots.listar_credenciais(props.bot as CrawJudBot);
 });
 
 watch(
@@ -118,12 +123,24 @@ const botForms: Record<ConfigForm, Component[]> = {
   multiple_files: [Xlsxfile, Anexos, Credencial],
   only_auth: [Credencial],
   only_file: [Xlsxfile],
-  pje: [Xlsxfile, Certificado],
-  pje_protocolo: [Xlsxfile, Certificado],
   proc_parte: [Xlsxfile, Credencial],
 };
 
 onUnmounted(() => FormBotManager.clearForm());
+
+watch(model, async (newValue) => {
+  await new Promise((resolve) => setTimeout(resolve, 2500));
+
+  if (newValue) {
+    if (props.bot?.configuracao_form !== "only_file" && bots.credenciais.length === 1) {
+      toast.create({
+        title: "Erro",
+        body: "É necessário ter ao menos uma credencial cadastrada para usar este robô",
+      });
+      model.value = false;
+    }
+  }
+});
 </script>
 
 <template>

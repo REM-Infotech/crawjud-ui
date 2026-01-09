@@ -36,13 +36,15 @@ class authService {
         useRouter().push({ name: "robot-listagem" });
       }
     } catch (err) {
+      let message = "Erro ao realizar login";
       if (isAxiosError(err) && err.response) {
-        const message = (err.response as AxiosResponse<AuthPayload>).data.message;
-        toast.create({
-          title: "Erro",
-          body: message,
-        });
+        message = (err.response as AxiosResponse<AuthPayload>).data.message;
       }
+
+      toast.create({
+        title: "Erro",
+        body: message,
+      });
     }
     load.hide();
   }
@@ -50,37 +52,55 @@ class authService {
 </script>
 
 <template>
-  <Container :main-class="'login-container'">
-    <div class="card-login">
-      <h2>Login</h2>
-      <form @submit="(e) => authService.authUser(e)">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control" id="username" v-model="FormLogin.username" />
-        </div>
-        <div class="mb-3">
-          <AppInputPassword id="password" placeholder="Senha" v-model="FormLogin.password" />
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-      </form>
+  <BContainer class="login-container">
+    <div class="card card-login">
+      <div class="card-header">
+        <h2 class="mb-3">Login</h2>
+      </div>
+      <div class="card-body">
+        <form @submit="(e) => authService.authUser(e)" for="username">
+          <BFormGroup class="mb-3">
+            <BFormInput
+              size="lg"
+              placeholder="Login"
+              type="text"
+              id="username"
+              v-model="FormLogin.username"
+            />
+          </BFormGroup>
+
+          <div class="mb-3">
+            <AppInputPassword
+              size="lg"
+              id="password"
+              placeholder="Senha"
+              v-model="FormLogin.password"
+            />
+          </div>
+          <div class="card-footer">
+            <BButton type="submit" class="btn mt-auto btn-primary w-100"> Login </BButton>
+          </div>
+        </form>
+      </div>
     </div>
-  </Container>
+  </BContainer>
 </template>
 
 <style lang="css" scoped>
 .login-container {
-  display: flex;
-  margin-top: 3.5em;
+  margin-top: 13.5em;
   background-color: rgba(255, 255, 255, 0);
   box-shadow: none;
+  display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .card-login {
-  width: 400px;
-  padding: 30px;
+  width: 480px;
+  min-height: 330px;
+  padding: 15px;
   background-color: var(--color-flirt-950);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;

@@ -1,75 +1,113 @@
-import { app, BrowserWindow } from "electron";
-
+import CrawJUD2 from "@/assets/img/crawjud2.ico";
+import { app, BrowserWindow, nativeImage, shell } from "electron";
 import { join, resolve } from "path";
 import IpcApp from "./ipc";
-import WindowUtils from "./window";
 
-import useBotService from "@/services/botService";
 import useThemeService from "@/services/themeService";
 
-export let mainWindow: BrowserWindow | null = null;
-let preload_path = resolve(join(__dirname, "../preload", "preload.js"));
+export const mainWindow: BrowserWindow | null = null;
+const preload_path = resolve(join(__dirname, "../preload", "preload.js"));
 
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    title: "CrawJUD",
-    width: 1600,
-    height: 900,
-    resizable: false,
-    maximizable: false,
-    frame: false,
-    transparent: true,
-    webPreferences: {
-      devTools: !app.isPackaged,
-      preload: preload_path,
-    },
-  });
-  mainWindow.webContents.on("will-navigate", (event, url) => {
-    const currentUrl = mainWindow?.webContents.getURL();
-    if (url !== currentUrl) {
-      event.preventDefault();
-    }
-  });
+class MainWindow {
+  public window: BrowserWindow | null = null;
 
-  mainWindow.webContents.on("before-input-event", (event, input) => {
-    const isBack = input.key === "BrowserBack" || (input.key === "ArrowLeft" && input.alt);
+  private getWindowOptions(): Electron.BrowserWindowConstructorOptions {
+    const iconBase64 = CrawJUD2.split(",")[1] ?? CrawJUD2;
+    const icon = nativeImage.createFromDataURL(iconBase64);
 
-    if (isBack) {
-      event.preventDefault();
-    }
-  });
-
-  if (process.argv.includes("--devtools") || !app.isPackaged) {
-    mainWindow.webContents.openDevTools();
-  }
-  if (app.isPackaged) {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
-    return;
+    return {
+      title: "CrawJUD",
+      width: 1600,
+      height: 900,
+      minWidth: 1280,
+      minHeight: 720,
+      resizable: true,
+      maximizable: true,
+      frame: !app.isPackaged,
+      transparent: false,
+      icon: icon,
+      fullscreenable: true,
+      webPreferences: {
+        nodeIntegration: false,
+        devTools: !app.isPackaged,
+        preload: preload_path,
+        partition: "persist:CrawJudApp",
+      },
+    };
   }
 
-  mainWindow.loadURL("http://localhost:3000/#/");
-}
+  private applyWindowSettings(win: BrowserWindow) {
+    win.setTitle("CrawJUD");
+    win.setResizable(false);
+    win.setMaximizable(false);
+    win.setFullScreenable(false);
+    win.setFullScreen(false);
+    win.setSize(1600, 900);
+    win.setMaximumSize(1600, 900);
+    win.setMinimumSize(1600, 900);
+    win.setMenuBarVisibility(false);
+    // Transparent and frame settings must be set at construction time
+    // so they are omitted here, but you can document this if needed.
+  }
 
-const gotTheLock = app.requestSingleInstanceLock();
+  private setupWebContents(win: BrowserWindow) {
+    win.webContents.on("will-navigate", (event, url) => {
+      const currentUrl = win.webContents.getURL();
+      if (url !== currentUrl) {
+        event.preventDefault();
+      }
+    });
 
-if (!gotTheLock) {
-  app.quit();
-} else {
-  app.on("second-instance", WindowUtils.DeepLink);
+    win.webContents.setWindowOpenHandler((details) => {
+      shell.openExternal(details.url);
+      return { action: "deny" };
+    });
 
-  // Create mainWindow, load the rest of the app, etc...
-  app.whenReady().then(() => {
-    IpcApp();
-    useBotService();
-    createWindow();
-    useThemeService();
-  });
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+    win.webContents.on("before-input-event", (event, input) => {
+      const isBack = input.key === "BrowserBack" || (input.key === "ArrowLeft" && input.alt);
+      if (isBack) {
+        event.preventDefault();
+      }
+    });
+
+    if (process.argv.includes("--devtools") || !app.isPackaged) {
+      win.webContents.openDevTools();
     }
-  });
+  }
+
+  public create() {
+    this.window = new BrowserWindow(this.getWindowOptions());
+
+    this.setupWebContents(this.window);
+
+    if (app.isPackaged) {
+      this.window.loadFile(join(__dirname, "../renderer/index.html"));
+    } else {
+      this.window.loadURL("http://localhost:3000/#/");
+    }
+  }
 }
+
+const mainWindowInstance = new MainWindow();
+
+// Create mainWindow, load the rest of the app, etc...
+app.whenReady().then(async () => {
+  mainWindowInstance.create();
+
+  IpcApp(mainWindowInstance.window as BrowserWindow);
+  useThemeService();
+
+  app.configureHostResolver({
+    enableBuiltInResolver: true,
+    secureDnsServers: ["https://one.one.one.one/dns-query"],
+  });
+});
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    mainWindowInstance.create();
+  }
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -77,12 +115,12 @@ app.on("window-all-closed", () => {
   }
 });
 
-if (process.defaultApp) {
-  if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient("crawjud", process.execPath, [
-      resolve(process.argv[1] as string),
-    ]);
-  }
-} else {
-  app.setAsDefaultProtocolClient("crawjud");
-}
+// if (process.defaultApp) {
+//   if (process.argv.length >= 2) {
+//     app.setAsDefaultProtocolClient("crawjud", process.execPath, [
+//       resolve(process.argv[1] as string),
+//     ]);
+//   }
+// } else {
+//   app.setAsDefaultProtocolClient("crawjud");
+// }

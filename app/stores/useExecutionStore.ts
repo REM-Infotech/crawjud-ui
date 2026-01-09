@@ -1,84 +1,104 @@
-export default defineStore("useExecutionStore", () => {
-  const logNs = socketio.socket("/bot");
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import MessageArquivo from "~/components/MessageArquivo.vue";
 
+export default defineStore("useExecutionStore", () => {
+  const toast = useToast();
+  const Arquivo = ref({
+    nome: "",
+    path: "",
+  });
+  const botNs = socketio.socket("/bot");
   const execucaoBot: Ref<string> = ref("");
+  const querySistema: Ref<string> = ref("");
   const queryExecucao: Ref<string> = ref("");
   const execucao = ref<Execucao>({} as Execucao);
   const logs: Ref<Message[]> = ref<Message[]>([]);
   const listagemExecucoes: Ref<Execucao[]> = ref<Execucao[]>([]);
-
-  const itemLog: elementRef = ref<Element | ComponentPublicInstance | null>(null); // Ref para o ul
-
+  const itemLog: Ref = ref<Element | ComponentPublicInstance | null>(null); // Ref para o ul
   const logsExecucao: ComputedRef<Message[]> = computed(() => logs.value);
   const execucoes: ComputedRef<Execucao[]> = computed(() =>
-    listagemExecucoes.value.filter((item) =>
-      item.pid.toLowerCase().includes(queryExecucao.value.toLowerCase()),
-    ),
+    listagemExecucoes.value.filter((item) => {
+      if (!querySistema.value) {
+        return item.pid.toLowerCase().includes(queryExecucao.value.toLowerCase());
+      }
+      return item.bot === querySistema.value;
+    }),
   );
 
   async function pushLog(msg: Message) {
-    const currentLogs = logs.value;
-    currentLogs.push(msg);
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    logs.value = currentLogs;
+    logs.value = [...logs.value, msg];
+    await new Promise((resolve) => setTimeout(resolve, 500));
   }
 
-  async function pushLogs(msgs: Message[]) {
-    for (const msg of msgs) {
-      await pushLog(msg);
+  async function pushLogs(_msgs: Message[]) {}
+
+  async function encerrar_execucao(pid: string) {
+    botNs.emit("bot_stop", { pid: pid });
+  }
+
+  async function download_execucao(pid: string) {
+    const { show, hide } = useLoad();
+    botNs.emit("bot_stop", { pid: pid });
+    show();
+    try {
+      const endpoint = `/bot/execucoes/${pid}/download`;
+      const response = await api.get<PayloadDownloadExecucao>(endpoint);
+      if (response.status === 200) {
+        const result = await window.fileService.downloadExecucao(response.data);
+        if (result) {
+          Arquivo.value = {
+            nome: response.data.file_name,
+            path: result,
+          };
+          const render = h(MessageArquivo, { filePath: result as string });
+          toast.create({
+            title: "Info",
+            slots: {
+              default: () => render,
+            },
+            modelValue: 2500,
+          });
+        }
+      }
+    } catch {
+      toast.create({ title: "Erro", body: "Não foi possivel baixar execução" });
     }
+
+    hide();
   }
 
-  async function encerrar_execucao(pid: str) {
-    logNs.emit("bot_stop", { pid: pid });
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-
-  async function download_execucao(pid: str) {
-    const { $botService: botService } = useNuxtApp();
-    const { toggle } = useLoad();
-
-    toggle();
-    await botService.downloadExecucao(pid);
-    toggle();
-  }
-
-  async function listar_execucoes(): Promise<void> {
-    logNs.emit("listagem_execucoes", (data: Execucoes) => {
-      listagemExecucoes.value = data;
-    });
-  }
-  logNs.on("connect", async () => {
-    logs.value = [];
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    logNs.emit("join_room", { room: execucaoBot.value }, pushLogs);
-  });
+  async function listar_execucoes(): Promise<void> {}
 
   watch(execucao, (newV) => {
     execucaoBot.value = newV?.pid as string;
+    logs.value = [];
+    botNs.emit("join_room", { room: execucaoBot.value }, pushLogs);
   });
 
-  watch(execucaoBot, async () => {
-    if (logNs.connected) {
-      logs.value = [];
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      logNs.disconnect();
-    }
-    logNs.connect();
+  botNs.on("logbot", async (data: Message) => {
+    await pushLog(data);
   });
 
   return {
-    execucoes,
-    queryExecucao,
-    pushLog,
-    listar_execucoes,
-    execucaoBot,
-    logsExecucao,
-    logNs,
-    logs,
-    encerrar_execucao,
+    // 1. Estados reativos
     execucao,
+    execucaoBot,
+    execucoes,
     itemLog,
+    listagemExecucoes,
+    logs,
+    logsExecucao,
+    queryExecucao,
+    querySistema,
+
+    // 2. Ações
     download_execucao,
+    encerrar_execucao,
+    listar_execucoes,
+    pushLog,
+
+    // 3. Utilitários
+    botNs,
+    Arquivo,
   };
 });

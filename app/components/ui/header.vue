@@ -28,6 +28,8 @@ const maximizeWindow = () => {
 };
 
 const iconMaximize = MaterialSymbolsLightOpenInFullRounded;
+const iconClose = MaterialSymbolsLightCloseRounded;
+const iconMinimize = MaterialSymbolsLightMinimizeRounded;
 
 watch(
   () => useRoute().name,
@@ -62,7 +64,7 @@ const iconTheme = () => {
               </NuxtLink>
             </li>
             <li class="nav-item">
-              <NuxtLink :to="{ name: 'index' }">
+              <NuxtLink :to="{ name: 'configuracao' }">
                 <span> Configurações </span>
               </NuxtLink>
             </li>
@@ -73,13 +75,6 @@ const iconTheme = () => {
             <Transition name="icon" mode="out-in">
               <component :is="iconTheme()" class="icon-button" />
             </Transition>
-          </button>
-          <button class="minimize-window">
-            <MaterialSymbolsLightMinimizeRounded @click="minimizeWindow" />
-          </button>
-
-          <button class="close-window" @click="closeWindow">
-            <MaterialSymbolsLightCloseRounded />
           </button>
         </div>
       </div>
@@ -100,7 +95,6 @@ const iconTheme = () => {
   padding: 2px;
   align-items: center;
   justify-content: center;
-  border-radius: 20.5px;
   app-region: drag;
   width: 100%;
 }

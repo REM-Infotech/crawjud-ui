@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Tipos auxiliares
 type FileUpload = {
   name: string;
@@ -36,6 +37,20 @@ interface ThemeApi {
   currentPreset: () => Promise<Theme>;
 }
 
-interface botService {
-  downloadExecucao: (pid: str) => Promise<void>;
+interface authService {
+  autenticarUsuario: (data: Record<string, any>) => Promise<AuthReturn>;
+}
+
+interface cookieService {
+  getCookies: () => Promise<cookieApp[]>;
+}
+
+interface safeStorageApi {
+  load: (key: string) => Promise<string>;
+  save: (opt: optSave) => Promise<string>;
+}
+
+interface fileService {
+  downloadExecucao: (kw: PayloadDownloadExecucao) => Promise<string | void>;
+  toFileUrl: (pathFile: string) => Promise<string>;
 }

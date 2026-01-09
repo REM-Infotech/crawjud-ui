@@ -24,13 +24,13 @@ function capsLockIndicator(e: Event) {
 </script>
 
 <template>
-  <BInputGroup :id="props.id">
+  <BInputGroup :id="id">
     <BFormInput
       :class="[exibeSenha ? 'border-warning' : 'border-primary']"
-      :size="props.size || 'md'"
-      :id="props.id"
+      :size="size || 'md'"
+      :id="id"
       :type="exibeSenha ? 'text' : 'password'"
-      :placeholder="props.placeholder"
+      :placeholder="placeholder"
       v-model="model"
       @keyup="capsLockIndicator"
     />
@@ -49,7 +49,4 @@ function capsLockIndicator(e: Event) {
       Exibir senha
     </BTooltip>
   </BInputGroup>
-  <div v-if="isCapsOn" class="text-warning mt-1 fw-bold p-2" style="font-size: 0.95em">
-    CapsLock ativo
-  </div>
 </template>

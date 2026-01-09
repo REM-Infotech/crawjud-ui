@@ -1,21 +1,39 @@
 <script setup lang="ts">
 import type { BaseColorVariant } from "bootstrap-vue-next";
 
+const botNs = socketio.socket("/bot");
 const execucaoStore = useExecutionStore();
 const execToRef = storeToRefs(execucaoStore);
-const { queryExecucao, execucoes, logsExecucao, execucao, itemLog } = execToRef;
+const { queryExecucao, execucoes, logsExecucao, execucao, itemLog, listagemExecucoes } = execToRef;
 
 const bodyListagem = ref<elementRef>(null as unknown as elementRef);
 const hoveredExecId = ref();
 const SetExec = ref(false);
 
-onBeforeMount(async () => {
-  execucaoStore.logNs.connect();
-  await execucaoStore.listar_execucoes();
+botNs.emit("listagem_execucoes", (data: Execucoes) => {
+  if (!data) return;
+  listagemExecucoes.value = data;
 });
 
-onBeforeUnmount(() => {
-  execucaoStore.logNs.disconnect();
+botNs.on("connect", () => {
+  botNs.emit("listagem_execucoes", (data: Execucoes) => {
+    if (!data) return;
+    listagemExecucoes.value = data;
+  });
+});
+
+const valores = computed(() => {
+  const execucoes = [...logsExecucao.value];
+
+  const sucessos0 = execucoes.filter((item) => item.message_type === "success" && item.row > 0);
+  const erros0 = execucoes.filter((item) => item.message_type === "error" && item.row > 0);
+  const item = (execucoes.reverse()[0] as Message) || {};
+  const sucessos = item.sucessos || sucessos0.length;
+  const erros = item.erros || erros0.length;
+  const restantes = item.restantes || 0;
+  const total = item.total || 0;
+
+  return { sucessos: sucessos, erros: erros, total: total, restantes: restantes };
 });
 
 watch(itemLog, async (newValue) => {
@@ -33,13 +51,14 @@ watch(itemLog, async (newValue) => {
 
 async function performSelecaoExec(e: Event, exec: Execucao) {
   e.preventDefault();
-
+  botNs.disconnect();
   if (SetExec.value) return;
   if (execucao.value === exec) return;
   SetExec.value = true;
   execucao.value = exec;
   await new Promise((resolve) => setTimeout(resolve, 1000));
   SetExec.value = false;
+  botNs.connect();
 }
 
 const classLogs: Record<MessageType, string> = {
@@ -115,7 +134,7 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
               {{ execucao.pid ? `Execução ${execucao.pid}` : "Selecione uma Execução" }}
             </span>
 
-            <div style="height: 35px" class="d-flex gap-1">
+            <div style="min-height: 35px" class="d-flex gap-1">
               <BButton
                 v-if="execucao.pid"
                 size="md"
@@ -153,7 +172,9 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
                 class="list-group-item"
               >
                 <div class="ms-2 me-auto">
-                  <div class="fw-bold" style="line-break: anywhere">{{ log.message }}</div>
+                  <div class="fw-bold" style="line-break: anywhere">
+                    {{ log.message }}
+                  </div>
                   <div class="d-flex gap-1">
                     <BBadge :variant="VariantLogs[log.message_type]">
                       {{ log.message_type }}
@@ -171,8 +192,30 @@ const VariantLogs: Record<MessageType, keyof BaseColorVariant> = {
               </div>
             </TransitionGroup>
           </div>
-          <div class="card-footer footer-exec">
-            {{ execucao.status ? `Status ${execucao.status}` : "" }}
+          <div class="card-footer footer-exec d-flex justify-content-between">
+            <span class="fw-bold">
+              {{ execucao.status ? `Status ${execucao.status}` : "" }}
+            </span>
+
+            <div>
+              <span>
+                Total: <strong>{{ valores.total }}</strong>
+              </span>
+              |
+              <span>
+                Sucessos: <strong>{{ valores.sucessos }}</strong>
+              </span>
+              |
+              <span
+                >Erros:
+                <strong>{{ valores.erros }}</strong>
+              </span>
+              |
+              <span
+                >Restantes
+                <strong>{{ valores.restantes }}</strong>
+              </span>
+            </div>
           </div>
         </div>
       </BCol>

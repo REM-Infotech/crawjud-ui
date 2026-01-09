@@ -1,0 +1,13 @@
+.card-header {
+  border-bottom: 00.1px solid rgba(0, 0, 0, 0.233);
+  font-weight: bold;
+}
+
+.card-header,
+.card-footer {
+  background-color: rgba(255, 255, 255, 0.226);
+}
+
+.card-footer {
+  justify-content: space-around;
+}

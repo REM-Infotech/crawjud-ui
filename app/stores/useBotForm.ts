@@ -1,9 +1,9 @@
 export default defineStore("useBotForm", () => {
+  const fileNs = socketio.socket("/file");
   const progressBarValue = ref(0);
-  const fileNs = socketio.socket("/files");
   const seed = ref("");
   const isFileUploading = computed(() => progressBarValue.value > 0);
-  const current = ref<BotInfo>({} as BotInfo);
+  const current = ref<CrawJudBot>({} as CrawJudBot);
   const FormBot = reactive<formBot>({
     xlsx: null,
     anexos: null,
@@ -22,5 +22,17 @@ export default defineStore("useBotForm", () => {
     bot_id: null,
   });
 
-  return { seed, FormBot, current, fileNs, progressBarValue, isFileUploading };
+  return {
+    // Estados reativos
+    FormBot,
+    current,
+    progressBarValue,
+    seed,
+
+    // Ações
+
+    // Utilitários
+    fileNs,
+    isFileUploading,
+  };
 });

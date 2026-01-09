@@ -6,7 +6,6 @@
     <div class="layout">
       <NuxtPage />
     </div>
-    <UiFooter />
   </div>
 </template>
 
