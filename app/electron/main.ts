@@ -12,6 +12,9 @@ class MainWindow {
   public window: BrowserWindow | null = null;
 
   private getWindowOptions(): Electron.BrowserWindowConstructorOptions {
+    const iconBase64 = CrawJUD2.split(",")[1] ?? CrawJUD2;
+    const icon = nativeImage.createFromDataURL(iconBase64);
+
     return {
       title: "CrawJUD",
       width: 1600,
@@ -22,8 +25,7 @@ class MainWindow {
       maximizable: true,
       frame: !app.isPackaged,
       transparent: false,
-      icon: CrawJUD2,
-      fullscreen: true,
+      icon: icon,
       fullscreenable: true,
       webPreferences: {
         nodeIntegration: false,
@@ -35,7 +37,6 @@ class MainWindow {
   }
 
   private applyWindowSettings(win: BrowserWindow) {
-    const iconBase64 = CrawJUD2.split(",")[1] ?? CrawJUD2;
     win.setTitle("CrawJUD");
     win.setResizable(false);
     win.setMaximizable(false);
@@ -44,7 +45,6 @@ class MainWindow {
     win.setSize(1600, 900);
     win.setMaximumSize(1600, 900);
     win.setMinimumSize(1600, 900);
-    win.setIcon(nativeImage.createFromBuffer(Buffer.from(iconBase64, "base64")));
     win.setMenuBarVisibility(false);
     // Transparent and frame settings must be set at construction time
     // so they are omitted here, but you can document this if needed.
